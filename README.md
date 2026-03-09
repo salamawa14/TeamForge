@@ -28,6 +28,6 @@ SE302 Software Project Management Course Project  A web-based Project Matching a
 ## Development Team
 [cite_start]A dedicated team of 9 members is collaborating on this project [cite: 303-304]:
 * **Project Manager:** [Muhammedendl]
-* **Backend Team:** Osama, Salam, and others.
-* **Frontend Team:** [Names of members].
-* **Database & UI/UX:** [Names of members].
+* **Backend Team:** [SOMA239 , salamawa14] .
+* **Frontend Team:** [Muhammedendl, FAISAL0x5,ahmedshaibani0].
+* **Database** [SOMA239 , salamawa14].
