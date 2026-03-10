@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TeamForge – Sign In</title>
+  <link rel="stylesheet" href="login.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="login-shell">
+
+  <!-- ── LEFT PANEL ── -->
+  <div class="left-panel">
+    <div class="left-inner">
+
+      <div class="brand">
+        <span class="brand-hex">⬡</span>
+        <span class="brand-name">TeamForge</span>
+      </div>
+
+      <div class="left-copy">
+        <h1>Welcome back to your research community.</h1>
+        <p>Thousands of students are collaborating on amazing projects. Sign in to continue building something remarkable.</p>
+      </div>
+
+      <ul class="feature-list">
+        <li><span class="fl-icon">🔬</span> TÜBİTAK project matching</li>
+        <li><span class="fl-icon">🚀</span> Teknofest team formation</li>
+        <li><span class="fl-icon">🏅</span> Academic advisor connections</li>
+        <li><span class="fl-icon">📅</span> Important deadline tracking</li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── RIGHT PANEL ── -->
+  <div class="right-panel">
+    <div class="form-box">
+
+      <div class="form-header">
+        <h2>Sign In</h2>
+        <p>New to TeamForge? <a href="#" class="link-teal">Create a free account</a></p>
+      </div>
+
+      <!-- Role tabs -->
+      <div class="role-tabs" id="roleTabs">
+        <button class="role-tab active" data-role="student">Student</button>
+        <button class="role-tab" data-role="instructor">Instructor</button>
+        <button class="role-tab" data-role="admin">Admin</button>
+      </div>
+
+      <form id="loginForm" novalidate>
+
+        <div class="field-group">
+          <label for="email">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="you@university.edu"
+            autocomplete="email"
+          />
+          <span class="field-error" id="emailError"></span>
+        </div>
+
+        <div class="field-group">
+          <label for="password">Password</label>
+          <div class="input-wrap">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+            />
+            <button type="button" class="eye-btn" id="togglePwd" aria-label="Show password">
+              <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <span class="field-error" id="pwdError"></span>
+        </div>
+
+        <div class="form-row">
+          <label class="checkbox-label">
+            <input type="checkbox" id="remember" />
+            <span class="checkbox-box"></span>
+            Remember me
+          </label>
+          <a href="#" class="link-muted">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn-signin" id="signInBtn">
+          <span class="btn-text">Sign In</span>
+          <span class="btn-spinner" id="btnSpinner" hidden></span>
+        </button>
+
+        <div class="divider"><span>or</span></div>
+
+        <a href="homw1.html" class="btn-create">Create New Account</a>
+
+      </form>
+
+      <!-- Toast notification -->
+      <div class="toast" id="toast"></div>
+
+    </div>
+  </div>
+
+</div>
+
+<script src="login.js"></script>
+</body>
+</html>
