@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TeamForge – Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/css/admin.css"/>
+</head>
+<body>
+<aside class="sb">
+  <div class="sb-logo"><span class="logo-icon">⬡</span>TeamForge</div>
+  <div class="sb-badge sb-badge-admin">Admin</div>
+  <nav class="sb-nav">
+    <div class="nlbl">Platform</div>
+    <div class="ni on"><span class="ic">📊</span>Dashboard</div>
+    <div class="ni" onclick="window.location.href='manage-users.html'"><span class="ic">👥</span>Manage Users</div>
+    <div class="ni"><span class="ic">📁</span>Manage Projects</div>
+    <div class="ni" onclick="window.location.href='announcements.html'"><span class="ic">📢</span>Announcements</div>
+  </nav>
+  <div class="sb-usr">
+    <div class="sb-av" style="background:var(--err)">AD</div>
+    <div><div class="sb-un">Admin User</div><div class="sb-ud">System Administrator</div></div>
+    <button class="sb-so" onclick="if(confirm('Sign out?')) window.location.href='../auth/login.html'">⎋</button>
+  </div>
+</aside>
+<div class="main">
+  <header class="tbar">
+    <span class="tbar-title">📊 Admin Dashboard</span>
+    <div class="tbar-right"><div class="ibt">🔔<span class="dot"></span></div></div>
+  </header>
+  <div class="pb">
+    <div class="ph"><div><h2>Platform Overview</h2><p>Monitor and manage the TeamForge platform.</p></div></div>
+    <div class="g4" style="margin-bottom:1.5rem">
+      <div class="sc"><div class="sc-ic i-b">👥</div><div><div class="sc-v">142</div><div class="sc-l">Total Students</div></div><span class="sc-tr tr-up">+8 this week</span></div>
+      <div class="sc"><div class="sc-ic i-p">🎓</div><div><div class="sc-v">24</div><div class="sc-l">Instructors</div></div></div>
+      <div class="sc"><div class="sc-ic i-t">📁</div><div><div class="sc-v">38</div><div class="sc-l">Active Projects</div></div><span class="sc-tr tr-up">+5</span></div>
+      <div class="sc"><div class="sc-ic i-o">📢</div><div><div class="sc-v">5</div><div class="sc-l">Announcements</div></div></div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="card-h"><h3>👥 Recent Registrations</h3><a href="manage-users.html" class="lbtn">Manage →</a></div>
+        <div style="padding:0 1.4rem">
+          <div class="ri"><div class="ri-av" style="background:#6c63ff">AD</div><div class="ri-inf"><div class="ri-n">Amara Diallo</div><div class="ri-d">Student · Computer Engineering · 2nd Year</div><div class="ri-t">3 hours ago</div></div><span class="chip c-ok">Active</span></div>
+          <div class="ri"><div class="ri-av" style="background:#00b894">RH</div><div class="ri-inf"><div class="ri-n">Rami Hassan</div><div class="ri-d">Student · Computer Engineering · 3rd Year</div><div class="ri-t">1 day ago</div></div><span class="chip c-ok">Active</span></div>
+          <div class="ri"><div class="ri-av" style="background:#a29bfe">LH</div><div class="ri-inf"><div class="ri-n">Dr. Layla Hassan</div><div class="ri-d">Instructor · Computer Engineering</div><div class="ri-t">2 days ago</div></div><span class="chip c-p">Instructor</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h3>📢 Announcements</h3><a href="announcements.html" class="lbtn">Manage →</a></div>
+        <div style="padding:0 1.4rem">
+          <div class="ri"><div class="ri-ic">📋</div><div class="ri-inf"><div class="ri-n">Gantt Chart Due Sunday</div><div class="ri-d">General · March 7, 2026</div></div><div class="ri-ac"><button class="btn btn-o btn-sm">✏️</button><button class="btn btn-er btn-sm">🗑</button></div></div>
+          <div class="ri"><div class="ri-ic">🔬</div><div class="ri-inf"><div class="ri-n">TÜBİTAK 2209-A Open</div><div class="ri-d">TÜBİTAK · March 5, 2026</div></div><div class="ri-ac"><button class="btn btn-o btn-sm">✏️</button><button class="btn btn-er btn-sm">🗑</button></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../assets\js\admin.js"></script>
+</body>
+</html>
