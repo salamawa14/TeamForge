@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TeamForge · Find Advisor</title>
+<link rel="stylesheet" href="../assets/css/Student-Find-Advisor.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sb">
+    <div class="sb-logo"><span class="sb-logo-icon">⬡</span><span class="sb-logo-text">TeamForge</span></div>
+    <div class="sb-role">STUDENT</div>
+    <nav class="sb-nav">
+      <p class="sb-group">MAIN</p>
+      <a class="sb-link" href="Home.html"><span class="sb-icon">🏠</span>Home</a>
+      <a class="sb-link" href="Dashboard.html"><span class="sb-icon">📊</span>Dashboard</a>
+      <a class="sb-link" href="Browse-Projects.html"><span class="sb-icon">🔍</span>Browse Projects</a>
+      <a class="sb-link" href="My-Projects.html"><span class="sb-icon">📁</span>My Projects</a>
+      <a class="sb-link" href="Create-Project.html"><span class="sb-icon">➕</span>Create Project</a>
+      <p class="sb-group">NETWORK</p>
+      <a class="sb-link" href="Find-Advisor.html"><span class="sb-icon">🎓</span>Find Advisor</a>
+      <a class="sb-link" href="Applications.html"><span class="sb-icon">📨</span>Applications<span class="sb-badge">2</span></a>
+      <a class="sb-link" href="Announcements.html"><span class="sb-icon">📢</span>Announcements</a>
+      <p class="sb-group">ACCOUNT</p>
+      <a class="sb-link" href="My-Profile.html"><span class="sb-icon">👤</span>My Profile</a>
+    </nav>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <div class="tb-left"><button class="burger" id="burg">☰</button><span class="tb-icon">🎓</span><span class="tb-title">Find Advisor</span><div class="tb-search"><span>🔍</span><input id="gs" type="text" placeholder="Search projects, advisors…"/></div></div>
+      <div class="tb-right"><button class="icon-btn" id="nBtn">🔔<span class="notif-dot"></span></button><div class="avatar">JS</div><div class="notif-panel" id="nPanel"><div class="np-head">Notifications</div><div class="np-item unread"><span class="np-ico">✅</span><div class="np-body"><strong>Application Accepted</strong><span>Autonomous Drone Navigation</span></div></div></div></div>
+    </header>
+    <main class="page">
+      <div class="page-head"><div><h1 class="page-title">🎓 Find Advisor</h1><p class="page-sub">Connect with academic advisors for your research projects.</p></div></div>
+
+      <div class="adv-banner au">
+        <div class="adv-banner-inner">
+          <h2>Find the Right Advisor</h2>
+          <p>Browse professors available for Teknofest &amp; TÜBİTAK projects.</p>
+          <div class="adv-search-row">
+            <div class="adv-inp"><span>🔍</span><input id="advSearch" type="text" placeholder="Search by name, department, or expertise…"/></div>
+            <button class="btn btn-teal">Search</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="adv-grid">
+        <div class="adv-card au d1" onclick="">
+          <div class="adv-top"><div class="adv-av" style="background:#00b8b8">AK</div><div><div class="adv-name">Dr. Ahmet Kaplan</div><div class="adv-dept-txt">Computer Engineering</div></div></div>
+          <div class="adv-univ">Middle East Technical University</div>
+          <div class="adv-specs"><span class="chip">IoT</span><span class="chip">Embedded Systems</span><span class="chip">MQTT</span><span class="chip">TÜBİTAK</span></div>
+          <div class="adv-avail-row"><span class="avail">Available</span><span class="slots-txt">2 slots open</span></div>
+          <button class="btn btn-teal" onclick="showToast('Request sent to Dr. Ahmet Kaplan!','ok')">📨 Send Request</button>
+        </div>
+        <div class="adv-card au d2">
+          <div class="adv-top"><div class="adv-av" style="background:#6366f1">ÖŞ</div><div><div class="adv-name">Prof. Ömer Şahin</div><div class="adv-dept-txt">Aerospace Engineering</div></div></div>
+          <div class="adv-univ">ODTÜ – Ankara</div>
+          <div class="adv-specs"><span class="chip">ROS2</span><span class="chip">Computer Vision</span><span class="chip">UAV</span><span class="chip">Teknofest</span></div>
+          <div class="adv-avail-row"><span class="avail busy">Busy</span><span class="slots-txt">0 slots</span></div>
+          <button class="btn btn-outline" style="width:100%;justify-content:center;opacity:.6;cursor:not-allowed" disabled>Unavailable</button>
+        </div>
+        <div class="adv-card au d3">
+          <div class="adv-top"><div class="adv-av" style="background:#f97316">AK</div><div><div class="adv-name">Dr. Ayşe Kaya</div><div class="adv-dept-txt">Computer Engineering</div></div></div>
+          <div class="adv-univ">Boğaziçi University</div>
+          <div class="adv-specs"><span class="chip">ARCore</span><span class="chip">Mobile Dev</span><span class="chip">HCI</span><span class="chip">Teknofest</span></div>
+          <div class="adv-avail-row"><span class="avail">Available</span><span class="slots-txt">1 slot open</span></div>
+          <button class="btn btn-teal" onclick="showToast('Request sent to Dr. Ayşe Kaya!','ok')">📨 Send Request</button>
+        </div>
+        <div class="adv-card au d4">
+          <div class="adv-top"><div class="adv-av" style="background:#a855f7">ED</div><div><div class="adv-name">Prof. Emre Demir</div><div class="adv-dept-txt">Artificial Intelligence</div></div></div>
+          <div class="adv-univ">Bilkent University</div>
+          <div class="adv-specs"><span class="chip">NLP</span><span class="chip">PyTorch</span><span class="chip">HuggingFace</span><span class="chip">TÜBİTAK</span></div>
+          <div class="adv-avail-row"><span class="avail">Available</span><span class="slots-txt">3 slots open</span></div>
+          <button class="btn btn-teal" onclick="showToast('Request sent to Prof. Emre Demir!','ok')">📨 Send Request</button>
+        </div>
+        <div class="adv-card au d5">
+          <div class="adv-top"><div class="adv-av" style="background:#22c55e">ZA</div><div><div class="adv-name">Dr. Zeynep Arslan</div><div class="adv-dept-txt">Electrical Engineering</div></div></div>
+          <div class="adv-univ">İstanbul Technical University</div>
+          <div class="adv-specs"><span class="chip">Energy Systems</span><span class="chip">IoT</span><span class="chip">Grafana</span><span class="chip">TÜBİTAK</span></div>
+          <div class="adv-avail-row"><span class="avail">Available</span><span class="slots-txt">2 slots open</span></div>
+          <button class="btn btn-teal" onclick="showToast('Request sent to Dr. Zeynep Arslan!','ok')">📨 Send Request</button>
+        </div>
+        <div class="adv-card au d6">
+          <div class="adv-top"><div class="adv-av" style="background:#ef4444">MY</div><div><div class="adv-name">Prof. Mehmet Yıldız</div><div class="adv-dept-txt">Software Engineering</div></div></div>
+          <div class="adv-univ">Hacettepe University</div>
+          <div class="adv-specs"><span class="chip">Blockchain</span><span class="chip">Solidity</span><span class="chip">Web3</span></div>
+          <div class="adv-avail-row"><span class="avail busy">Busy</span><span class="slots-txt">0 slots</span></div>
+          <button class="btn btn-outline" style="width:100%;justify-content:center;opacity:.6;cursor:not-allowed" disabled>Unavailable</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../assets/js/Student-Find-Advisor.js"></script>
+</body>
+</html>

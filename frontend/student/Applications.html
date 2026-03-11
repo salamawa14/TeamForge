@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TeamForge · Applications</title>
+<link rel="stylesheet" href="../assets/css/Student-Applications.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sb">
+    <div class="sb-logo"><span class="sb-logo-icon">⬡</span><span class="sb-logo-text">TeamForge</span></div>
+    <div class="sb-role">STUDENT</div>
+    <nav class="sb-nav">
+      <p class="sb-group">MAIN</p>
+      <a class="sb-link" href="Home.html"><span class="sb-icon">🏠</span>Home</a>
+      <a class="sb-link" href="Dashboard.html"><span class="sb-icon">📊</span>Dashboard</a>
+      <a class="sb-link" href="Browse-Projects.html"><span class="sb-icon">🔍</span>Browse Projects</a>
+      <a class="sb-link" href="My-Projects.html"><span class="sb-icon">📁</span>My Projects</a>
+      <a class="sb-link" href="Create-Project.html"><span class="sb-icon">➕</span>Create Project</a>
+      <p class="sb-group">NETWORK</p>
+      <a class="sb-link" href="Find-Advisor.html"><span class="sb-icon">🎓</span>Find Advisor</a>
+      <a class="sb-link" href="Applications.html"><span class="sb-icon">📨</span>Applications<span class="sb-badge">2</span></a>
+      <a class="sb-link" href="Announcements.html"><span class="sb-icon">📢</span>Announcements</a>
+      <p class="sb-group">ACCOUNT</p>
+      <a class="sb-link" href="My-Profile.html"><span class="sb-icon">👤</span>My Profile</a>
+    </nav>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <div class="tb-left"><button class="burger" id="burg">☰</button><span class="tb-icon">📨</span><span class="tb-title">Applications</span><div class="tb-search"><span>🔍</span><input id="gs" type="text" placeholder="Search projects, advisors…"/></div></div>
+      <div class="tb-right"><button class="icon-btn" id="nBtn">🔔<span class="notif-dot"></span></button><div class="avatar">JS</div>
+        <div class="notif-panel" id="nPanel"><div class="np-head">Notifications</div>
+          <div class="np-item unread"><span class="np-ico">✅</span><div class="np-body"><strong>Application Accepted</strong><span>Autonomous Drone Navigation · 3 days ago</span></div></div>
+          <div class="np-item unread"><span class="np-ico">📨</span><div class="np-body"><strong>New Incoming Application</strong><span>Ali Kaya → Smart Water IoT</span></div></div>
+        </div>
+      </div>
+    </header>
+    <main class="page">
+      <div class="page-head"><div><h1 class="page-title">📨 Applications</h1><p class="page-sub">Manage incoming and outgoing team applications.</p></div></div>
+
+      <div class="card au">
+        <!-- Tabs — exact Figma: Incoming 2, Sent 3 active, Advisor Requests 2 -->
+        <div class="tabs">
+          <button class="tab-btn" data-tab="incoming">Incoming <span class="tab-count">2</span></button>
+          <button class="tab-btn active" data-tab="sent">Sent <span class="tab-count teal">3</span></button>
+          <button class="tab-btn" data-tab="advisor">Advisor Requests <span class="tab-count">2</span></button>
+        </div>
+
+        <!-- INCOMING -->
+        <div class="tab-pane" id="pane-incoming">
+          <div class="app-item" id="inc1">
+            <div class="app-av" style="background:#6366f1">AK</div>
+            <div class="app-body">
+              <strong>Ali Kaya wants to join Smart Water IoT</strong>
+              <span class="sub">Applying for: IoT Hardware Developer</span>
+              <span class="ts">📅 2 days ago</span>
+            </div>
+            <div class="app-right">
+              <button class="btn-acc" onclick="acceptApp('inc1','Ali Kaya')">✓ Accept</button>
+              <button class="btn-dec" onclick="declineApp('inc1')">✕ Decline</button>
+            </div>
+          </div>
+          <div class="app-item" id="inc2">
+            <div class="app-av" style="background:#f97316">SÖ</div>
+            <div class="app-body">
+              <strong>Selin Öz wants to join Autonomous Drone Navigation</strong>
+              <span class="sub">Applying for: Computer Vision Developer</span>
+              <span class="ts">📅 4 days ago</span>
+            </div>
+            <div class="app-right">
+              <button class="btn-acc" onclick="acceptApp('inc2','Selin Öz')">✓ Accept</button>
+              <button class="btn-dec" onclick="declineApp('inc2')">✕ Decline</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SENT — exact Figma match -->
+        <div class="tab-pane active" id="pane-sent">
+          <div class="app-item">
+            <div class="app-ico" style="background:var(--orange-10)">🚀</div>
+            <div class="app-body">
+              <strong>Autonomous Drone Navigation</strong>
+              <span class="sub">Applied to join as Computer Vision developer · Teknofest</span>
+              <span class="ts">📅 3 days ago</span>
+            </div>
+            <span class="status s-accepted">ACCEPTED ✓</span>
+          </div>
+          <div class="app-item">
+            <div class="app-ico" style="background:rgba(234,179,8,.1)">💡</div>
+            <div class="app-body">
+              <strong>AR Campus Navigation App</strong>
+              <span class="sub">Applied to join as Backend / Firebase developer · Teknofest</span>
+              <span class="ts">📅 5 days ago</span>
+            </div>
+            <span class="status s-pending">PENDING ⏳</span>
+          </div>
+          <div class="app-item">
+            <div class="app-ico" style="background:var(--indigo-10)">🔬</div>
+            <div class="app-body">
+              <strong>Smart Water IoT</strong>
+              <span class="sub">Applied to join as Cloud Backend developer · TÜBİTAK</span>
+              <span class="ts">📅 1 week ago</span>
+            </div>
+            <span class="status s-rejected">REJECTED</span>
+          </div>
+        </div>
+
+        <!-- ADVISOR REQUESTS — exact Figma match -->
+        <div class="tab-pane" id="pane-advisor">
+          <div class="app-item">
+            <div class="app-av" style="background:var(--teal)">AK</div>
+            <div class="app-body">
+              <strong>Advisor Request → Dr. Ahmet Kaplan</strong>
+              <span class="sub">For: Smart Campus IoT System (Teknofest)</span>
+              <span class="ts">📅 5 days ago</span>
+            </div>
+            <span class="status s-accepted">ACCEPTED ✓</span>
+          </div>
+          <div class="app-item">
+            <div class="app-av" style="background:#a855f7">AY</div>
+            <div class="app-body">
+              <strong>Advisor Request → Prof. Ayşe Yıldız</strong>
+              <span class="sub">For: Smart Campus IoT System (Teknofest)</span>
+              <span class="ts">📅 1 week ago</span>
+            </div>
+            <span class="status s-rejected">REJECTED</span>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../assets/js/Student-Applications.js"></script>
+</body>
+</html>

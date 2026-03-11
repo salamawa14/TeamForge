@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TeamForge · Create Project</title>
+<link rel="stylesheet" href="../assets/css/Student-Create-Project.css"/>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar" id="sb">
+    <div class="sb-logo"><span class="sb-logo-icon">⬡</span><span class="sb-logo-text">TeamForge</span></div>
+    <div class="sb-role">STUDENT</div>
+    <nav class="sb-nav">
+      <p class="sb-group">MAIN</p>
+      <a class="sb-link" href="Home.html"><span class="sb-icon">🏠</span>Home</a>
+      <a class="sb-link" href="Dashboard.html"><span class="sb-icon">📊</span>Dashboard</a>
+      <a class="sb-link" href="Browse-Projects.html"><span class="sb-icon">🔍</span>Browse Projects</a>
+      <a class="sb-link" href="My-Projects.html"><span class="sb-icon">📁</span>My Projects</a>
+      <a class="sb-link" href="Create-Project.html"><span class="sb-icon">➕</span>Create Project</a>
+      <p class="sb-group">NETWORK</p>
+      <a class="sb-link" href="Find-Advisor.html"><span class="sb-icon">🎓</span>Find Advisor</a>
+      <a class="sb-link" href="Applications.html"><span class="sb-icon">📨</span>Applications<span class="sb-badge">2</span></a>
+      <a class="sb-link" href="Announcements.html"><span class="sb-icon">📢</span>Announcements</a>
+      <p class="sb-group">ACCOUNT</p>
+      <a class="sb-link" href="My-Profile.html"><span class="sb-icon">👤</span>My Profile</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="tb-left">
+        <button class="burger" id="burg">☰</button>
+        <span class="tb-icon">➕</span>
+        <span class="tb-title">Create Project</span>
+        <div class="tb-search"><span>🔍</span><input id="gs" type="text" placeholder="Search projects, advisors…"/></div>
+      </div>
+      <div class="tb-right">
+        <button class="icon-btn" id="nBtn">🔔<span class="notif-dot"></span></button>
+        <div class="avatar">JS</div>
+        <div class="notif-panel" id="nPanel">
+          <div class="np-head">Notifications</div>
+          <div class="np-item unread"><span class="np-ico">✅</span><div class="np-body"><strong>Application Accepted</strong><span>Autonomous Drone Navigation</span></div></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">➕ Create Project</h1>
+          <p class="page-sub">Post a new project announcement and start building your team.</p>
+        </div>
+      </div>
+
+      <div class="card form-wrap au">
+
+        <!-- Basic Info -->
+        <div class="section-title">📋 Basic Information</div>
+        <div class="fg">
+          <label>Project Title <span class="req">*</span></label>
+          <input type="text" id="cpTitle" placeholder="e.g. Autonomous Drone Navigation for Teknofest 2026"/>
+          <span class="ferr" id="cpTitleErr"></span>
+        </div>
+        <div class="g2">
+          <div class="fg">
+            <label>Project Type <span class="req">*</span></label>
+            <select id="cpType">
+              <option value="">Select type</option>
+              <option>TEKNOFEST</option>
+              <option>TÜBİTAK</option>
+              <option>COURSE</option>
+            </select>
+            <span class="ferr" id="cpTypeErr"></span>
+          </div>
+          <div class="fg">
+            <label>Max Team Size <span class="req">*</span></label>
+            <input type="number" id="cpSize" placeholder="e.g. 6" min="2" max="20"/>
+            <span class="ferr" id="cpSizeErr"></span>
+          </div>
+        </div>
+        <div class="fg">
+          <label>Submission Deadline</label>
+          <input type="date" id="cpDeadline"/>
+        </div>
+
+        <!-- Skills & Roles -->
+        <div class="section-title">⚡ Skills &amp; Roles</div>
+        <div class="fg">
+          <label>Required Skills <span class="req">*</span></label>
+          <input type="text" id="cpSkills" placeholder="e.g. Python, React, ROS2 (comma separated)"/>
+          <span class="ferr" id="cpSkillsErr"></span>
+        </div>
+        <div class="fg">
+          <label>Roles Needed</label>
+          <div class="add-role-row">
+            <input type="text" id="roleInput" placeholder="e.g. Backend Developer"/>
+            <button class="btn btn-outline btn-sm" id="addRoleBtn">+ Add</button>
+          </div>
+          <div class="roles-list" id="rolesList">
+            <span class="role-tag">Frontend Developer <button onclick="this.parentElement.remove()">✕</button></span>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="section-title">📄 Description</div>
+        <div class="fg">
+          <label>Full Description <span class="req">*</span></label>
+          <textarea id="cpDesc" rows="6" placeholder="Describe your project goals, what you'll build, and what you need from teammates…"></textarea>
+          <span class="ferr" id="cpDescErr"></span>
+          <div class="char-count" id="charCount">0 / 800</div>
+        </div>
+
+        <!-- Budget (TÜBİTAK) -->
+        <div class="section-title">💰 Funding (Optional)</div>
+        <div class="fg">
+          <label>Budget</label>
+          <input type="text" id="cpBudget" placeholder="e.g. ₺9,000 (TÜBİTAK projects only)"/>
+        </div>
+
+        <div class="form-acts">
+          <button class="btn btn-teal" id="publishBtn" style="gap:8px">
+            <span id="pubTxt">🚀 Publish Project</span>
+            <span class="spinner" id="pubSpin"></span>
+          </button>
+          <a href="My-Projects.html" class="btn btn-outline">Cancel</a>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../assets/js/Student-Create-Project.js"></script>
+</body>
+</html>

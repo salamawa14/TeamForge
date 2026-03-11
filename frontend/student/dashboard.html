@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TeamForge · Dashboard</title>
+<link rel="stylesheet" href="../assets/css/Student-Dashboard.css"/>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="sidebar" id="sb">
+    <div class="sb-logo"><span class="sb-logo-icon">⬡</span><span class="sb-logo-text">TeamForge</span></div>
+    <div class="sb-role">STUDENT</div>
+    <nav class="sb-nav">
+      <p class="sb-group">MAIN</p>
+      <a class="sb-link" href="Home.html"><span class="sb-icon">🏠</span>Home</a>
+      <a class="sb-link" href="Dashboard.html"><span class="sb-icon">📊</span>Dashboard</a>
+      <a class="sb-link" href="Browse-Projects.html"><span class="sb-icon">🔍</span>Browse Projects</a>
+      <a class="sb-link" href="My-Projects.html"><span class="sb-icon">📁</span>My Projects</a>
+      <a class="sb-link" href="Create-Project.html"><span class="sb-icon">➕</span>Create Project</a>
+      <p class="sb-group">NETWORK</p>
+      <a class="sb-link" href="Find-Advisor.html"><span class="sb-icon">🎓</span>Find Advisor</a>
+      <a class="sb-link" href="Applications.html"><span class="sb-icon">📨</span>Applications<span class="sb-badge">2</span></a>
+      <a class="sb-link" href="Announcements.html"><span class="sb-icon">📢</span>Announcements</a>
+      <p class="sb-group">ACCOUNT</p>
+      <a class="sb-link" href="My-Profile.html"><span class="sb-icon">👤</span>My Profile</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="tb-left">
+        <button class="burger" id="burg">☰</button>
+        <span class="tb-icon">📊</span>
+        <span class="tb-title">Dashboard</span>
+        <div class="tb-search"><span>🔍</span><input id="gs" type="text" placeholder="Search projects, advisors…"/></div>
+      </div>
+      <div class="tb-right">
+        <button class="icon-btn" id="nBtn">🔔<span class="notif-dot"></span></button>
+        <div class="avatar">JS</div>
+        <div class="notif-panel" id="nPanel">
+          <div class="np-head">Notifications</div>
+          <div class="np-item unread"><span class="np-ico">✅</span><div class="np-body"><strong>Application Accepted</strong><span>Autonomous Drone Navigation · 3 days ago</span></div></div>
+          <div class="np-item"><span class="np-ico">📅</span><div class="np-body"><strong>Deadline Reminder</strong><span>Teknofest closes Apr 15</span></div></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">📊 Dashboard</h1>
+          <p class="page-sub">Your activity overview at a glance.</p>
+        </div>
+      </div>
+
+      <!-- Summary cards -->
+      <div class="ds-grid au">
+        <div class="ds-card">
+          <div class="ds-ico" style="background:var(--teal-10);color:var(--teal)">📁</div>
+          <div><div class="ds-val">2</div><div class="ds-lbl">Active Projects</div></div>
+        </div>
+        <div class="ds-card">
+          <div class="ds-ico" style="background:var(--green-10);color:var(--green)">✅</div>
+          <div><div class="ds-val">1</div><div class="ds-lbl">Accepted Apps</div></div>
+        </div>
+        <div class="ds-card">
+          <div class="ds-ico" style="background:var(--amber-10);color:var(--amber)">⏳</div>
+          <div><div class="ds-val">1</div><div class="ds-lbl">Pending Apps</div></div>
+        </div>
+        <div class="ds-card">
+          <div class="ds-ico" style="background:var(--indigo-10);color:var(--indigo)">🎓</div>
+          <div><div class="ds-val">1</div><div class="ds-lbl">Advisor Req.</div></div>
+        </div>
+      </div>
+
+      <!-- Progress + Deadlines -->
+      <div class="mid-grid au d1">
+        <div class="card">
+          <h3 class="card-title">📈 Project Progress</h3>
+          <div class="pp-item">
+            <div class="pp-top"><span class="badge b-teknofest">TEKNOFEST</span><span class="pp-name">Autonomous Drone Navigation</span><span class="pp-pct">50%</span></div>
+            <div class="prog"><div class="prog-fill" style="width:50%"></div></div>
+          </div>
+          <div class="pp-item">
+            <div class="pp-top"><span class="badge b-tubitak">TÜBİTAK</span><span class="pp-name">Smart Water IoT</span><span class="pp-pct">33%</span></div>
+            <div class="prog"><div class="prog-fill" style="width:33%"></div></div>
+          </div>
+          <div class="pp-item">
+            <div class="pp-top"><span class="badge b-course">COURSE</span><span class="pp-name">E-Commerce Platform</span><span class="pp-pct">75%</span></div>
+            <div class="prog"><div class="prog-fill" style="width:75%"></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card-title">📅 Upcoming Deadlines</h3>
+          <div class="dl-list">
+            <div class="dl-row">
+              <div class="dl-bar" style="background:var(--red)"></div>
+              <div class="dl-info"><strong>Teknofest Team Registration</strong><span class="red">Apr 15, 2026 — 5 days left!</span></div>
+            </div>
+            <div class="dl-row">
+              <div class="dl-bar" style="background:var(--indigo)"></div>
+              <div class="dl-info"><strong>TÜBİTAK Project Submission</strong><span>May 30, 2026</span></div>
+            </div>
+            <div class="dl-row">
+              <div class="dl-bar" style="background:var(--teal)"></div>
+              <div class="dl-info"><strong>SE302 Final Report</strong><span>Jun 5, 2026</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity -->
+      <div class="card au d2">
+        <h3 class="card-title">🕐 Recent Activity</h3>
+        <div class="act-list">
+          <div class="act-item"><div class="act-dot" style="background:var(--green)"></div><div class="act-text"><strong>Application accepted</strong> for Autonomous Drone Navigation<span>3 days ago</span></div></div>
+          <div class="act-item"><div class="act-dot" style="background:var(--teal)"></div><div class="act-text"><strong>Joined team</strong> for E-Commerce Platform as Frontend developer<span>5 days ago</span></div></div>
+          <div class="act-item"><div class="act-dot" style="background:var(--amber)"></div><div class="act-text"><strong>Application pending</strong> for AR Campus Navigation App<span>5 days ago</span></div></div>
+          <div class="act-item"><div class="act-dot" style="background:var(--red)"></div><div class="act-text"><strong>Application rejected</strong> for Smart Water IoT<span>1 week ago</span></div></div>
+          <div class="act-item"><div class="act-dot" style="background:var(--indigo)"></div><div class="act-text"><strong>Posted project</strong> Smart Water IoT (TÜBİTAK)<span>1 week ago</span></div></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+<script src="../assets/js/Student-Dashboard.js"></script>
+</body>
+</html>

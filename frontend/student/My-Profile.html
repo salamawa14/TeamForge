@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TeamForge · My Profile</title>
+<link rel="stylesheet" href="../assets/css/Student-My-Profile.css"/>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar" id="sb">
+    <div class="sb-logo"><span class="sb-logo-icon">⬡</span><span class="sb-logo-text">TeamForge</span></div>
+    <div class="sb-role">STUDENT</div>
+    <nav class="sb-nav">
+      <p class="sb-group">MAIN</p>
+      <a class="sb-link" href="Home.html"><span class="sb-icon">🏠</span>Home</a>
+      <a class="sb-link" href="Dashboard.html"><span class="sb-icon">📊</span>Dashboard</a>
+      <a class="sb-link" href="Browse-Projects.html"><span class="sb-icon">🔍</span>Browse Projects</a>
+      <a class="sb-link" href="My-Projects.html"><span class="sb-icon">📁</span>My Projects</a>
+      <a class="sb-link" href="Create-Project.html"><span class="sb-icon">➕</span>Create Project</a>
+      <p class="sb-group">NETWORK</p>
+      <a class="sb-link" href="Find-Advisor.html"><span class="sb-icon">🎓</span>Find Advisor</a>
+      <a class="sb-link" href="Applications.html"><span class="sb-icon">📨</span>Applications<span class="sb-badge">2</span></a>
+      <a class="sb-link" href="Announcements.html"><span class="sb-icon">📢</span>Announcements</a>
+      <p class="sb-group">ACCOUNT</p>
+      <a class="sb-link" href="My-Profile.html"><span class="sb-icon">👤</span>My Profile</a>
+    </nav>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <div class="tb-left"><button class="burger" id="burg">☰</button><span class="tb-icon">👤</span><span class="tb-title">My Profile</span><div class="tb-search"><span>🔍</span><input id="gs" type="text" placeholder="Search projects, advisors…"/></div></div>
+      <div class="tb-right"><button class="icon-btn" id="nBtn">🔔<span class="notif-dot"></span></button><div class="avatar">JS</div><div class="notif-panel" id="nPanel"><div class="np-head">Notifications</div><div class="np-item unread"><span class="np-ico">✅</span><div class="np-body"><strong>Application Accepted</strong><span>Autonomous Drone Navigation · 3 days ago</span></div></div></div></div>
+    </header>
+    <main class="page">
+      <div class="page-head"><div><h1 class="page-title">👤 My Profile</h1><p class="page-sub">Manage your student profile and preferences.</p></div></div>
+
+      <!-- Profile Banner — exact Figma: centered avatar, name, sub, chips, links -->
+      <div class="profile-banner au">
+        <div class="pb-glow"></div>
+        <div class="pb-hex">⬡</div>
+        <button class="pb-edit-btn">✏ Edit Profile</button>
+        <div class="pb-inner">
+          <div class="pb-av">JS</div>
+          <h2>Jeren Student</h2>
+          <div class="sub">Computer Engineering · 3rd Year · GPA 3.4</div>
+          <div class="pb-chips">
+            <span class="tag-dark">Python</span>
+            <span class="tag-dark">React</span>
+            <span class="tag-dark">Node.js</span>
+            <span class="tag-dark">TensorFlow</span>
+            <span class="tag-dark">IoT</span>
+          </div>
+          <div class="pb-links">
+            <a href="#" class="pb-lnk">🔗 GitHub</a>
+            <a href="#" class="pb-lnk">💼 LinkedIn</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form grid -->
+      <div class="profile-grid">
+
+        <!-- Personal Info -->
+        <div class="card au d1">
+          <h3 class="card-title">👤 Personal Information</h3>
+          <div class="g2">
+            <div class="fg"><label>First Name</label><input type="text" value="Jeren"/></div>
+            <div class="fg"><label>Last Name</label><input type="text" value="Student"/></div>
+          </div>
+          <div class="fg"><label>Email Address</label><input type="email" value="jeren@university.edu"/></div>
+          <div class="fg"><label>Student Number</label><input type="text" value="2021050012"/></div>
+          <div class="g2">
+            <div class="fg"><label>University</label>
+              <select><option selected>ODTÜ</option><option>Boğaziçi</option><option>Bilkent</option><option>İTÜ</option><option>Hacettepe</option></select>
+            </div>
+            <div class="fg"><label>Department</label>
+              <select><option selected>Computer Engineering</option><option>Electrical Engineering</option><option>Aerospace Engineering</option></select>
+            </div>
+          </div>
+          <div class="g2">
+            <div class="fg"><label>Year of Study</label>
+              <select><option>1st Year</option><option>2nd Year</option><option selected>3rd Year</option><option>4th Year</option><option>Graduate</option></select>
+            </div>
+            <div class="fg"><label>GPA</label><input type="text" value="3.4"/></div>
+          </div>
+          <button class="btn btn-teal" style="margin-top:4px" onclick="showToast('✓ Personal info saved!','ok')">Save Changes</button>
+        </div>
+
+        <!-- Skills & Links -->
+        <div class="card au d2">
+          <h3 class="card-title">⚡ Skills &amp; Links</h3>
+          <div class="fg"><label>Skills <span style="font-size:.72rem;color:var(--t3);font-weight:400">(comma separated)</span></label>
+            <input type="text" value="Python, React, Node.js, TensorFlow, IoT"/>
+          </div>
+          <div class="fg"><label>GitHub URL</label><input type="text" value="https://github.com/jerenstudent"/></div>
+          <div class="fg"><label>LinkedIn URL</label><input type="text" value="https://linkedin.com/in/jerenstudent"/></div>
+          <div class="fg"><label>Bio</label>
+            <textarea rows="4">3rd year Computer Engineering student at ODTÜ. Passionate about IoT, machine learning, and open-source development. Currently working on autonomous drone systems.</textarea>
+          </div>
+          <button class="btn btn-teal" style="margin-top:4px" onclick="showToast('✓ Skills & links saved!','ok')">Save Changes</button>
+        </div>
+
+        <!-- Password -->
+        <div class="card au d3">
+          <h3 class="card-title">🔒 Change Password</h3>
+          <div class="fg"><label>Current Password</label><input type="password" placeholder="••••••••"/></div>
+          <div class="fg">
+            <label>New Password</label>
+            <input type="password" id="newPass" placeholder="••••••••"/>
+            <div class="strength-bar"><div class="strength-fill" id="sBar" style="width:0%"></div></div>
+            <div class="strength-lbl" id="sLbl"></div>
+          </div>
+          <div class="fg"><label>Confirm New Password</label><input type="password" placeholder="••••••••"/></div>
+          <button class="btn btn-teal" style="margin-top:4px" onclick="showToast('✓ Password updated!','ok')">Update Password</button>
+        </div>
+
+        <!-- Notification Prefs -->
+        <div class="card au d4">
+          <h3 class="card-title">🔔 Notification Preferences</h3>
+          <div style="display:flex;flex-direction:column">
+            <div class="toggle-row">
+              <div class="toggle-label"><b>Application updates</b><span>When your applications are accepted or rejected</span></div>
+              <label class="toggle"><input type="checkbox" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-label"><b>Team invites</b><span>When someone invites you to their team</span></div>
+              <label class="toggle"><input type="checkbox" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-label"><b>Deadline reminders</b><span>7 days before submission deadlines</span></div>
+              <label class="toggle"><input type="checkbox" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-label"><b>Platform announcements</b><span>TeamForge news and feature updates</span></div>
+              <label class="toggle"><input type="checkbox"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+            </div>
+          </div>
+          <button class="btn btn-teal" style="margin-top:18px;width:100%;justify-content:center" onclick="showToast('✓ Preferences saved!','ok')">Save Preferences</button>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../assets/js/Student-My-Profile.js"></script>
+</body>
+</html>
