@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TeamForge · Settings</title>
+<link rel="stylesheet" href="../assets/css/Student-Settings.css"/>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ══════════ MAIN SIDEBAR ══════════ -->
+  <aside class="sidebar" id="sb">
+    <div class="sb-logo">
+      <span class="sb-logo-icon">⬡</span>
+      <span class="sb-logo-text">TeamForge</span>
+    </div>
+    <div class="sb-role">STUDENT</div>
+    <nav class="sb-nav">
+      <p class="sb-group">MAIN</p>
+      <a class="sb-link" href="Home.html"><span class="sb-icon">🏠</span>Home</a>
+      <a class="sb-link" href="Dashboard.html"><span class="sb-icon">📊</span>Dashboard</a>
+      <a class="sb-link" href="Browse-Projects.html"><span class="sb-icon">🔍</span>Browse Projects</a>
+      <a class="sb-link" href="My-Projects.html"><span class="sb-icon">📁</span>My Projects</a>
+      <a class="sb-link" href="Create-Project.html"><span class="sb-icon">➕</span>Create Project</a>
+      <p class="sb-group">NETWORK</p>
+      <a class="sb-link" href="Find-Advisor.html"><span class="sb-icon">🎓</span>Find Advisor</a>
+      <a class="sb-link" href="Applications.html"><span class="sb-icon">📨</span>Applications<span class="sb-badge">2</span></a>
+      <a class="sb-link" href="Announcements.html"><span class="sb-icon">📢</span>Announcements</a>
+      <p class="sb-group">ACCOUNT</p>
+      <a class="sb-link" href="My-Profile.html"><span class="sb-icon">👤</span>My Profile</a>
+      <p class="sb-group">SETTINGS</p>
+      <a class="sb-link active" href="Settings.html"><span class="sb-icon">⚙</span>Settings</a>
+    </nav>
+    <div class="sb-user">
+      <div class="sb-av">JS</div>
+      <div>
+        <div class="sb-uname">Jeren Student</div>
+        <div class="sb-urole">Computer Eng.</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════ MAIN AREA ══════════ -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="tb-left">
+        <button class="burger" id="burg">☰</button>
+        <span class="tb-icon">⚙</span>
+        <span class="tb-title">Settings</span>
+        <div class="tb-search">
+          <span>🔍</span>
+          <input id="gs" type="text" placeholder="Search projects, advisors…"/>
+        </div>
+      </div>
+      <div class="tb-right">
+        <button class="icon-btn" id="nBtn">🔔<span class="notif-dot"></span></button>
+        <div class="avatar">JS</div>
+        <div class="notif-panel" id="nPanel">
+          <div class="np-head">Notifications</div>
+          <div class="np-item unread"><span class="np-ico">✅</span><div class="np-body"><strong>Application Accepted</strong><span>Autonomous Drone Navigation · 3 days ago</span></div></div>
+          <div class="np-item unread"><span class="np-ico">📨</span><div class="np-body"><strong>New Team Invite</strong><span>AR Campus Navigation · 5 days ago</span></div></div>
+          <div class="np-item"><span class="np-ico">📅</span><div class="np-body"><strong>Deadline Reminder</strong><span>Teknofest closes Apr 15</span></div></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page content -->
+    <main class="page">
+
+      <!-- Page header -->
+      <div class="page-hdr">
+        <div>
+          <h1>Settings ⚙</h1>
+          <p>Manage your account, privacy, and preferences.</p>
+        </div>
+        <button class="btn-save" id="saveBtn">💾 Save Changes</button>
+      </div>
+
+      <!-- ══════════ TWO-PANEL WRAP ══════════ -->
+      <div class="set-wrap">
+
+        <!-- ── Settings left nav ── -->
+        <nav class="set-lnav">
+          <div class="sn-group">ACCOUNT</div>
+          <div class="sn-item active" data-sec="profile">
+            <span class="sn-icon">👤</span>Profile
+          </div>
+          <div class="sn-item" data-sec="academic">
+            <span class="sn-icon">🎓</span>Academic Info
+          </div>
+          <div class="sn-item" data-sec="links">
+            <span class="sn-icon">🔗</span>Links &amp; Socials
+          </div>
+
+          <div class="sn-group">PREFERENCES</div>
+          <div class="sn-item" data-sec="notifications">
+            <span class="sn-icon">🔔</span>Notifications
+          </div>
+          <div class="sn-item" data-sec="privacy">
+            <span class="sn-icon">🔒</span>Privacy
+          </div>
+          <div class="sn-item" data-sec="appearance">
+            <span class="sn-icon">🎨</span>Appearance
+          </div>
+
+          <div class="sn-group">SECURITY</div>
+          <div class="sn-item" data-sec="security">
+            <span class="sn-icon">🛡</span>Password &amp; 2FA
+          </div>
+          <div class="sn-item" data-sec="danger">
+            <span class="sn-icon" style="color:var(--red)">⚠</span>
+            <span style="color:var(--red)">Danger Zone</span>
+          </div>
+        </nav>
+
+        <!-- ── Right content panel ── -->
+        <div class="set-body">
+
+          <!-- ═══ PROFILE ═══ -->
+          <div class="sec on" id="sec-profile">
+            <div class="sec-title">👤 Personal Information</div>
+            <div class="sec-sub">Your name and contact info shown on your profile</div>
+
+            <div class="av-row">
+              <div class="av-circle">JS</div>
+              <div class="av-meta">
+                <p>Jeren Student</p>
+                <span>Click to change photo · JPG or PNG, max 2 MB</span>
+                <button class="btn-upload" onclick="showToast('File picker coming soon…','')">Upload Photo</button>
+              </div>
+            </div>
+
+            <div class="g2">
+              <div class="fg">
+                <label>First Name</label>
+                <input type="text" value="Jeren"/>
+              </div>
+              <div class="fg">
+                <label>Last Name</label>
+                <input type="text" value="Student"/>
+              </div>
+            </div>
+            <div class="fg">
+              <label>University Email</label>
+              <input type="email" value="jeren.student@university.edu"/>
+            </div>
+            <div class="fg">
+              <label>Phone Number <span class="hint">(optional, not shown publicly)</span></label>
+              <input type="tel" placeholder="+90 5XX XXX XX XX"/>
+            </div>
+            <div class="fg">
+              <label>Short Bio <span class="hint">(shown on your profile card)</span></label>
+              <textarea>Passionate about ML and IoT. Looking for innovative team projects in AI and embedded systems.</textarea>
+            </div>
+          </div>
+
+          <!-- ═══ ACADEMIC INFO ═══ -->
+          <div class="sec" id="sec-academic">
+            <div class="sec-title">🎓 Academic Information</div>
+            <div class="sec-sub">Your department, year, and academic details</div>
+
+            <div class="g2">
+              <div class="fg">
+                <label>Department</label>
+                <input type="text" value="Computer Engineering"/>
+              </div>
+              <div class="fg">
+                <label>Year of Study</label>
+                <select>
+                  <option>1st Year</option>
+                  <option>2nd Year</option>
+                  <option selected>3rd Year</option>
+                  <option>4th Year</option>
+                  <option>Graduate</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="g2">
+              <div class="fg">
+                <label>GPA</label>
+                <input type="text" value="3.4"/>
+              </div>
+              <div class="fg">
+                <label>Student ID <span class="hint">(not public)</span></label>
+                <input type="text" value="20231512034"/>
+              </div>
+            </div>
+
+            <div class="fg">
+              <label>Technical Skills</label>
+              <div class="chips-wrap" id="skillsWrap" onclick="document.getElementById('chipInp').focus()">
+                <span class="s-chip">Python <button type="button" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></span>
+                <span class="s-chip">React <button type="button" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></span>
+                <span class="s-chip">Node.js <button type="button" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></span>
+                <span class="s-chip">TensorFlow <button type="button" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></span>
+                <span class="s-chip">IoT <button type="button" onclick="event.stopPropagation();this.parentElement.remove()">✕</button></span>
+                <input class="chip-inp" id="chipInp" placeholder="+ Add skill" type="text"/>
+              </div>
+            </div>
+
+            <div class="fg">
+              <label>Research Interests</label>
+              <input type="text" value="Machine Learning, IoT, Embedded Systems"/>
+            </div>
+
+            <div class="s-group" style="padding: 12px 16px; margin-top: 4px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+                <div class="s-row-l">
+                  <b>Looking for Advisor</b>
+                  <span>Shows "Seeking Advisor" badge on your profile in instructor searches</span>
+                </div>
+                <label class="tog">
+                  <input type="checkbox" checked/>
+                  <div class="tog-track"></div>
+                  <div class="tog-thumb"></div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ LINKS & SOCIALS ═══ -->
+          <div class="sec" id="sec-links">
+            <div class="sec-title">🔗 Links &amp; Socials</div>
+            <div class="sec-sub">Add links to your academic and professional profiles</div>
+
+            <div class="fg"><label>GitHub</label><input type="url" placeholder="https://github.com/username"/></div>
+            <div class="fg"><label>LinkedIn</label><input type="url" placeholder="https://linkedin.com/in/username"/></div>
+            <div class="fg"><label>Personal Website / Portfolio</label><input type="url" placeholder="https://yourportfolio.com"/></div>
+            <div class="fg"><label>Kaggle</label><input type="url" placeholder="https://kaggle.com/username"/></div>
+            <div class="fg"><label>Google Scholar</label><input type="url" placeholder="https://scholar.google.com/citations?user=…"/></div>
+          </div>
+
+          <!-- ═══ NOTIFICATIONS ═══ -->
+          <div class="sec" id="sec-notifications">
+            <div class="sec-title">📧 Email Notifications</div>
+            <div class="sec-sub">Control when we send you email alerts</div>
+
+            <div class="s-group">
+              <div class="s-row">
+                <div class="s-row-l"><b>Application Status Updates</b><span>Email when your project applications are accepted or rejected</span></div>
+                <label class="tog"><input type="checkbox" checked/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+              <div class="s-row">
+                <div class="s-row-l"><b>Advisor Request Response</b><span>Email when an advisor accepts or declines your request</span></div>
+                <label class="tog"><input type="checkbox" checked/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+              <div class="s-row">
+                <div class="s-row-l"><b>New Team Member Joined</b><span>Notify when someone joins your project team</span></div>
+                <label class="tog"><input type="checkbox" checked/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+              <div class="s-row">
+                <div class="s-row-l"><b>Platform Announcements</b><span>TÜBİTAK and Teknofest deadline alerts from admins</span></div>
+                <label class="tog"><input type="checkbox" checked/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+              <div class="s-row">
+                <div class="s-row-l"><b>Project Recommendations</b><span>Receive suggestions matching your skills once a week</span></div>
+                <label class="tog"><input type="checkbox"/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+              <div class="s-row" style="border-bottom:none">
+                <div class="s-row-l"><b>Notification Frequency</b><span>How often to receive digest emails</span></div>
+                <span class="s-row-val">Daily digest</span>
+              </div>
+            </div>
+
+            <div class="sec-title" style="margin-top:8px">📱 In-App Alerts</div>
+            <div class="sec-sub" style="margin-bottom:14px">Alerts visible inside TeamForge</div>
+            <div class="s-group">
+              <div class="s-row">
+                <div class="s-row-l"><b>Desktop Push Notifications</b><span>Browser notifications when the app is in background</span></div>
+                <label class="tog"><input type="checkbox"/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+              <div class="s-row" style="border-bottom:none">
+                <div class="s-row-l"><b>Sound Alerts</b><span>Play a sound on new notifications</span></div>
+                <label class="tog"><input type="checkbox"/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ PRIVACY ═══ -->
+          <div class="sec" id="sec-privacy">
+            <div class="sec-title">👁 Profile Visibility</div>
+            <div class="sec-sub">Control who can see your profile</div>
+
+            <div class="s-group">
+              <div class="s-row">
+                <div class="s-row-l"><b>Profile Visibility</b><span>Who can view your full profile page</span></div>
+                <span class="s-row-val">Everyone</span>
+              </div>
+              <div class="s-row">
+                <div class="s-row-l"><b>Show in Instructor Searches</b><span>Allow instructors to find you when browsing students</span></div>
+                <label class="tog"><input type="checkbox" checked/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+              <div class="s-row">
+                <div class="s-row-l"><b>Show GPA on Profile</b><span>Display your GPA publicly</span></div>
+                <label class="tog"><input type="checkbox" checked/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+              <div class="s-row">
+                <div class="s-row-l"><b>Show Email on Profile</b><span>Let others see your university email</span></div>
+                <label class="tog"><input type="checkbox"/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+              <div class="s-row" style="border-bottom:none">
+                <div class="s-row-l"><b>Show Active Projects</b><span>Display your current projects on your profile</span></div>
+                <label class="tog"><input type="checkbox" checked/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+            </div>
+
+            <div class="sec-title" style="margin-top:16px">🤝 Team &amp; Project Privacy</div>
+            <div class="sec-sub" style="margin-bottom:14px">Control who can interact with you</div>
+            <div class="s-group">
+              <div class="s-row">
+                <div class="s-row-l"><b>Allow Team Invitations</b><span>Let other students invite you to their project teams</span></div>
+                <label class="tog"><input type="checkbox" checked/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+              <div class="s-row">
+                <div class="s-row-l"><b>Allow Direct Messages</b><span>Let other students directly message you</span></div>
+                <label class="tog"><input type="checkbox" checked/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+              <div class="s-row" style="border-bottom:none">
+                <div class="s-row-l"><b>Show "Online Now" Status</b><span>Display when you are currently active on the platform</span></div>
+                <label class="tog"><input type="checkbox"/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+            </div>
+
+            <!-- ── Change Password — inside Privacy as requested ── -->
+            <div class="sec-title" style="margin-top:20px">🔑 Change Password</div>
+            <div class="sec-sub" style="margin-bottom:14px">Use a strong password for your account</div>
+            <div class="s-group" style="padding: 0 16px 4px">
+              <div style="padding-top:14px">
+                <div class="fg">
+                  <label>Current Password</label>
+                  <input type="password" id="pCur" placeholder="••••••••"/>
+                </div>
+                <div class="fg">
+                  <label>New Password</label>
+                  <input type="password" id="pNew" placeholder="Min 8 characters"/>
+                  <div class="str-bar"><div class="str-fill" id="pStrBar"></div></div>
+                  <div class="str-lbl" id="pStrLbl"></div>
+                </div>
+                <div class="fg" style="margin-bottom:16px">
+                  <label>Confirm New Password</label>
+                  <input type="password" id="pConf" placeholder="Re-enter new password"/>
+                </div>
+                <button class="btn-teal" id="updatePwBtn" style="margin-bottom:16px">Update Password</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ APPEARANCE ═══ -->
+          <div class="sec" id="sec-appearance">
+            <div class="sec-title">🎨 Theme</div>
+            <div class="sec-sub">Choose how TeamForge looks for you</div>
+
+            <div class="theme-pick">
+              <div class="t-opt on" data-theme="light">
+                <div class="preview prev-light"></div>
+                <span>Light</span>
+              </div>
+              <div class="t-opt" data-theme="dark">
+                <div class="preview prev-dark"></div>
+                <span>Dark</span>
+              </div>
+              <div class="t-opt" data-theme="system">
+                <div class="preview prev-sys"></div>
+                <span>System</span>
+              </div>
+            </div>
+
+            <div class="s-group">
+              <div class="s-row">
+                <div class="s-row-l"><b>Compact Mode</b><span>Reduce spacing and padding for denser information display</span></div>
+                <label class="tog"><input type="checkbox"/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+              <div class="s-row" style="border-bottom:none">
+                <div class="s-row-l"><b>Reduce Animations</b><span>Decrease motion effects across the interface</span></div>
+                <label class="tog"><input type="checkbox"/><div class="tog-track"></div><div class="tog-thumb"></div></label>
+              </div>
+            </div>
+
+            <div class="sec-title" style="margin-top:16px">🌐 Language &amp; Region</div>
+            <div class="sec-sub" style="margin-bottom:12px">Set your preferred language and timezone</div>
+
+            <div style="font-size:.76rem;font-weight:600;color:var(--t1);margin-bottom:8px">Display Language</div>
+            <div class="lang-list">
+              <div class="l-opt on" data-lang="en"><span class="flag">🇬🇧</span><span class="lname">English</span></div>
+              <div class="l-opt" data-lang="tr"><span class="flag">🇹🇷</span><span class="lname">Türkçe</span></div>
+              <div class="l-opt" data-lang="ar"><span class="flag">🇸🇦</span><span class="lname">العربية</span></div>
+            </div>
+
+            <div class="s-group" style="margin-top:4px">
+              <div class="s-row">
+                <div class="s-row-l"><b>Timezone</b><span>Used for deadline and notification times</span></div>
+                <span class="s-row-val">Europe/Istanbul (UTC+3)</span>
+              </div>
+              <div class="s-row" style="border-bottom:none">
+                <div class="s-row-l"><b>Date Format</b><span>How dates are displayed across the platform</span></div>
+                <span class="s-row-val">DD/MM/YYYY</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ SECURITY — Password & 2FA ═══ -->
+          <div class="sec" id="sec-security">
+            <div class="sec-title">🔑 Change Password</div>
+            <div class="sec-sub">Use a strong password for your account</div>
+
+            <div class="s-group" style="padding:0 16px 4px">
+              <div style="padding-top:14px">
+                <div class="fg">
+                  <label>Current Password</label>
+                  <input type="password" id="sCur" placeholder="••••••••"/>
+                </div>
+                <div class="fg">
+                  <label>New Password</label>
+                  <input type="password" id="sNew" placeholder="Min 8 characters"/>
+                  <div class="str-bar"><div class="str-fill" id="sStrBar"></div></div>
+                  <div class="str-lbl" id="sStrLbl"></div>
+                </div>
+                <div class="fg" style="margin-bottom:16px">
+                  <label>Confirm New Password</label>
+                  <input type="password" id="sConf" placeholder="Re-enter new password"/>
+                </div>
+                <button class="btn-teal" style="margin-bottom:16px" onclick="doUpdatePw('sCur','sNew','sConf','sStrBar','sStrLbl')">Update Password</button>
+              </div>
+            </div>
+
+            <div class="sec-title" style="margin-top:20px">🔐 Two-Factor Authentication</div>
+            <div class="sec-sub" style="margin-bottom:14px">Add an extra layer of security</div>
+
+            <div class="s-group">
+              <div class="s-row">
+                <div class="s-row-l"><b>Authenticator App (TOTP)</b><span>Use Google Authenticator or similar apps</span></div>
+                <button class="btn-ghost" onclick="showToast('2FA setup coming soon!','')">Set Up</button>
+              </div>
+              <div class="s-row" style="border-bottom:none">
+                <div class="s-row-l"><b>SMS Verification</b><span>Receive a code via SMS when signing in</span></div>
+                <button class="btn-ghost" onclick="showToast('SMS verification coming soon!','')">Enable</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ ACTIVE SESSIONS (excluded per request — shows placeholder) ═══ -->
+          <div class="sec" id="sec-sessions">
+            <div class="sec-title">💻 Active Sessions</div>
+            <div class="sec-sub">Manage your active login sessions across devices</div>
+            <div class="s-group">
+              <div class="s-row">
+                <div class="s-row-l"><b>Chrome on Windows</b><span>Istanbul, Turkey · Current session · Just now</span></div>
+                <span style="font-size:.72rem;font-weight:700;color:var(--green);background:var(--green-10);padding:2px 9px;border-radius:20px;border:1px solid rgba(34,197,94,.2)">Current</span>
+              </div>
+              <div class="s-row">
+                <div class="s-row-l"><b>Safari on iPhone</b><span>Istanbul, Turkey · 2 days ago</span></div>
+                <button class="btn-ghost" onclick="showToast('Session revoked.','ok')">Revoke</button>
+              </div>
+              <div class="s-row" style="border-bottom:none">
+                <div class="s-row-l"><b>Firefox on MacOS</b><span>Ankara, Turkey · 5 days ago</span></div>
+                <button class="btn-ghost" onclick="showToast('Session revoked.','ok')">Revoke</button>
+              </div>
+            </div>
+            <button class="btn-outline" onclick="showToast('All other sessions signed out.','ok')">Sign Out All Other Sessions</button>
+          </div>
+
+          <!-- ═══ DANGER ZONE ═══ -->
+          <div class="sec" id="sec-danger">
+            <div class="sec-title" style="color:var(--red)">⚠ Danger Zone</div>
+            <div class="sec-sub" style="margin-bottom:18px">Manage account termination options</div>
+
+            <div class="s-group">
+              <div class="dz-row">
+                <div>
+                  <b>Pause Account</b>
+                  <span>Temporarily hide your profile from all student searches</span>
+                </div>
+                <button class="btn-ghost" onclick="dangerConfirm('pause')">Pause Account</button>
+              </div>
+              <div class="dz-row">
+                <div>
+                  <b>Export My Data</b>
+                  <span>Download all your data including profile, requests, and advisors</span>
+                </div>
+                <button class="btn-ghost" onclick="showToast('Preparing your data export…','ok')">Export Data</button>
+              </div>
+              <div class="dz-row" style="border-bottom:none">
+                <div>
+                  <b class="red">Delete Account</b>
+                  <span>Permanently delete your account and all associated data. This cannot be undone.</span>
+                </div>
+                <button class="btn-danger" onclick="dangerConfirm('delete')">Delete Account</button>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /set-body -->
+      </div><!-- /set-wrap -->
+
+    </main>
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script src="../assets/js/Student-Settings.js"></script>
+</body>
+</html>
