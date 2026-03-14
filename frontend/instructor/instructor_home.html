@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TeamForge — Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/instructor.css/instructor_home.css" />
+</head>
+<body>
+<div class="page">
+
+  <aside class="sidebar">
+    <div class="logo">TeamForge</div>
+    <div class="role-badge">INSTRUCTOR</div>
+    <nav class="sidebar-nav">
+      <p class="nav-label">MAIN</p>
+      <a href="instructor_home.html"  class="nav-item active">🏠 Home</a>
+      <a href="dashboard_insructor.html"        class="nav-item">📊 Dashboard</a>
+      <a href="advisor_req_insrtoctor.html" class="nav-item">👤 Advisor Requests <span class="nav-badge">3</span></a>
+      <a href="advisees_instructor.html"      class="nav-item">👥 My Advisees</a>
+      <p class="nav-label">EXPLORE</p>
+      <a href="#" class="nav-item">🔍 Browse Students</a>
+      <a href="#" class="nav-item">📁 Active Projects</a>
+      <p class="nav-label">ACCOUNT</p>
+      <a href="profile_instructor.html" class="nav-item">👤 My Profile</a>
+      <a href="set_acc_instructor.html"   class="nav-item">⚙️ Settings</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="avatar">AK</div>
+      <div><div class="u-name">Dr. Ahmet Kaplan</div><div class="u-sub">Computer Eng.</div></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <span>🏠 Home</span>
+      <input type="text" class="search" placeholder="Search students by name, skill..." />
+      <div class="topbar-right">
+        <button id="bellBtn" class="icon-btn">🔔 <span class="dot"></span></button>
+        <button id= "profileBtn"class="icon-btn">👤</button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- Hero -->
+      <div class="hero">
+        <div class="hero-text">
+          <h1>Welcome back, <span class="teal">Dr. Kaplan</span> 🧑‍🏫</h1>
+          <h2>You have 3 pending requests.</h2>
+          <p>Browse student profiles, manage advisor requests, and track the platform's activity. Your expertise shapes the next generation of researchers.</p>
+          <div class="hero-btns">
+            <button class="btn-primary"> ✓ Review Requests ( 3 )</button>
+            <button class="btn-ghost">🔍 Browse Students</button>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat"><span class="hnum teal">4</span><span class="hlabel">ACTIVE ADVISEES</span></div>
+          <div class="hstat"><span class="hnum purple">3</span><span class="hlabel">PENDING REQUESTS</span></div>
+          <div class="hstat"><span class="hnum orange">1</span><span class="hlabel">OPEN SLOT</span></div>
+        </div>
+      </div>
+
+      <!-- Availability -->
+      <div class="avail-bar">
+        <span class="avail-label">🔔 My Availability:</span>
+        <span class="avail-comp">TÜBİTAK</span>
+        <span class="avail-tag on">✓ Available</span><span class="avail-tag off">✗ Unavailable</span>
+        <span class="avail-comp">Teknofest</span>
+        <span class="avail-tag on">✓ Available</span><span class="avail-tag off">✗ Unavailable</span>
+        <span class="avail-quota">Quota: <strong>4/5</strong> slots used</span>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="stat-cards">
+        <div class="stat-card"><div class="sicon orange-bg">📋</div><div><div class="snum">3</div><div class="slabel">Pending Requests</div></div><span class="stag orange-tag">Action needed</span></div>
+        <div class="stat-card"><div class="sicon teal-bg">✅</div><div><div class="snum">4</div><div class="slabel">Active Advisees</div></div></div>
+        <div class="stat-card"><div class="sicon blue-bg">👥</div><div><div class="snum">118</div><div class="slabel">Students Online</div></div><span class="stag blue-tag">+7 new</span></div>
+        <div class="stat-card"><div class="sicon gray-bg">📁</div><div><div class="snum">38</div><div class="slabel">Active Projects</div></div></div>
+      </div>
+
+      <!-- Grid -->
+      <div class="grid">
+        <div class="left">
+
+          <!-- Tabs -->
+          <div class="tabs">
+            <button class="tab active" data-tab="overview">📊 Overview</button>
+            <button class="tab" data-tab="students">🔍 Browse Students <span class="badge">40</span></button>
+            <button class="tab" data-tab="projects">📁 Active Projects <span class="badge">38</span></button>
+          </div>
+
+          <div class="tab-panel active" id="tab-overview">
+            <!-- Pending Requests -->
+            <div class="card">
+              <div class="card-hdr"><span class="card-title">👤 Pending Advisor Requests</span><a href="04_advisor_requests.html" class="link">Manage All →</a></div>
+              <div class="req-item" id="r1">
+                <div class="ravatar" style="background:#3b82f6;">JS</div>
+                <div class="rbody"><div class="rname">Jeren Student</div><span class="tag tek">TEKNOFEST</span><div class="rdesc"><strong>Smart Campus IoT</strong> – Teknofest project with IoT and ML integration for smart campus environments.</div><div class="rtime">2 hours ago</div></div>
+                <div class="rbtns"><button class="acc" data-id="r1">✓</button><button class="rej" data-id="r1">✗</button></div>
+              </div>
+              <div class="req-item" id="r2">
+                <div class="ravatar" style="background:#f59e0b;">OS</div>
+                <div class="rbody"><div class="rname">Osama Sami</div><span class="tag tub">TÜBİTAK</span><div class="rdesc"><strong>AI Healthcare NLP</strong> – TÜBİTAK project using NLP for medical record classification.</div><div class="rtime">1 day ago</div></div>
+                <div class="rbtns"><button class="acc" data-id="r2">✓</button><button class="rej" data-id="r2">✗</button></div>
+              </div>
+              <div class="req-item" id="r3">
+                <div class="ravatar" style="background:#8b5cf6;">AD</div>
+                <div class="rbody"><div class="rname">Amara Diallo</div><span class="tag tub">TÜBİTAK</span><div class="rdesc"><strong>Social Media Sentiment</strong> – Analyzing social media for real-time public opinion using ML.</div><div class="rtime">2 days ago</div></div>
+                <div class="rbtns"><button class="acc" data-id="r3">✓</button><button class="rej" data-id="r3">✗</button></div>
+              </div>
+            </div>
+
+            <!-- Platform Activity -->
+            <div class="card">
+              <div class="card-hdr"><span class="card-title">🔴 Platform Activity</span></div>
+              <div class="act-item"><div class="act-dot"></div><div><div class="act-text">New advisor request from <strong>Jeren Student</strong></div><div class="act-sub">Smart Campus IoT · IoT + ML focus <span class="atag req">REQUEST</span></div><div class="act-time">10 mins ago</div></div></div>
+              <div class="act-item"><div class="act-dot green"></div><div><div class="act-text">New student joined: <strong>Amara Diallo</strong></div><div class="act-sub">Computer Engineering · 2nd Year <span class="atag new">NEW STUDENT</span></div><div class="act-time">1 hour ago</div></div></div>
+              <div class="act-item"><div class="act-dot blue"></div><div><div class="act-text">New project posted: <strong>Quantum Computing Sim</strong></div><div class="act-sub">TÜBİTAK · Physics · 2 members needed <span class="atag tub-t">TÜBİTAK</span></div><div class="act-time">2 hours ago</div></div></div>
+              <div class="act-item"><div class="act-dot green"></div><div><div class="act-text">Dr. Selin Arslan accepted a student request</div><div class="act-sub">Smart Campus Scheduling · Teknofest <span class="atag acc-t">ACCEPTED</span></div><div class="act-time">3 hours ago</div></div></div>
+              <div class="act-item"><div class="act-dot blue"></div><div><div class="act-text">TÜBİTAK 2209-A applications are now open</div><div class="act-sub">Deadline: April 15, 2026. Budget ₺8,000 <span class="atag tub-t">TÜBİTAK</span></div><div class="act-time">2 days ago</div></div></div>
+            </div>
+
+            <!-- Advisees -->
+            <div class="card">
+              <div class="card-hdr"><span class="card-title">👥 My Current Advisees</span><a href="advisees_instructor.html" class="link">View All →</a></div>
+              <div class="advisees-grid">
+                <div class="advisee"><div class="ravatar" style="background:#3b82f6;">HK</div><div><div class="rname">Hamza Kadir</div><div class="act-sub">Drone Navigation</div><span class="tag tek">TEKNOFEST</span></div></div>
+                <div class="advisee"><div class="ravatar" style="background:#1a9e8f;">NA</div><div><div class="rname">Nisan Ay</div><div class="act-sub">Crop Disease AI</div><span class="tag tub">TÜBİTAK</span></div></div>
+                <div class="advisee"><div class="ravatar" style="background:#8b5cf6;">NC</div><div><div class="rname">Nurem Can</div><div class="act-sub">Water IoT System</div><span class="tag tub">TÜBİTAK</span></div></div>
+                <div class="advisee"><div class="ravatar" style="background:#f59e0b;">ŞY</div><div><div class="rname">Şan Yılmaz</div><div class="act-sub">AR Campus App</div><span class="tag tek">TEKNOFEST</span></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="tab-students"><div class="card"><p class="empty">Browse Students content here.</p></div></div>
+          <div class="tab-panel" id="tab-projects"><div class="card"><p class="empty">Active Projects content here.</p></div></div>
+        </div>
+
+        <!-- Right widgets -->
+        <div class="right">
+          <div class="widget">
+            <div class="widget-title">📊 My Quota Status</div>
+            <div class="quota-row"><span>Slots Used</span><strong>4 / 5</strong></div>
+            <div class="qbar"><div class="qfill"></div></div>
+            <p class="quota-hint">You have <strong>1 open slot</strong> remaining.</p>
+            <button class="btn-outline w-full">Manage Requests</button>
+          </div>
+          <div class="widget">
+            <div class="widget-title">📈 Platform This Week</div>
+            <div class="wstat"><span>🗂 New Projects</span><div class="wbar"><div style="width:58%;background:#1a9e8f;"></div></div><span class="teal">+7</span></div>
+            <div class="wstat"><span>🤝 Advisor Matches</span><div class="wbar"><div style="width:46%;background:#1a9e8f;"></div></div><span class="teal">+6</span></div>
+            <div class="wstat"><span>👤 New Students</span><div class="wbar"><div style="width:62%;background:#1a9e8f;"></div></div><span class="teal">+8</span></div>
+            <div class="wstat"><span>📤 Requests Sent</span><div class="wbar"><div style="width:92%;background:#f59e0b;"></div></div><span class="orange">+12</span></div>
+          </div>
+          <div class="widget">
+            <div class="widget-title">📢 Announcements</div>
+            <div class="ann"><div>📅</div><div><div class="rname">Gantt Chart Due Sunday!</div><div class="act-sub">Remind students to upload to LMS by March 8.</div><div class="act-time">Today <span class="atag urg">URGENT</span></div></div></div>
+            <div class="ann"><div>🚀</div><div><div class="rname">TÜBİTAK 2209-A Open</div><div class="act-sub">Students can now apply. Deadline April 15.</div><div class="act-time">1 day ago <span class="atag tub-t">TÜBİTAK</span></div></div></div>
+            <div class="ann"><div>🏆</div><div><div class="rname">Teknofest 2026 Registration</div><div class="act-sub">Encourage teams to register before May 1.</div><div class="act-time">3 days ago <span class="atag tek-t">TEKNOFEST</span></div></div></div>
+          </div>
+          <div class="widget">
+            <div class="widget-title">⚡ Quick Actions</div>
+            <button id="reqBtn" class="btn-primary w-full mb8">✓ Review Requests ( 3 )</button>
+            <button class="btn-outline w-full mb8">🔍 Browse Students</button>
+            <button id="adviseeBtn" class="btn-outline w-full mb8">👥 My Advisees</button>
+            <button id="editProfBtn" class="btn-outline w-full">✏️ Edit My Profile</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="../assets/instructor.js/instructor_home.js"></script>
+</body>
+</html>

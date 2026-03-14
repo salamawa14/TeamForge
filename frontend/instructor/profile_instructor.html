@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TeamForge — My Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/instructor.css/profile_instructor.css" />
+</head>
+<body>
+
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+        <path d="M16 2L28 9V23L16 30L4 23V9L16 2Z" stroke="#1a9e8f" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      TeamForge
+    </div>
+
+    <div class="role-badge">INSTRUCTOR</div>
+
+    <nav class="sidebar-nav">
+      <p class="nav-label">MAIN</p>
+      <a href="instructor_home.html"  class="nav-item">🏠 Home</a>
+      <a href="dashboard_insructor.html"        class="nav-item">📊 Dashboard</a>
+      <a href="advisor_req_insrtoctor.html" class="nav-item ">👤 Advisor Requests <span class="nav-badge">3</span></a>
+      <a href="advisees_instructor.html"      class="nav-item ">👥 My Advisees</a>
+      <p class="nav-label">EXPLORE</p>
+      <a href="#" class="nav-item">🔍 Browse Students</a>
+      <a href="#" class="nav-item">📁 Active Projects</a>
+      <p class="nav-label">ACCOUNT</p>
+      <a href="profile_instructor.html" class="nav-item active">👤 My Profile</a>
+      <a href="set_acc_instructor.html"   class="nav-item">⚙️ Settings</a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="avatar">AK</div>
+      <div>
+        <div class="user-name">Dr. Ahmet Kaplan</div>
+        <div class="user-sub">Computer Eng.</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <span class="topbar-title">👤 My Profile</span>
+      <div class="topbar-right">
+        <button id="bellBtn" class="icon-btn">🔔<span class="dot"></span></button>
+        <button id="profileBtn" class="icon-btn">👤</button>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content">
+
+      <h1 class="page-title">My Profile</h1>
+      <p class="page-sub">Your advisor profile visible to students.</p>
+
+      <div class="profile-grid">
+
+        <!-- Left: Profile Card -->
+        <div class="profile-card">
+          <div class="profile-avatar">AK</div>
+          <div class="profile-name">Dr. Ahmet Kaplan</div>
+          <div class="profile-role">Associate Professor · Computer Engineering</div>
+          <div class="skill-tags">
+            <span class="skill-tag">Machine Learning</span>
+            <span class="skill-tag">Computer Vision</span>
+            <span class="skill-tag">IoT</span>
+          </div>
+          <div class="avail-tags">
+            <span class="avail-tag tubitak">TÜBİTAK ✓</span>
+            <span class="avail-tag teknofest">TEKNOFEST ✓</span>
+          </div>
+        </div>
+
+        <!-- Right: Edit Form -->
+        <div class="edit-card">
+          <div class="edit-title">Edit Profile</div>
+
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input class="form-input" type="text" id="full-name" value="Dr. Ahmet Kaplan" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              <input class="form-input" type="text" id="department" value="Computer Engineering" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Academic Title</label>
+              <input class="form-input" type="text" id="academic-title" value="Associate Professor" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Areas of Expertise</label>
+            <input class="form-input" type="text" id="expertise" value="Machine Learning, Computer Vision, IoT" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Research Interests</label>
+            <input class="form-input" type="text" id="research" value="Deep Learning, Embedded AI, Smart Systems" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Previously Supervised</label>
+            <input class="form-input" type="text" id="supervised" value="TÜBİTAK 2209-A, Teknofest UAV, Teknofest AI" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Advising Availability</label>
+            <div class="avail-row">
+              <span class="avail-badge tubitak" id="badge-tubitak">TÜBİTAK: AVAILABLE</span>
+              <span class="avail-badge teknofest" id="badge-teknofest">TEKNOFEST: AVAILABLE</span>
+            </div>
+          </div>
+
+          <button class="btn-save" id="btn-save">Save Changes</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/instructor.js/profile_instructor.js"></script>
+</body>
+</html>
