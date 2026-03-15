@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TeamForge — Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/instructor.css/set_acc_instructor.css" />
+</head>
+<body>
+
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+        <path d="M16 2L28 9V23L16 30L4 23V9L16 2Z" stroke="#1a9e8f" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      TeamForge
+    </div>
+    <div class="role-badge">INSTRUCTOR</div>
+    <nav class="sidebar-nav">
+      <p class="nav-label">MAIN</p>
+      <a href="instructor_home.html"  class="nav-item">🏠 Home</a>
+      <a href="dashboard_insructor.html"        class="nav-item">📊 Dashboard</a>
+      <a href="advisor_req_insrtoctor.html" class="nav-item ">👤 Advisor Requests<span class="nav-badge">3</span></a>
+      <a href="advisees_instructor.html"      class="nav-item">👥 My Advisees</a>
+      <p class="nav-label">EXPLORE</p>
+      <a href="#" class="nav-item">🔍 Browse Students</a>
+      <a href="#" class="nav-item">📁 Active Projects</a>
+      <p class="nav-label">ACCOUNT</p>
+      <a href="profile_instructor.html" class="nav-item">👤 My Profile</a>
+      <a href="set_acc_instructor.html"   class="nav-item active">⚙️ Settings</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="avatar">AK</div>
+      <div>
+        <div class="user-name">Dr. Ahmet Kaplan</div>
+        <div class="user-sub">Computer Eng.</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <header class="topbar">
+      <span class="topbar-title">⚙️ Settings</span>
+      <div class="topbar-right">
+        <button id="bellBtn" class="icon-btn">🔔<span class="dot"></span></button>
+        <button id="profileBtn" class="icon-btn">👤</button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Settings ⚙️</h1>
+          <p class="page-sub">Manage your account preferences, notifications, and security.</p>
+        </div>
+        <button class="btn-save" id="btn-save">💾 Save Changes</button>
+      </div>
+
+      <div class="settings-layout">
+
+        <!-- Left nav -->
+        <nav class="settings-nav">
+          <button id="accBtn" class="snav-item active" data-panel="account">👤 Account</button>
+          <button id="notBtn" class="snav-item" data-panel="notifications">🔔 Notifications</button>
+          <button id="availBtn" class="snav-item" data-panel="availability">📅 Availability</button>
+          <button id="privacyBtn" class="snav-item" data-panel="privacy">🔒 Privacy</button>
+          <button id="secBtn" class="snav-item" data-panel="security">🛡️ Security</button>
+          <button id="zoneBtn" class="snav-item danger" data-panel="danger">⚠️ Danger Zone</button>
+        </nav>
+
+        <!-- Right panels -->
+        <div class="settings-panels">
+
+          <!-- Account -->
+          <div class="panel active" id="panel-account">
+
+            <div class="section-block">
+              <div class="section-head">
+                <span class="section-icon">👤</span>
+                <div>
+                  <div class="section-title">Profile Information</div>
+                  <div class="section-sub">Update your public profile visible to students.</div>
+                </div>
+              </div>
+
+              <div class="avatar-row">
+                <div class="profile-avatar">AK</div>
+                <div>
+                  <div class="avatar-name">Dr. Ahmet Kaplan</div>
+                  <div class="avatar-hint">Click your avatar to upload a new photo.</div>
+                  <div class="avatar-hint">JPG or PNG, max 2 MB.</div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">First Name</label>
+                  <input class="form-input" type="text" value="Ahmet" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Last Name</label>
+                  <input class="form-input" type="text" value="Kaplan" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Academic Title</label>
+                  <input class="form-input" type="text" value="Associate Professor" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Department</label>
+                  <input class="form-input" type="text" value="Computer Engineering" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">University Email</label>
+                <input class="form-input" type="email" value="ahmet.kaplan@university.edu" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Areas of Expertise <span class="label-hint">(comma-separated)</span></label>
+                <input class="form-input" type="text" value="Machine Learning, Computer Vision, IoT" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Research Interests</label>
+                <input class="form-input" type="text" value="Deep Learning, Embedded AI, Smart Systems" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Bio <span class="label-hint">(shown on your advisor card)</span></label>
+                <textarea class="form-input form-textarea">Associate Professor at Computer Engineering. Specializing in ML and IoT systems. Open to advising TÜBİTAK and Teknofest projects.</textarea>
+              </div>
+            </div>
+
+            <div class="section-block">
+              <div class="section-head">
+                <span class="section-icon">🔗</span>
+                <div>
+                  <div class="section-title">Links &amp; Contact</div>
+                  <div class="section-sub">Add links to your academic profiles.</div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Google Scholar URL</label>
+                <input class="form-input" type="url" placeholder="https://scholar.google.com/citations?user=..." />
+              </div>
+              <div class="form-group">
+                <label class="form-label">ResearchGate Profile</label>
+                <input class="form-input" type="url" placeholder="https://www.researchgate.net/profile/..." />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Personal / Lab Website</label>
+                <input class="form-input" type="url" placeholder="https://yourlab.university.edu" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Office Location</label>
+                <input class="form-input" type="text" placeholder="e.g. Engineering Block B, Room 214" />
+              </div>
+            </div>
+
+          </div><!-- /panel-account -->
+
+          <!-- Notifications (placeholder) -->
+          <div class="panel" id="panel-notifications">
+            <div class="section-block">
+              <div class="section-title" style="margin-bottom:8px;">🔔 Notifications</div>
+              <p class="section-sub">Notification preferences coming soon.</p>
+            </div>
+          </div>
+
+          <!-- Availability -->
+          <div class="panel" id="panel-availability">
+            <div class="section-block">
+              <div class="section-title" style="margin-bottom:16px;">📅 Advising Availability</div>
+              <div class="form-group">
+                <label class="form-label">TÜBİTAK Advising</label>
+                <div class="toggle-row">
+                  <button class="toggle-btn active" data-group="tb">✓ Available</button>
+                  <button class="toggle-btn"        data-group="tb">✗ Unavailable</button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Teknofest Advising</label>
+                <div class="toggle-row">
+                  <button class="toggle-btn active" data-group="tk">✓ Available</button>
+                  <button class="toggle-btn"        data-group="tk">✗ Unavailable</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Privacy / Security / Sessions / Danger placeholders -->
+          <div class="panel" id="panel-privacy">
+            <div class="section-block"><div class="section-title" style="margin-bottom:8px;">🔒 Privacy</div><p class="section-sub">Privacy settings coming soon.</p></div>
+          </div>
+          <div class="panel" id="panel-appearance">
+            <div class="section-block"><div class="section-title" style="margin-bottom:8px;">🎨 Appearance</div><p class="section-sub">Theme and display settings coming soon.</p></div>
+          </div>
+          <div class="panel" id="panel-security">
+            <div class="section-block"><div class="section-title" style="margin-bottom:8px;">🛡️ Security</div><p class="section-sub">Password and 2FA settings coming soon.</p></div>
+          </div>
+          <div class="panel" id="panel-sessions">
+            <div class="section-block"><div class="section-title" style="margin-bottom:8px;">📱 Active Sessions</div><p class="section-sub">Session management coming soon.</p></div>
+          </div>
+          <div class="panel" id="panel-danger">
+            <div class="section-block">
+              <div class="section-title" style="margin-bottom:8px; color:#ef4444;">⚠️ Danger Zone</div>
+              <p class="section-sub" style="margin-bottom:16px;">These actions are irreversible. Please proceed with caution.</p>
+              <button class="btn-danger">Delete Account</button>
+            </div>
+          </div>
+
+        </div><!-- /settings-panels -->
+      </div><!-- /settings-layout -->
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /page -->
+
+<script src="../assets/instructor.js/set_acc_instructor.js"></script>
+</body>
+</html>

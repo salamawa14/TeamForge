@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TeamForge — Settings: Availability</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/instructor.css/set_avail_instructor.css" />
+</head>
+<body>
+
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+        <path d="M16 2L28 9V23L16 30L4 23V9L16 2Z" stroke="#1a9e8f" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      TeamForge
+    </div>
+    <div class="role-badge">INSTRUCTOR</div>
+    <nav class="sidebar-nav">
+      <p class="nav-label">MAIN</p>
+      <a href="instructor_home.html"  class="nav-item">🏠 Home</a>
+      <a href="dashboard_insructor.html"        class="nav-item">📊 Dashboard</a>
+      <a href="advisor_req_insrtoctor.html" class="nav-item ">👤 Advisor Requests<span class="nav-badge">3</span></a>
+      <a href="advisees_instructor.html"      class="nav-item">👥 My Advisees</a>
+      <p class="nav-label">EXPLORE</p>
+      <a href="#" class="nav-item">🔍 Browse Students</a>
+      <a href="#" class="nav-item">📁 Active Projects</a>
+      <p class="nav-label">ACCOUNT</p>
+      <a href="profile_instructor.html" class="nav-item">👤 My Profile</a>
+      <a href="set_acc_instructor.html"   class="nav-item active">⚙️ Settings</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="avatar">AK</div>
+      <div>
+        <div class="user-name">Dr. Ahmet Kaplan</div>
+        <div class="user-sub">Computer Eng.</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <header class="topbar">
+      <span class="topbar-title">⚙️ Settings</span>
+      <div class="topbar-right">
+        <button id="bellBtn" class="icon-btn">🔔<span class="dot"></span></button>
+        <button id="profileBtn" class="icon-btn">👤</button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Settings ⚙️</h1>
+          <p class="page-sub">Manage your account preferences, notifications, and security.</p>
+        </div>
+        <button class="btn-save" id="btn-save">💾 Save Changes</button>
+      </div>
+
+      <div class="settings-layout">
+
+        <!-- Settings nav -->
+        <nav class="settings-nav">
+          <a href="set_acc_instructor.html"              class="snav-item">👤 Account</a>
+          <a href="set_not_instructor.html" class="snav-item">🔔 Notifications</a>
+          <a href="#"                              class="snav-item active">🎓 Availability</a>
+          <a href="set_privacy_instructor.html"                              class="snav-item">🔒 Privacy</a>
+          <a href="set_security_instructor.html"                              class="snav-item">🛡️ Security</a>
+          <a href="set_zone_instructor.html"                              class="snav-item danger">⚠️ Danger Zone</a>
+        </nav>
+
+        <!-- Availability panel -->
+        <div class="panel-card">
+
+          <div class="section-head">
+            <span class="section-icon">🎓</span>
+            <div>
+              <div class="section-title">Advising Availability</div>
+              <div class="section-sub">Control your visibility in student searches.</div>
+            </div>
+          </div>
+
+          <!-- Quota bar -->
+          <div class="quota-label-row">
+            <span class="form-label" style="margin:0;">Advisor Quota</span>
+            <span class="quota-value">4 / 5 slots used</span>
+          </div>
+          <div class="quota-bar"><div class="quota-fill"></div></div>
+          <p class="quota-hint">You have <strong>1 slot remaining</strong></p>
+
+          <!-- Toggles -->
+          <div class="toggle-row-item">
+            <div>
+              <div class="toggle-item-title">TÜBİTAK Projects</div>
+              <div class="toggle-item-sub">Appear in searches for TÜBİTAK advisor requests</div>
+            </div>
+            <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+          </div>
+
+          <div class="toggle-row-item">
+            <div>
+              <div class="toggle-item-title">Teknofest Projects</div>
+              <div class="toggle-item-sub">Appear in searches for Teknofest advisor requests</div>
+            </div>
+            <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+          </div>
+
+          <div class="toggle-row-item">
+            <div>
+              <div class="toggle-item-title">Maximum Concurrent Advisees</div>
+              <div class="toggle-item-sub">How many students you can advise simultaneously</div>
+            </div>
+            <select class="form-select">
+              <option>5 students</option>
+              <option>3 students</option>
+              <option>7 students</option>
+              <option>10 students</option>
+            </select>
+          </div>
+
+          <div class="toggle-row-item">
+            <div>
+              <div class="toggle-item-title">Auto-hide when full</div>
+              <div class="toggle-item-sub">Automatically hide from searches when quota is reached</div>
+            </div>
+            <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+          </div>
+
+          <div class="toggle-row-item" style="flex-direction:column; align-items:flex-start; gap:10px; border-bottom:none;">
+            <div>
+              <div class="toggle-item-title">Office Hours Note</div>
+              <div class="toggle-item-sub">A short note shown to students requesting advising.</div>
+            </div>
+            <textarea class="form-input" placeholder="e.g. Available Tue/Thu 14:00–16:00. Contact by email first."></textarea>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/instructor.js/set_avail_instructor.js"></script>
+</body>
+</html>

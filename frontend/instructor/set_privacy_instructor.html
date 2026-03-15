@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TeamForge — Settings: Privacy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/instructor.css/set_privacy_instructor.css" />
+</head>
+<body>
+
+<div class="page">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+        <path d="M16 2L28 9V23L16 30L4 23V9L16 2Z" stroke="#1a9e8f" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      TeamForge
+    </div>
+    <div class="role-badge">INSTRUCTOR</div>
+    <nav class="sidebar-nav">
+      <p class="nav-label">MAIN</p>
+      <a href="instructor_home.html"  class="nav-item">🏠 Home</a>
+      <a href="dashboard_insructor.html"        class="nav-item">📊 Dashboard</a>
+      <a href="advisor_req_insrtoctor.html" class="nav-item ">👤 Advisor Requests<span class="nav-badge">3</span></a>
+      <a href="advisees_instructor.html"      class="nav-item">👥 My Advisees</a>
+      <p class="nav-label">EXPLORE</p>
+      <a href="#" class="nav-item">🔍 Browse Students</a>
+      <a href="#" class="nav-item">📁 Active Projects</a>
+      <p class="nav-label">ACCOUNT</p>
+      <a href="profile_instructor.html" class="nav-item">👤 My Profile</a>
+      <a href="set_acc_instructor.html"   class="nav-item active">⚙️ Settings</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="avatar">AK</div>
+      <div>
+        <div class="user-name">Dr. Ahmet Kaplan</div>
+        <div class="user-sub">Computer Eng.</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+
+    <header class="topbar">
+      <span class="topbar-title">⚙️ Settings</span>
+      <div class="topbar-right">
+        <button id="bellBtn" class="icon-btn">🔔<span class="dot"></span></button>
+        <button id="profileBtn" class="icon-btn">👤</button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Settings ⚙️</h1>
+          <p class="page-sub">Manage your account preferences, notifications, and security.</p>
+        </div>
+        <button class="btn-save" id="btn-save">💾 Save Changes</button>
+      </div>
+
+      <div class="settings-layout">
+
+        <nav class="settings-nav">
+          <a href="set_acc_instructor.html"               class="snav-item">👤 Account</a>
+          <a href="set_not_instructor.html"  class="snav-item">🔔 Notifications</a>
+          <a href="set_avail_instructor.html"   class="snav-item">🎓 Availability</a>
+          <a href="#"                               class="snav-item active">🔒 Privacy</a>
+          <a href="set_security_instructor.html"                               class="snav-item">🛡️ Security</a>
+          <a href="set_zone_instructor.html"                               class="snav-item danger">⚠️ Danger Zone</a>
+        </nav>
+
+        <div class="panels">
+
+          <!-- Profile Visibility -->
+          <div class="panel-card">
+            <div class="section-head">
+              <span class="section-icon">👁️</span>
+              <div>
+                <div class="section-title">Profile Visibility</div>
+                <div class="section-sub">Control who can see your information.</div>
+              </div>
+            </div>
+
+            <div class="row-item">
+              <div>
+                <div class="row-title">Show in Student Search</div>
+                <div class="row-sub">Allow students to find and view your advisor profile</div>
+              </div>
+              <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+            </div>
+            <div class="row-item">
+              <div>
+                <div class="row-title">Show GPA of Advisees</div>
+                <div class="row-sub">Display academic stats on your public profile page</div>
+              </div>
+              <label class="switch"><input type="checkbox" /><span class="slider"></span></label>
+            </div>
+            <div class="row-item">
+              <div>
+                <div class="row-title">Show Current Advisees Count</div>
+                <div class="row-sub">Display how many students you currently advise</div>
+              </div>
+              <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+            </div>
+            <div class="row-item">
+              <div>
+                <div class="row-title">Show Office Location</div>
+                <div class="row-sub">Display your office location to students</div>
+              </div>
+              <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+            </div>
+            <div class="row-item" style="border-bottom:none;">
+              <div>
+                <div class="row-title">Profile Indexing</div>
+                <div class="row-sub">Allow your profile to be discoverable via platform search</div>
+              </div>
+              <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+            </div>
+          </div>
+
+          <!-- Request Preferences -->
+          <div class="panel-card">
+            <div class="section-head">
+              <span class="section-icon">📋</span>
+              <div>
+                <div class="section-title">Request Preferences</div>
+                <div class="section-sub">Control who can send you advisor requests.</div>
+              </div>
+            </div>
+
+            <div class="row-item">
+              <div>
+                <div class="row-title">Who can send requests</div>
+                <div class="row-sub">Restrict advisor requests by student criteria</div>
+              </div>
+              <select class="form-select">
+                <option>All Students</option>
+                <option>Verified Students Only</option>
+                <option>Same Department</option>
+                <option>Nobody</option>
+              </select>
+            </div>
+            <div class="row-item" style="border-bottom:none;">
+              <div>
+                <div class="row-title">Require Message with Request</div>
+                <div class="row-sub">Students must include a message when requesting you as advisor</div>
+              </div>
+              <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/instructor.js/set_privacy_instructor.js"></script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TeamForge — Advisor Requests</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/instructor.css/advisor_req_instructor.css" />
+</head>
+<body>
+
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+        <path d="M16 2L28 9V23L16 30L4 23V9L16 2Z" stroke="#1a9e8f" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      TeamForge
+    </div>
+
+    <div class="role-badge">INSTRUCTOR</div>
+
+    <nav class="sidebar-nav">
+      <p class="nav-label">MAIN</p>
+      <a href="instructor_home.html"  class="nav-item">🏠 Home</a>
+      <a href="dashboard_insructor.html"        class="nav-item">📊 Dashboard</a>
+      <a href="advisor_req_insrtoctor.html" class="nav-item active">👤 Advisor Requests <span class="nav-badge">3</span></a>
+      <a href="advisees_instructor.html"      class="nav-item">👥 My Advisees</a>
+      <p class="nav-label">EXPLORE</p>
+      <a href="#" class="nav-item">🔍 Browse Students</a>
+      <a href="#" class="nav-item">📁 Active Projects</a>
+      <p class="nav-label">ACCOUNT</p>
+      <a href="profile_instructor.html" class="nav-item">👤 My Profile</a>
+      <a href="set_acc_instructor.html"   class="nav-item">⚙️ Settings</a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="avatar">AK</div>
+      <div>
+        <div class="user-name">Dr. Ahmet Kaplan</div>
+        <div class="user-sub">Computer Eng.</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <span class="topbar-title">👤 Advisor Requests</span>
+      <div class="topbar-right">
+        <button id="bellBtn" class="icon-btn">🔔<span class="dot"></span></button>
+        <button id="profileBtn" class="icon-btn">👤</button>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content">
+
+      <h1 class="page-title">Advisor Requests</h1>
+      <p class="page-sub">Review and respond to student advisor requests.</p>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="pending">Pending (3)</button>
+        <button class="tab"        data-tab="accepted">Accepted (4)</button>
+        <button class="tab"        data-tab="rejected">Rejected (1)</button>
+      </div>
+
+      <!-- Pending -->
+      <div class="tab-content active" id="tab-pending">
+
+        <div class="req-card" id="r1">
+          <div class="req-avatar" style="background:#3b82f6;">JS</div>
+          <div class="req-body">
+            <div class="req-name">Jeren Student</div>
+            <span class="tag teknofest">TEKNOFEST</span>
+            <div class="req-desc"><strong>Smart Campus IoT</strong> – Teknofest project with IoT and ML integration for smart campus environments.</div>
+            <div class="req-time">2 hours ago</div>
+          </div>
+          <div class="req-actions">
+            <button class="btn-accept" data-id="r1">✓ Accept</button>
+            <button class="btn-reject" data-id="r1">✗ Reject</button>
+          </div>
+        </div>
+
+        <div class="req-card" id="r2">
+          <div class="req-avatar" style="background:#f59e0b;">OS</div>
+          <div class="req-body">
+            <div class="req-name">Osama Sami</div>
+            <span class="tag tubitak">TÜBİTAK</span>
+            <div class="req-desc"><strong>AI Healthcare NLP</strong> – TÜBİTAK project using NLP for medical record classification.</div>
+            <div class="req-time">1 day ago</div>
+          </div>
+          <div class="req-actions">
+            <button class="btn-accept" data-id="r2">✓ Accept</button>
+            <button class="btn-reject" data-id="r2">✗ Reject</button>
+          </div>
+        </div>
+
+        <div class="req-card" id="r3">
+          <div class="req-avatar" style="background:#8b5cf6;">AD</div>
+          <div class="req-body">
+            <div class="req-name">Amara Diallo</div>
+            <span class="tag tubitak">TÜBİTAK</span>
+            <div class="req-desc"><strong>Social Media Sentiment</strong> – Analyzing social media for real-time public opinion using ML.</div>
+            <div class="req-time">2 days ago</div>
+          </div>
+          <div class="req-actions">
+            <button class="btn-accept" data-id="r3">✓ Accept</button>
+            <button class="btn-reject" data-id="r3">✗ Reject</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Accepted -->
+      <div class="tab-content" id="tab-accepted">
+        <div class="req-card resolved">
+          <div class="req-avatar" style="background:#1a9e8f;">HK</div>
+          <div class="req-body">
+            <div class="req-name">Hamza Kadir</div>
+            <span class="tag teknofest">TEKNOFEST</span>
+            <div class="req-desc"><strong>Smart Campus Scheduling</strong> – Automated campus resource scheduling system.</div>
+            <div class="req-time">3 days ago</div>
+          </div>
+          <span class="status-badge accepted">✓ Accepted</span>
+        </div>
+        <div class="req-card resolved">
+          <div class="req-avatar" style="background:#3b82f6;">NA</div>
+          <div class="req-body">
+            <div class="req-name">Nisan Ay</div>
+            <span class="tag tubitak">TÜBİTAK</span>
+            <div class="req-desc"><strong>Quantum Computing Sim</strong> – Physics-based quantum simulation framework.</div>
+            <div class="req-time">5 days ago</div>
+          </div>
+          <span class="status-badge accepted">✓ Accepted</span>
+        </div>
+      </div>
+
+      <!-- Rejected -->
+      <div class="tab-content" id="tab-rejected">
+        <div class="req-card resolved">
+          <div class="req-avatar" style="background:#ef4444;">MK</div>
+          <div class="req-body">
+            <div class="req-name">Mehmet Kaya</div>
+            <span class="tag teknofest">TEKNOFEST</span>
+            <div class="req-desc"><strong>Drone Navigation</strong> – Autonomous drone path planning using reinforcement learning.</div>
+            <div class="req-time">1 week ago</div>
+          </div>
+          <span class="status-badge rejected">✗ Rejected</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="../assets/instructor.js/advisor_req_instructor.js"></script>
+</body>
+</html>

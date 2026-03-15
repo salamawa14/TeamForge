@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TeamForge — My Advisees</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/instructor.css/advisees_instructor.css" />
+</head>
+<body>
+
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+        <path d="M16 2L28 9V23L16 30L4 23V9L16 2Z" stroke="#1a9e8f" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      TeamForge
+    </div>
+
+    <div class="role-badge">INSTRUCTOR</div>
+
+    <nav class="sidebar-nav">
+      <p class="nav-label">MAIN</p>
+      <a href="instructor_home.html"  class="nav-item">🏠 Home</a>
+      <a href="dashboard_insructor.html"        class="nav-item">📊 Dashboard</a>
+      <a href="advisor_req_insrtoctor.html" class="nav-item ">👤 Advisor Requests <span class="nav-badge">3</span></a>
+      <a href="advisees_instructor.html"      class="nav-item active">👥 My Advisees</a>
+      <p class="nav-label">EXPLORE</p>
+      <a href="#" class="nav-item">🔍 Browse Students</a>
+      <a href="#" class="nav-item">📁 Active Projects</a>
+      <p class="nav-label">ACCOUNT</p>
+      <a href="profile_instructor.html" class="nav-item">👤 My Profile</a>
+      <a href="set_acc_instructor.html"   class="nav-item">⚙️ Settings</a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="avatar">AK</div>
+      <div>
+        <div class="user-name">Dr. Ahmet Kaplan</div>
+        <div class="user-sub">Computer Eng.</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <span class="topbar-title">👥 My Advisees</span>
+      <div class="topbar-right">
+        <button id="bellBtn" class="icon-btn">🔔<span class="dot"></span></button>
+        <button id="profileBtn" class="icon-btn">👤</button>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content">
+
+      <h1 class="page-title">My Advisees</h1>
+      <p class="page-sub">Students you are currently advising (4/5 slots used).</p>
+
+      <div class="advisees-grid">
+
+        <div class="advisee-card">
+          <div class="advisee-avatar" style="background:#8b5cf6;">HK</div>
+          <div class="advisee-name">Hamza Kadir</div>
+          <div class="advisee-type">Teknofest Project</div>
+          <div class="advisee-project">Drone Navigation</div>
+          <span class="tag teknofest">TEKNOFEST</span>
+        </div>
+
+        <div class="advisee-card">
+          <div class="advisee-avatar" style="background:#1a9e8f;">NA</div>
+          <div class="advisee-name">Nisan Ay</div>
+          <div class="advisee-type">TÜBİTAK Project</div>
+          <div class="advisee-project">Crop Disease AI</div>
+          <span class="tag tubitak">TÜBİTAK</span>
+        </div>
+
+        <div class="advisee-card">
+          <div class="advisee-avatar" style="background:#3b82f6;">NC</div>
+          <div class="advisee-name">Nurem Can</div>
+          <div class="advisee-type">TÜBİTAK Project</div>
+          <div class="advisee-project">Water IoT System</div>
+          <span class="tag tubitak">TÜBİTAK</span>
+        </div>
+
+        <div class="advisee-card">
+          <div class="advisee-avatar" style="background:#f59e0b;">ŞY</div>
+          <div class="advisee-name">Şan Yılmaz</div>
+          <div class="advisee-type">Teknofest Project</div>
+          <div class="advisee-project">AR Campus App</div>
+          <span class="tag teknofest">TEKNOFEST</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/instructor.js/advisees_instructor.js"></script>
+</body>
+</html>
