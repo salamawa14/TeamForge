@@ -31,9 +31,7 @@
   <div class="main">
     <header class="topbar">
       <div class="tb-left"><button class="burger" id="burg">☰</button><span class="tb-icon">🎓</span><span class="tb-title">Find Advisor</span><div class="tb-search"><span>🔍</span><input id="gs" type="text" placeholder="Search projects"/></div></div>
-      <div class="tb-right"><button class="icon-btn" id="nBtn">🔔<span class="notif-dot"></span></button><a href="My-Profile.html">
-       <div class="avatar">JS</div>
-        </a><div class="notif-panel" id="nPanel"><div class="np-head">Notifications</div><div class="np-item unread"><span class="np-ico">✅</span><div class="np-body"><strong>Application Accepted</strong><span>Autonomous Drone Navigation</span></div></div></div></div>
+      <div class="tb-right"><button class="icon-btn" id="nBtn">🔔<span class="notif-dot"></span></button><div class="avatar">JS</div><div class="notif-panel" id="nPanel"><div class="np-head">Notifications</div><div class="np-item unread"><span class="np-ico">✅</span><div class="np-body"><strong>Application Accepted</strong><span>Autonomous Drone Navigation</span></div></div></div></div>
     </header>
     <main class="page">
       <div class="page-head"><div><h1 class="page-title">🎓 Find Advisor</h1><p class="page-sub">Connect with academic advisors for your research projects.</p></div></div>
@@ -55,7 +53,7 @@
           <div class="adv-univ">Middle East Technical University</div>
           <div class="adv-specs"><span class="chip">IoT</span><span class="chip">Embedded Systems</span><span class="chip">MQTT</span><span class="chip">TÜBİTAK</span></div>
           <div class="adv-avail-row"><span class="avail">Available</span><span class="slots-txt">2 slots open</span></div>
-          <button class="btn btn-teal" onclick="showToast('Request sent to Dr. Ahmet Kaplan!','ok')">📨 Send Request</button>
+          <button class="btn btn-teal" onclick="openRequestModal('Dr. Ahmet Kaplan', this)">📨 Send Request</button>
         </div>
         <div class="adv-card au d2">
           <div class="adv-top"><div class="adv-av" style="background:#6366f1">ÖŞ</div><div><div class="adv-name">Prof. Ömer Şahin</div><div class="adv-dept-txt">Aerospace Engineering</div></div></div>
@@ -69,21 +67,21 @@
           <div class="adv-univ">Boğaziçi University</div>
           <div class="adv-specs"><span class="chip">ARCore</span><span class="chip">Mobile Dev</span><span class="chip">HCI</span><span class="chip">Teknofest</span></div>
           <div class="adv-avail-row"><span class="avail">Available</span><span class="slots-txt">1 slot open</span></div>
-          <button class="btn btn-teal" onclick="showToast('Request sent to Dr. Ayşe Kaya!','ok')">📨 Send Request</button>
+          <button class="btn btn-teal" onclick="openRequestModal('Dr. Ayşe Kaya', this)">📨 Send Request</button>
         </div>
         <div class="adv-card au d4">
           <div class="adv-top"><div class="adv-av" style="background:#a855f7">ED</div><div><div class="adv-name">Prof. Emre Demir</div><div class="adv-dept-txt">Artificial Intelligence</div></div></div>
           <div class="adv-univ">Bilkent University</div>
           <div class="adv-specs"><span class="chip">NLP</span><span class="chip">PyTorch</span><span class="chip">HuggingFace</span><span class="chip">TÜBİTAK</span></div>
           <div class="adv-avail-row"><span class="avail">Available</span><span class="slots-txt">3 slots open</span></div>
-          <button class="btn btn-teal" onclick="showToast('Request sent to Prof. Emre Demir!','ok')">📨 Send Request</button>
+          <button class="btn btn-teal" onclick="openRequestModal('Prof. Emre Demir', this)">📨 Send Request</button>
         </div>
         <div class="adv-card au d5">
           <div class="adv-top"><div class="adv-av" style="background:#22c55e">ZA</div><div><div class="adv-name">Dr. Zeynep Arslan</div><div class="adv-dept-txt">Electrical Engineering</div></div></div>
           <div class="adv-univ">İstanbul Technical University</div>
           <div class="adv-specs"><span class="chip">Energy Systems</span><span class="chip">IoT</span><span class="chip">Grafana</span><span class="chip">TÜBİTAK</span></div>
           <div class="adv-avail-row"><span class="avail">Available</span><span class="slots-txt">2 slots open</span></div>
-          <button class="btn btn-teal" onclick="showToast('Request sent to Dr. Zeynep Arslan!','ok')">📨 Send Request</button>
+          <button class="btn btn-teal" onclick="openRequestModal('Dr. Zeynep Arslan', this)">📨 Send Request</button>
         </div>
         <div class="adv-card au d6">
           <div class="adv-top"><div class="adv-av" style="background:#ef4444">MY</div><div><div class="adv-name">Prof. Mehmet Yıldız</div><div class="adv-dept-txt">Software Engineering</div></div></div>

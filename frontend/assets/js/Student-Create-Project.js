@@ -143,14 +143,95 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  /* char counter */
+
+  /* ── Char counter ── */
   const descTA = document.getElementById('cpDesc');
   const charCt = document.getElementById('charCount');
   descTA?.addEventListener('input', () => {
-    charCt.textContent = descTA.value.length + ' / 800';
+    const len = descTA.value.length;
+    charCt.textContent = len + ' / 800';
+    charCt.style.color = len > 750 ? 'var(--red)' : 'var(--t3)';
   });
 
-  /* roles tagger */
+  /* ── Project Type → show/hide advisor & budget sections ── */
+  const cpType        = document.getElementById('cpType');
+  const advisorSec    = document.getElementById('advisorSection');
+  const advisorWrap   = document.getElementById('advisorWrap');
+  const budgetSection = document.getElementById('budgetSection');
+  const budgetWrap    = document.getElementById('budgetWrap');
+  const advisorToggle = document.getElementById('advisorToggle');
+
+  function handleTypeChange() {
+    const t = cpType.value;
+    // Budget: only for TÜBİTAK
+    const showBudget = t === 'TÜBİTAK';
+    budgetSection.style.display = showBudget ? '' : 'none';
+    budgetWrap.style.display    = showBudget ? '' : 'none';
+    // Advisor: hidden for COURSE, forced ON for TÜBİTAK/TEKNOFEST
+    if (t === 'COURSE') {
+      advisorSec.style.display  = 'none';
+      advisorWrap.style.display = 'none';
+      advisorToggle.checked     = false;
+    } else {
+      advisorSec.style.display  = '';
+      advisorWrap.style.display = '';
+      advisorToggle.checked     = true;
+    }
+  }
+  cpType?.addEventListener('change', handleTypeChange);
+  // init state
+  budgetSection.style.display = 'none';
+  budgetWrap.style.display    = 'none';
+
+  /* ── Active/Inactive toggle hint ── */
+  const activeToggle = document.getElementById('activeToggle');
+  const statusHint   = document.getElementById('statusHint');
+  activeToggle?.addEventListener('change', () => {
+    const on = activeToggle.checked;
+    statusHint.innerHTML = on
+      ? '<span class="hint-dot active"></span> Project will be <strong>visible</strong> to all students after publishing'
+      : '<span class="hint-dot inactive"></span> Project will be <strong>hidden</strong> from student listings';
+  });
+
+  /* ── Skills chip input ── */
+  const skillInp  = document.getElementById('skillInp');
+  const skillWrap = document.getElementById('skillsWrap');
+
+  function addSkillChip(val) {
+    val = val.replace(/,/g, '').trim();
+    if (!val) return;
+    // avoid duplicates
+    const existing = [...skillWrap.querySelectorAll('.s-chip')].map(c => c.dataset.val);
+    if (existing.includes(val.toLowerCase())) return;
+    const chip = document.createElement('span');
+    chip.className = 's-chip';
+    chip.dataset.val = val.toLowerCase();
+    chip.innerHTML = `${val} <button type="button">✕</button>`;
+    chip.querySelector('button').addEventListener('click', e => {
+      e.stopPropagation();
+      chip.remove();
+    });
+    skillWrap.insertBefore(chip, skillInp);
+    skillWrap.classList.remove('err');
+    document.getElementById('cpSkillsErr').textContent = '';
+  }
+
+  skillInp?.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      addSkillChip(skillInp.value);
+      skillInp.value = '';
+    }
+    if (e.key === 'Backspace' && !skillInp.value) {
+      const chips = skillWrap.querySelectorAll('.s-chip');
+      if (chips.length) chips[chips.length - 1].remove();
+    }
+  });
+  skillInp?.addEventListener('blur', () => {
+    if (skillInp.value.trim()) { addSkillChip(skillInp.value); skillInp.value = ''; }
+  });
+
+  /* ── Roles tagger ── */
   const roleInput = document.getElementById('roleInput');
   const addRoleBtn = document.getElementById('addRoleBtn');
   const rolesList  = document.getElementById('rolesList');
@@ -160,36 +241,48 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!v) return;
     const tag = document.createElement('span');
     tag.className = 'role-tag';
-    tag.innerHTML = `${v} <button onclick="this.parentElement.remove()">✕</button>`;
+    tag.innerHTML = `${v} <button type="button">✕</button>`;
+    tag.querySelector('button').addEventListener('click', () => tag.remove());
     rolesList?.appendChild(tag);
     roleInput.value = '';
   }
   addRoleBtn?.addEventListener('click', addRole);
-  roleInput?.addEventListener('keydown', e => { if(e.key==='Enter'){e.preventDefault();addRole();} });
+  roleInput?.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addRole(); } });
 
-  /* publish */
+  /* ── Publish with validation ── */
   document.getElementById('publishBtn')?.addEventListener('click', () => {
-    const checks = [
-      ['cpTitle','cpTitleErr','Project title is required.'],
-      ['cpType','cpTypeErr','Please select a project type.'],
-      ['cpSize','cpSizeErr','Team size is required.'],
-      ['cpSkills','cpSkillsErr','Required skills are needed.'],
-      ['cpDesc','cpDescErr','Description is required.'],
-    ];
     let ok = true;
-    checks.forEach(([id, eid, msg]) => {
+
+    // text/select fields
+    [
+      ['cpTitle', 'cpTitleErr', 'Project title is required.'],
+      ['cpType',  'cpTypeErr',  'Please select a project type.'],
+      ['cpSize',  'cpSizeErr',  'Team size is required.'],
+      ['cpDesc',  'cpDescErr',  'Description is required.'],
+    ].forEach(([id, eid, msg]) => {
       const el  = document.getElementById(id);
       const err = document.getElementById(eid);
       const empty = !el.value.trim();
-      if(err) err.textContent = empty ? msg : '';
+      if (err) err.textContent = empty ? msg : '';
       el.classList.toggle('err', empty);
-      if(empty) ok = false;
+      if (empty) ok = false;
     });
+
+    // skills chips validation
+    const chips = skillWrap.querySelectorAll('.s-chip');
+    if (chips.length === 0) {
+      skillWrap.classList.add('err');
+      document.getElementById('cpSkillsErr').textContent = 'At least one skill is required.';
+      ok = false;
+    }
+
     if (!ok) return;
+
     const btn = document.getElementById('publishBtn');
     btn.disabled = true;
     document.getElementById('pubTxt').textContent = 'Publishing…';
     document.getElementById('pubSpin').style.display = 'inline-block';
+
     setTimeout(() => {
       showToast('🚀 Project published successfully!', 'ok');
       setTimeout(() => window.location.href = 'My-Projects.html', 1200);

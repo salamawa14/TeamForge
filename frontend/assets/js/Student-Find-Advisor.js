@@ -150,3 +150,208 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+/* ════════════════ ADVISOR REQUEST MODAL ════════════════ */
+
+// Student's pre-filled data (in real app this comes from session/DB)
+const STUDENT_PROFILE = {
+  name:   'Jeren Student',
+  skills: ['Python', 'React', 'Node.js', 'TensorFlow', 'IoT'],
+  projects: [
+    { id: 1, title: 'Autonomous Drone Navigation', type: 'TEKNOFEST' },
+    { id: 3, title: 'E-Commerce Platform',         type: 'COURSE'    }
+  ]
+};
+
+// Advisor meta — matches the cards
+const ADVISOR_META = {
+  'Dr. Ahmet Kaplan':  { initials: 'AK', color: '#00b8b8', dept: 'Computer Engineering' },
+  'Dr. Ayşe Kaya':     { initials: 'AK', color: '#f97316', dept: 'Computer Engineering' },
+  'Prof. Emre Demir':  { initials: 'ED', color: '#a855f7', dept: 'Artificial Intelligence' },
+  'Dr. Zeynep Arslan': { initials: 'ZA', color: '#22c55e', dept: 'Electrical Engineering' }
+};
+
+function openRequestModal(advisorName, triggerBtn) {
+  const meta = ADVISOR_META[advisorName] || { initials: '??', color: '#8a96ae', dept: '' };
+
+  // Build project options
+  const projectOpts = STUDENT_PROFILE.projects.map(p =>
+    `<option value="${p.id}">${p.title} (${p.type})</option>`
+  ).join('');
+
+  // Build pre-filled skill chips HTML
+  const chipsHTML = STUDENT_PROFILE.skills.map(s =>
+    `<span class="req-chip">${s} <button type="button" onclick="this.parentElement.remove()">✕</button></span>`
+  ).join('');
+
+  const overlay = document.createElement('div');
+  overlay.className = 'req-overlay';
+  overlay.id = 'reqOverlay';
+  overlay.innerHTML = `
+    <div class="req-modal" role="dialog" aria-modal="true" aria-label="Send Advisor Request">
+
+      <!-- Header -->
+      <div class="req-head">
+        <div class="req-head-l">
+          <div class="req-head-av" style="background:${meta.color}">${meta.initials}</div>
+          <div>
+            <div class="req-head-name">📨 Request — ${advisorName}</div>
+            <div class="req-head-dept">${meta.dept}</div>
+          </div>
+        </div>
+        <button class="req-close" id="reqClose" aria-label="Close">✕</button>
+      </div>
+
+      <!-- Body -->
+      <div class="req-body">
+
+        <!-- Project -->
+        <label class="req-label" for="reqProject">
+          Project <span>*</span>
+        </label>
+        <select class="req-select" id="reqProject">
+          <option value="">Select a project…</option>
+          ${projectOpts}
+        </select>
+        <span class="req-err" id="reqProjectErr">Please select a project.</span>
+
+        <!-- Skills -->
+        <label class="req-label">
+          Your Skills <span>(shown to advisor — edit if needed)</span>
+        </label>
+        <div class="req-chips-wrap" id="reqChipsWrap" onclick="document.getElementById('reqChipInp').focus()">
+          ${chipsHTML}
+          <input class="req-chip-inp" id="reqChipInp" type="text" placeholder="+ Add skill"/>
+        </div>
+        <div class="req-chips-hint">Press Enter or comma to add a skill</div>
+        <span class="req-err" id="reqSkillsErr">Add at least one skill.</span>
+
+        <!-- Message -->
+        <label class="req-label" for="reqMsg">
+          Message to Advisor <span>(optional)</span>
+        </label>
+        <textarea class="req-textarea" id="reqMsg"
+          placeholder="Briefly describe your project and why you'd like this advisor's guidance…"
+          maxlength="400"></textarea>
+        <div class="req-char"><span id="reqCharCount">0</span> / 400</div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="req-foot">
+        <button class="req-cancel" id="reqCancel">Cancel</button>
+        <button class="req-send" id="reqSend">
+          <span id="reqSendTxt">📨 Send Request</span>
+          <span class="req-spin" id="reqSpin"></span>
+        </button>
+      </div>
+
+    </div>`;
+
+  document.body.appendChild(overlay);
+  document.body.style.overflow = 'hidden';
+
+  // Focus first field
+  setTimeout(() => document.getElementById('reqProject')?.focus(), 100);
+
+  /* ── Close handlers ── */
+  function closeModal() {
+    overlay.remove();
+    document.body.style.overflow = '';
+  }
+  document.getElementById('reqClose').addEventListener('click', closeModal);
+  document.getElementById('reqCancel').addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function escHandler(e) {
+    if (e.key === 'Escape') { closeModal(); document.removeEventListener('keydown', escHandler); }
+  });
+
+  /* ── Char counter ── */
+  document.getElementById('reqMsg').addEventListener('input', function() {
+    document.getElementById('reqCharCount').textContent = this.value.length;
+  });
+
+  /* ── Skill chip input ── */
+  const chipInp  = document.getElementById('reqChipInp');
+  const chipsWrap = document.getElementById('reqChipsWrap');
+
+  function addReqChip(val) {
+    val = val.replace(/,/g, '').trim();
+    if (!val) return;
+    const existing = [...chipsWrap.querySelectorAll('.req-chip')].map(c => c.textContent.replace('✕','').trim().toLowerCase());
+    if (existing.includes(val.toLowerCase())) return;
+    const chip = document.createElement('span');
+    chip.className = 'req-chip';
+    chip.innerHTML = `${val} <button type="button">✕</button>`;
+    chip.querySelector('button').addEventListener('click', e => { e.stopPropagation(); chip.remove(); });
+    chipsWrap.insertBefore(chip, chipInp);
+    document.getElementById('reqSkillsErr').style.display = 'none';
+  }
+
+  chipInp.addEventListener('keydown', e => {
+    if ((e.key === 'Enter' || e.key === ',') && chipInp.value.trim()) {
+      e.preventDefault();
+      addReqChip(chipInp.value);
+      chipInp.value = '';
+    }
+    if (e.key === 'Backspace' && !chipInp.value) {
+      const chips = chipsWrap.querySelectorAll('.req-chip');
+      if (chips.length) chips[chips.length - 1].remove();
+    }
+  });
+  chipInp.addEventListener('blur', () => {
+    if (chipInp.value.trim()) { addReqChip(chipInp.value); chipInp.value = ''; }
+  });
+
+  /* ── Send ── */
+  document.getElementById('reqSend').addEventListener('click', () => {
+    let valid = true;
+
+    // Validate project
+    const projErr = document.getElementById('reqProjectErr');
+    const projVal = document.getElementById('reqProject').value;
+    if (!projVal) {
+      projErr.style.display = 'block';
+      document.getElementById('reqProject').classList.add('err');
+      valid = false;
+    } else {
+      projErr.style.display = 'none';
+      document.getElementById('reqProject').classList.remove('err');
+    }
+
+    // Validate skills
+    const skillsErr = document.getElementById('reqSkillsErr');
+    const chips     = chipsWrap.querySelectorAll('.req-chip');
+    if (chips.length === 0) {
+      skillsErr.style.display = 'block';
+      valid = false;
+    } else {
+      skillsErr.style.display = 'none';
+    }
+
+    if (!valid) return;
+
+    // Simulate sending
+    const sendBtn = document.getElementById('reqSend');
+    sendBtn.disabled = true;
+    document.getElementById('reqSendTxt').textContent = 'Sending…';
+    document.getElementById('reqSpin').style.display  = 'inline-block';
+
+    setTimeout(() => {
+      closeModal();
+      // Update the trigger button to show sent state
+      triggerBtn.disabled = true;
+      triggerBtn.textContent = '✓ Request Sent';
+      triggerBtn.style.background  = 'var(--green)';
+      triggerBtn.style.cursor      = 'not-allowed';
+      triggerBtn.style.opacity     = '0.85';
+      showToast(`✓ Request sent to ${advisorName}!`, 'ok');
+    }, 1200);
+  });
+
+  // Clear err on change
+  document.getElementById('reqProject').addEventListener('change', () => {
+    document.getElementById('reqProjectErr').style.display = 'none';
+    document.getElementById('reqProject').classList.remove('err');
+  });
+}

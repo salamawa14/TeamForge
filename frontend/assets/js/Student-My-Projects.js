@@ -91,10 +91,8 @@ function openModal(id) {
         <div class="m-sec">📄 Full Description</div>
         <div class="m-fulldesc">${p.full}</div>
         <div class="m-foot">
-          <button class="btn btn-teal" id="mApply" ${full?'disabled':''}>
-            ${full?'🔒 Team Full':'✅ Apply to Join'}
-          </button>
-          <button class="btn-notint" id="mNot">🤚 Not Interested</button>
+          
+          <button class="btn-notint" id="mNot">🤚 Not Interested Any more</button>
         </div>
       </div>
     </div>`);
