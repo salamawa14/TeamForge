@@ -159,6 +159,7 @@ const STUDENT_PROFILE = {
   skills: ['Python', 'React', 'Node.js', 'TensorFlow', 'IoT'],
   projects: [
     { id: 1, title: 'Autonomous Drone Navigation', type: 'TEKNOFEST' },
+    { id: 2, title: 'Smart Water IoT',             type: 'TÜBİTAK'  },
     { id: 3, title: 'E-Commerce Platform',         type: 'COURSE'    }
   ]
 };
@@ -353,5 +354,231 @@ function openRequestModal(advisorName, triggerBtn) {
   document.getElementById('reqProject').addEventListener('change', () => {
     document.getElementById('reqProjectErr').style.display = 'none';
     document.getElementById('reqProject').classList.remove('err');
+  });
+}
+
+/* ════════════════ ADVISOR PROFILE MODAL ════════════════ */
+
+const ADVISORS = {
+  'Dr. Ahmet Kaplan': {
+    initials:   'AK',
+    color:      '#00b8b8',
+    title:      'Associate Professor',
+    dept:       'Computer Engineering',
+    univ:       'Middle East Technical University',
+    bio:        'Experienced in IoT and embedded systems research. Actively supervising TÜBİTAK and Teknofest projects with a focus on smart campus applications.',
+    expertise:  ['IoT', 'Embedded Systems', 'MQTT', 'Raspberry Pi'],
+    types:      ['TÜBİTAK'],
+    slots:      2,
+    supervised: 4,
+    groups:     3,
+    available:  true,
+    projects: [
+      { type: 'TÜBİTAK', title: 'Smart Water Monitoring System' },
+      { type: 'TÜBİTAK', title: 'Campus Energy Dashboard' },
+      { type: 'TEKNOFEST', title: 'Autonomous Sensor Network' },
+    ]
+  },
+  'Prof. Ömer Şahin': {
+    initials:   'ÖŞ',
+    color:      '#6366f1',
+    title:      'Professor',
+    dept:       'Aerospace Engineering',
+    univ:       'ODTÜ – Ankara',
+    bio:        'Leading expert in UAV systems and ROS2 development. Currently at full capacity for student advising.',
+    expertise:  ['ROS2', 'Computer Vision', 'UAV', 'Sensor Fusion'],
+    types:      ['TEKNOFEST'],
+    slots:      0,
+    supervised: 7,
+    groups:     5,
+    available:  false,
+    projects: [
+      { type: 'TEKNOFEST', title: 'Autonomous Drone Navigation' },
+      { type: 'TEKNOFEST', title: 'UAV Swarm Intelligence' },
+    ]
+  },
+  'Dr. Ayşe Kaya': {
+    initials:   'AK',
+    color:      '#f97316',
+    title:      'Assistant Professor',
+    dept:       'Computer Engineering',
+    univ:       'Boğaziçi University',
+    bio:        'Specializes in AR/VR applications and human-computer interaction. Open to supervising mobile and AR-based Teknofest projects.',
+    expertise:  ['ARCore', 'Mobile Dev', 'HCI', 'Unity'],
+    types:      ['TEKNOFEST'],
+    slots:      1,
+    supervised: 3,
+    groups:     2,
+    available:  true,
+    projects: [
+      { type: 'TEKNOFEST', title: 'AR Campus Navigation App' },
+      { type: 'TEKNOFEST', title: 'VR Lab Simulation' },
+    ]
+  },
+  'Prof. Emre Demir': {
+    initials:   'ED',
+    color:      '#a855f7',
+    title:      'Professor',
+    dept:       'Artificial Intelligence',
+    univ:       'Bilkent University',
+    bio:        'NLP and transformer model researcher with 10+ years in Turkish language processing. Prefers TÜBİTAK research projects.',
+    expertise:  ['NLP', 'PyTorch', 'HuggingFace', 'Transformers', 'FastAPI'],
+    types:      ['TÜBİTAK'],
+    slots:      3,
+    supervised: 6,
+    groups:     4,
+    available:  true,
+    projects: [
+      { type: 'TÜBİTAK', title: 'NLP News Summarizer' },
+      { type: 'TÜBİTAK', title: 'Turkish Sentiment Analysis' },
+      { type: 'TÜBİTAK', title: 'Multilingual QA System' },
+    ]
+  },
+  'Dr. Zeynep Arslan': {
+    initials:   'ZA',
+    color:      '#22c55e',
+    title:      'Assistant Professor',
+    dept:       'Electrical Engineering',
+    univ:       'İstanbul Technical University',
+    bio:        'Focuses on energy monitoring and smart grid systems. Available to advise TÜBİTAK projects in IoT and energy domains.',
+    expertise:  ['Energy Systems', 'IoT', 'Grafana', 'InfluxDB', 'MQTT'],
+    types:      ['TÜBİTAK'],
+    slots:      2,
+    supervised: 3,
+    groups:     2,
+    available:  true,
+    projects: [
+      { type: 'TÜBİTAK', title: 'Smart Campus Energy Monitor' },
+      { type: 'TÜBİTAK', title: 'Solar Panel Efficiency Tracker' },
+    ]
+  },
+  'Prof. Mehmet Yıldız': {
+    initials:   'MY',
+    color:      '#ef4444',
+    title:      'Professor',
+    dept:       'Software Engineering',
+    univ:       'Hacettepe University',
+    bio:        'Blockchain and Web3 researcher. Currently busy with existing projects and not taking new advisees.',
+    expertise:  ['Blockchain', 'Solidity', 'Web3', 'Smart Contracts'],
+    types:      ['COURSE'],
+    slots:      0,
+    supervised: 5,
+    groups:     3,
+    available:  false,
+    projects: [
+      { type: 'COURSE', title: 'Blockchain Supply Chain' },
+      { type: 'COURSE', title: 'Decentralized Voting System' },
+    ]
+  }
+};
+
+function openAdvisorProfile(name, triggerBtn) {
+  const a = ADVISORS[name];
+  if (!a) return;
+
+  // type badge colors
+  const typeColor = { 'TÜBİTAK': '#6366f1', 'TEKNOFEST': '#f97316', 'COURSE': '#00b8b8' };
+  const typeBg    = { 'TÜBİTAK': 'rgba(99,102,241,.10)', 'TEKNOFEST': 'rgba(249,115,22,.10)', 'COURSE': 'rgba(0,184,184,.10)' };
+
+  const typeBadges = a.types.map(t =>
+    `<span style="background:${typeBg[t]};color:${typeColor[t]};border:1px solid ${typeColor[t]}30;border-radius:20px;padding:3px 10px;font-size:.71rem;font-weight:700">${t} ✓</span>`
+  ).join(' ');
+
+  const expertiseChips = a.expertise.map(e =>
+    `<span class="ap-chip">${e}</span>`
+  ).join('');
+
+  const slotsText = a.slots > 0
+    ? `<span class="ap-slot-badge">${a.slots} Slot(s) Open</span>`
+    : `<span class="ap-slot-badge busy">Full</span>`;
+
+  const projectList = a.projects.map(p => {
+    const c = typeColor[p.type] || '#8a96ae';
+    const bg = typeBg[p.type] || 'rgba(138,150,174,.10)';
+    return `
+      <div class="ap-proj-item">
+        <span style="background:${bg};color:${c};border:1px solid ${c}30;border-radius:20px;padding:2px 9px;font-size:.67rem;font-weight:800;display:inline-block;margin-bottom:5px">${p.type}</span>
+        <div class="ap-proj-title">${p.title}</div>
+      </div>`;
+  }).join('');
+
+  const overlay = document.createElement('div');
+  overlay.className = 'ap-overlay';
+  overlay.id = 'apOverlay';
+  overlay.innerHTML = `
+    <div class="ap-modal">
+
+      <!-- Header with gradient -->
+      <div class="ap-header" style="background: linear-gradient(135deg, #3d2d7a, #5b3fa8)">
+        <button class="ap-close" id="apClose">✕</button>
+        <div class="ap-header-av" style="background:${a.color}">${a.initials}</div>
+      </div>
+
+      <!-- Scrollable body -->
+      <div class="ap-body">
+
+        <!-- Name / title / dept -->
+        <h2 class="ap-name">${name}</h2>
+        <div class="ap-title-txt">${a.title}</div>
+        <div class="ap-dept">📍 ${a.dept}</div>
+
+        <!-- Bio -->
+        <div class="ap-bio">${a.bio}</div>
+
+        <!-- Expertise -->
+        <div class="ap-sec-label">🎓 EXPERTISE</div>
+        <div class="ap-chips">${expertiseChips}</div>
+
+        <!-- Availability -->
+        <div class="ap-sec-label">✅ AVAILABILITY</div>
+        <div class="ap-avail-row">
+          ${typeBadges}
+          ${slotsText}
+        </div>
+
+        <!-- Statistics -->
+        <div class="ap-sec-label">📊 STATISTICS</div>
+        <div class="ap-stats">
+          <div class="ap-stat"><span class="ap-stat-n">${a.supervised}</span><span class="ap-stat-l">Supervised</span></div>
+          <div class="ap-stat"><span class="ap-stat-n">${a.groups}</span><span class="ap-stat-l">Active Groups</span></div>
+          <div class="ap-stat"><span class="ap-stat-n" style="color:${a.slots > 0 ? '#22c55e' : '#ef4444'}">${a.slots}</span><span class="ap-stat-l">Open Slots</span></div>
+        </div>
+
+        <!-- Supervised Projects -->
+        <div class="ap-sec-label">📋 SUPERVISED PROJECTS</div>
+        <div class="ap-projects">${projectList}</div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="ap-foot">
+        ${a.available
+          ? `<button class="ap-send-btn" id="apSendBtn">📨 Send Advisor Request</button>`
+          : `<button class="ap-send-btn" disabled style="opacity:.5;cursor:not-allowed">Unavailable</button>`
+        }
+        <button class="ap-close-btn" id="apCloseBtn">Close</button>
+      </div>
+
+    </div>`;
+
+  document.body.appendChild(overlay);
+  document.body.style.overflow = 'hidden';
+
+  // close handlers
+  function closeProfile() {
+    overlay.remove();
+    document.body.style.overflow = '';
+  }
+  document.getElementById('apClose').addEventListener('click', closeProfile);
+  document.getElementById('apCloseBtn').addEventListener('click', closeProfile);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeProfile(); });
+  document.addEventListener('keydown', function esc(e) {
+    if (e.key === 'Escape') { closeProfile(); document.removeEventListener('keydown', esc); }
+  });
+
+  // Send Request from profile — reuse existing modal
+  document.getElementById('apSendBtn')?.addEventListener('click', () => {
+    closeProfile();
+    setTimeout(() => openRequestModal(name, triggerBtn), 100);
   });
 }
