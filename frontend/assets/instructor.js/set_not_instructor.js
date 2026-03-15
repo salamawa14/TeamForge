@@ -1,16 +1,11 @@
 document.getElementById('btn-save').addEventListener('click', function() {
+  this.textContent = '✓ Saved!';
+  this.style.background = '#16a34a';
   var btn = this;
-  btn.textContent = '✓ Saved!';
-  btn.style.background = '#16a34a';
   setTimeout(function() { btn.textContent = '💾 Save Changes'; btn.style.background = ''; }, 2000);
   toast('Notification settings saved');
 });
-document.getElementById("bellBtn").addEventListener("click", function () {
-    window.location.href = "set_not_instructor.html";
-});
-document.getElementById("profileBtn").addEventListener("click", function () {
-    window.location.href = "profile_instructor.html";
-});
+
 function toast(msg) {
   var t = document.createElement('div');
   t.textContent = msg;
