@@ -249,6 +249,63 @@ document.addEventListener('DOMContentLoaded', () => {
   addRoleBtn?.addEventListener('click', addRole);
   roleInput?.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addRole(); } });
 
+  /* ── Visibility skill chips ── */
+  const visSkillInp  = document.getElementById('visSkillInp');
+  const visSkillWrap = document.getElementById('visSkillsWrap');
+
+  function addVisChip(val) {
+    val = val.replace(/,/g, '').trim();
+    if (!val) return;
+    const existing = [...visSkillWrap.querySelectorAll('.s-chip')].map(c => c.dataset.val);
+    if (existing.includes(val.toLowerCase())) return;
+    const chip = document.createElement('span');
+    chip.className = 's-chip';
+    chip.dataset.val = val.toLowerCase();
+    chip.innerHTML = `${val} <button type="button">✕</button>`;
+    chip.querySelector('button').addEventListener('click', e => {
+      e.stopPropagation(); chip.remove(); updateVisPreview();
+    });
+    visSkillWrap.insertBefore(chip, visSkillInp);
+    updateVisPreview();
+  }
+
+  visSkillInp?.addEventListener('keydown', e => {
+    if ((e.key === 'Enter' || e.key === ',') && visSkillInp.value.trim()) {
+      e.preventDefault(); addVisChip(visSkillInp.value); visSkillInp.value = '';
+    }
+    if (e.key === 'Backspace' && !visSkillInp.value) {
+      const chips = visSkillWrap.querySelectorAll('.s-chip');
+      if (chips.length) { chips[chips.length - 1].remove(); updateVisPreview(); }
+    }
+  });
+  visSkillInp?.addEventListener('blur', () => {
+    if (visSkillInp.value.trim()) { addVisChip(visSkillInp.value); visSkillInp.value = ''; }
+  });
+
+  /* ── Visibility preview updater ── */
+  function updateVisPreview() {
+    const years   = [...document.querySelectorAll('#visYears input:checked')].map(c => c.value);
+    const depts   = [...document.querySelectorAll('#visDepts input:checked')].map(c => c.value);
+    const skills  = [...document.querySelectorAll('#visSkillsWrap .s-chip')].map(c => c.dataset.val);
+    const allYears = document.querySelectorAll('#visYears input').length;
+    const txt = document.getElementById('visPreviewTxt');
+    if (!txt) return;
+
+    let parts = [];
+    if (years.length < allYears) parts.push(`${years.length} year(s)`);
+    if (depts.length > 0)        parts.push(`${depts.length} dept(s)`);
+    if (skills.length > 0)       parts.push(`"${skills.slice(0,2).join(', ')}" skills`);
+
+    txt.innerHTML = parts.length === 0
+      ? 'Visible to <strong>all students</strong>'
+      : `Visible to students matching: <strong>${parts.join(' · ')}</strong>`;
+  }
+
+  // Attach to all checkboxes
+  document.querySelectorAll('#visYears input, #visDepts input').forEach(cb => {
+    cb.addEventListener('change', updateVisPreview);
+  });
+
   /* ── Publish with validation ── */
   document.getElementById('publishBtn')?.addEventListener('click', () => {
     let ok = true;
@@ -277,6 +334,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!ok) return;
+
+    // Collect visibility filters
+    const visYears  = [...document.querySelectorAll('#visYears input:checked')].map(c => c.value);
+    const visDepts  = [...document.querySelectorAll('#visDepts input:checked')].map(c => c.value);
+    const visSkills = [...document.querySelectorAll('#visSkillsWrap .s-chip')].map(c => c.dataset.val);
 
     const btn = document.getElementById('publishBtn');
     btn.disabled = true;

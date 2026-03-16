@@ -91,8 +91,10 @@ function openModal(id) {
         <div class="m-sec">📄 Full Description</div>
         <div class="m-fulldesc">${p.full}</div>
         <div class="m-foot">
-          
-          <button class="btn-notint" id="mNot">🤚 Not Interested Any more</button>
+          <button class="btn btn-teal" id="mApply" ${full?'disabled':''}>
+            ${full?'🔒 Team Full':'✅ Apply to Join'}
+          </button>
+          <button class="btn-notint" id="mNot">🤚 Not Interested</button>
         </div>
       </div>
     </div>`);
@@ -150,3 +152,283 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+/* ════════════════ MANAGE PROJECT PANEL ════════════════ */
+
+const MANAGE_DATA = {
+  1: {
+    title:       'Autonomous Drone Navigation',
+    type:        'TEKNOFEST',
+    typeClass:   'b-teknofest',
+    desc:        'Full autonomous drone for Teknofest 2026 UAV category — ROS2, sensor fusion, obstacle avoidance.',
+    skills:      ['C++', 'ROS2', 'Python', 'Computer Vision', 'Sensor Fusion'],
+    roles:       ['Computer Vision Developer', 'ROS2 Engineer'],
+    size:        6,
+    deadline:    '2026-04-15',
+    budget:      '',
+    active:      true,
+    advisorNeeded: true,
+    advisor:     'Prof. Ömer Şahin',
+    requests: [
+      { id: 'r1', name: 'Ali Kaya',  initials: 'AK', color: '#6366f1', role: 'Computer Vision Developer', year: '3rd Year', dept: 'Computer Eng.', skills: ['Python', 'OpenCV', 'C++'], time: '2 days ago' },
+      { id: 'r2', name: 'Mert Koç', initials: 'MK', color: '#22c55e', role: 'ROS2 Engineer',              year: '4th Year', dept: 'Computer Eng.', skills: ['ROS2', 'C++', 'Linux'], time: '5 days ago' },
+    ]
+  },
+  2: {
+    title:       'Smart Water IoT',
+    type:        'TÜBİTAK',
+    typeClass:   'b-tubitak',
+    desc:        'IoT sensor network for real-time water usage monitoring and leak detection on campus.',
+    skills:      ['Arduino', 'MQTT', 'Raspberry Pi', 'Python', 'InfluxDB'],
+    roles:       ['IoT Hardware Developer', 'Cloud Backend Dev'],
+    size:        3,
+    deadline:    '2026-04-15',
+    budget:      '₺9,000',
+    active:      true,
+    advisorNeeded: true,
+    advisor:     null,
+    requests: [
+      { id: 'r3', name: 'Selin Öz', initials: 'SÖ', color: '#f97316', role: 'IoT Hardware Developer', year: '2nd Year', dept: 'Electrical Eng.', skills: ['Arduino', 'MQTT', 'Python'], time: '1 day ago' },
+    ]
+  }
+};
+
+function openManagePanel(projectId) {
+  const p = MANAGE_DATA[projectId];
+  if (!p) return;
+
+  const typeColor = { 'TEKNOFEST': '#f97316', 'TÜBİTAK': '#6366f1', 'COURSE': '#00b8b8' };
+  const typeBg    = { 'TEKNOFEST': 'rgba(249,115,22,.10)', 'TÜBİTAK': 'rgba(99,102,241,.10)', 'COURSE': 'rgba(0,184,184,.10)' };
+
+  const skillChips = p.skills.map(s =>
+    `<span class="mg-chip" data-skill="${s}">${s} <button type="button" onclick="this.parentElement.remove()">✕</button></span>`
+  ).join('');
+
+  const roleItems = p.roles.map((r, i) =>
+    `<div class="mg-role-item" id="role_${i}">
+      <span>${r}</span>
+      <button type="button" onclick="this.closest('.mg-role-item').remove()">✕</button>
+    </div>`
+  ).join('');
+
+  const requestItems = p.requests.length === 0
+    ? `<div class="mg-empty">No pending join requests.</div>`
+    : p.requests.map(r => `
+        <div class="mg-req-item" id="mgreq_${r.id}">
+          <div class="mg-req-av" style="background:${r.color}">${r.initials}</div>
+          <div class="mg-req-body">
+            <strong>${r.name}</strong>
+            <span>${r.role} · ${r.dept} · ${r.year}</span>
+            <div class="mg-req-skills">${r.skills.map(s => `<span class="mg-req-chip">${s}</span>`).join('')}</div>
+            <span class="mg-req-time">📅 ${r.time}</span>
+          </div>
+          <div class="mg-req-acts">
+            <button class="mg-acc" onclick="mgAccept('mgreq_${r.id}','${r.name}')">✓</button>
+            <button class="mg-dec" onclick="mgDecline('mgreq_${r.id}')">✕</button>
+          </div>
+        </div>`
+      ).join('');
+
+  const overlay = document.createElement('div');
+  overlay.className = 'mg-overlay';
+  overlay.id = 'mgOverlay';
+  overlay.innerHTML = `
+    <div class="mg-panel">
+
+      <!-- Header -->
+      <div class="mg-header">
+        <div class="mg-header-l">
+          <span class="mg-type-badge" style="background:${typeBg[p.type]};color:${typeColor[p.type]}">${p.type}</span>
+          <h2 class="mg-title">${p.title}</h2>
+        </div>
+        <button class="mg-close" id="mgClose">✕</button>
+      </div>
+
+      <!-- Scrollable body -->
+      <div class="mg-body">
+
+        <!-- ── Section: Edit Details ── -->
+        <div class="mg-sec-label">✏️ EDIT PROJECT DETAILS</div>
+
+        <div class="mg-fg">
+          <label>Project Title</label>
+          <input type="text" id="mgTitle" value="${p.title}"/>
+        </div>
+
+        <div class="mg-fg">
+          <label>Description</label>
+          <textarea id="mgDesc" rows="3">${p.desc}</textarea>
+        </div>
+
+        <div class="mg-row2">
+          <div class="mg-fg">
+            <label>Max Team Size</label>
+            <input type="number" id="mgSize" value="${p.size}" min="2" max="20"/>
+          </div>
+          <div class="mg-fg">
+            <label>Deadline</label>
+            <input type="date" id="mgDeadline" value="${p.deadline}"/>
+          </div>
+        </div>
+
+        ${p.budget !== undefined ? `
+        <div class="mg-fg">
+          <label>Budget</label>
+          <input type="text" id="mgBudget" value="${p.budget}" placeholder="e.g. ₺9,000"/>
+        </div>` : ''}
+
+        <!-- Skills -->
+        <div class="mg-fg">
+          <label>Required Skills</label>
+          <div class="mg-chips-wrap" id="mgSkillsWrap" onclick="document.getElementById('mgSkillInp').focus()">
+            ${skillChips}
+            <input class="mg-chip-inp" id="mgSkillInp" type="text" placeholder="+ Add skill"/>
+          </div>
+        </div>
+
+        <!-- Roles -->
+        <div class="mg-fg">
+          <label>Roles Needed</label>
+          <div class="mg-roles-list" id="mgRolesList">${roleItems}</div>
+          <div class="mg-add-role-row">
+            <input type="text" id="mgRoleInp" placeholder="e.g. Backend Developer"/>
+            <button type="button" id="mgAddRole">+ Add</button>
+          </div>
+        </div>
+
+        <!-- ── Section: Status ── -->
+        <div class="mg-sec-label" style="margin-top:20px">🔘 PROJECT STATUS</div>
+
+        <div class="mg-toggle-row">
+          <div class="mg-toggle-l">
+            <b>Active</b>
+            <span>Active projects are visible to students. Inactive projects are hidden.</span>
+          </div>
+          <label class="mg-sw">
+            <input type="checkbox" id="mgActive" ${p.active ? 'checked' : ''}/>
+            <div class="mg-sw-track"></div>
+            <div class="mg-sw-thumb"></div>
+          </label>
+        </div>
+        <div class="mg-status-hint" id="mgStatusHint">
+          <span class="mg-dot ${p.active ? 'on' : 'off'}"></span>
+          <span id="mgStatusTxt">Project is currently <strong>${p.active ? 'visible' : 'hidden'}</strong></span>
+        </div>
+
+        ${p.advisorNeeded ? `
+        <div class="mg-toggle-row" style="margin-top:10px">
+          <div class="mg-toggle-l">
+            <b>Advisor Needed</b>
+            <span>${p.advisor ? `Assigned: ${p.advisor}` : 'Currently seeking an advisor'}</span>
+          </div>
+          <label class="mg-sw">
+            <input type="checkbox" id="mgAdvisor" checked/>
+            <div class="mg-sw-track"></div>
+            <div class="mg-sw-thumb"></div>
+          </label>
+        </div>` : ''}
+
+        <!-- ── Section: Join Requests ── -->
+        <div class="mg-sec-label" style="margin-top:20px">
+          📨 JOIN REQUESTS
+          <span class="mg-req-count">${p.requests.length}</span>
+        </div>
+        <div id="mgRequestsList">${requestItems}</div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="mg-footer">
+        <button class="mg-save" id="mgSave">💾 Save Changes</button>
+        <button class="mg-cancel" id="mgCancel">Cancel</button>
+      </div>
+
+    </div>`;
+
+  document.body.appendChild(overlay);
+  document.body.style.overflow = 'hidden';
+
+  /* ── Close ── */
+  function closePanel() {
+    overlay.remove();
+    document.body.style.overflow = '';
+  }
+  document.getElementById('mgClose').addEventListener('click', closePanel);
+  document.getElementById('mgCancel').addEventListener('click', closePanel);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closePanel(); });
+  document.addEventListener('keydown', function esc(e) {
+    if (e.key === 'Escape') { closePanel(); document.removeEventListener('keydown', esc); }
+  });
+
+  /* ── Skills chips ── */
+  const mgSkillInp  = document.getElementById('mgSkillInp');
+  const mgSkillWrap = document.getElementById('mgSkillsWrap');
+  function addMgChip(val) {
+    val = val.replace(/,/g, '').trim();
+    if (!val) return;
+    const chip = document.createElement('span');
+    chip.className = 'mg-chip';
+    chip.innerHTML = `${val} <button type="button" onclick="this.parentElement.remove()">✕</button>`;
+    mgSkillWrap.insertBefore(chip, mgSkillInp);
+  }
+  mgSkillInp?.addEventListener('keydown', e => {
+    if ((e.key === 'Enter' || e.key === ',') && mgSkillInp.value.trim()) {
+      e.preventDefault(); addMgChip(mgSkillInp.value); mgSkillInp.value = '';
+    }
+    if (e.key === 'Backspace' && !mgSkillInp.value) {
+      const chips = mgSkillWrap.querySelectorAll('.mg-chip');
+      if (chips.length) chips[chips.length - 1].remove();
+    }
+  });
+
+  /* ── Roles ── */
+  const mgRoleInp = document.getElementById('mgRoleInp');
+  document.getElementById('mgAddRole')?.addEventListener('click', () => {
+    const v = mgRoleInp.value.trim();
+    if (!v) return;
+    const idx = Date.now();
+    const item = document.createElement('div');
+    item.className = 'mg-role-item';
+    item.innerHTML = `<span>${v}</span><button type="button" onclick="this.closest('.mg-role-item').remove()">✕</button>`;
+    document.getElementById('mgRolesList')?.appendChild(item);
+    mgRoleInp.value = '';
+  });
+  mgRoleInp?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); document.getElementById('mgAddRole')?.click(); }
+  });
+
+  /* ── Active toggle hint ── */
+  document.getElementById('mgActive')?.addEventListener('change', function() {
+    const on = this.checked;
+    document.getElementById('mgStatusTxt').innerHTML = `Project is currently <strong>${on ? 'visible' : 'hidden'}</strong>`;
+    const dot = document.querySelector('.mg-dot');
+    if (dot) { dot.className = 'mg-dot ' + (on ? 'on' : 'off'); }
+  });
+
+  /* ── Save ── */
+  document.getElementById('mgSave')?.addEventListener('click', () => {
+    const saveBtn = document.getElementById('mgSave');
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving…';
+    setTimeout(() => {
+      closePanel();
+      showToast('✓ Project updated successfully!', 'ok');
+    }, 1000);
+  });
+}
+
+/* ── Accept / Decline from manage panel ── */
+function mgAccept(itemId, name) {
+  const el = document.getElementById(itemId);
+  if (!el) return;
+  el.style.background = 'rgba(34,197,94,.06)';
+  el.style.borderColor = 'rgba(34,197,94,.25)';
+  el.querySelector('.mg-req-acts').innerHTML = '<span style="font-size:.75rem;font-weight:700;color:var(--green)">✓ Accepted</span>';
+  showToast(`✓ ${name} accepted!`, 'ok');
+}
+
+function mgDecline(itemId) {
+  const el = document.getElementById(itemId);
+  if (el) { el.style.opacity = '.4'; el.style.pointerEvents = 'none'; }
+  showToast('Request declined.', '');
+}

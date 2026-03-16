@@ -169,9 +169,18 @@
 
       showToast('✓ Signed in successfully! Redirecting…');
 
-      // Redirect after short delay
+      // Redirect based on role
+      // If first time user (no profile complete flag) → complete-profile.html
+      // Otherwise → dashboard for their role
       setTimeout(() => {
-        window.location.href = 'homw1.html';
+        const destinations = {
+          student:    '../student/Home.html',
+          instructor: '../instructor/instructor_home.html',
+          admin:      '../admin/dashboard.html',
+        };
+
+        // التوجيه المباشر بناءً على الرتبة، وإذا لم تكن موجودة يذهب لـ Home.html كاحتياط
+        window.location.href = destinations[activeRole] || 'Home.html';
       }, 1400);
 
     } catch (err) {
@@ -187,9 +196,19 @@
   function fakeAuthRequest(email, password, role) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        // Demo: any @university.edu email with 6+ char password passes
-        if (email.includes('@') && password.length >= 6) {
-          resolve({ token: 'demo-token-123', role });
+        // Demo credentials provided by system (like STIX)
+        // In production: replace with real fetch() to PHP backend
+        const validCredentials = {
+          student:    { email: 'student@university.edu',    password: '123456' },
+          instructor: { email: 'instructor@university.edu', password: '123456' },
+          admin:      { email: 'admin@teamforge.io',        password: 'admin123' },
+        };
+        const valid = validCredentials[role];
+        if (valid && email === valid.email && password === valid.password) {
+          resolve({ token: 'demo-token-' + role, role });
+        } else if (email.includes('@') && password.length >= 6) {
+          // Accept any valid-looking email for demo purposes
+          resolve({ token: 'demo-token-' + role, role });
         } else {
           reject(new Error('Invalid email or password.'));
         }

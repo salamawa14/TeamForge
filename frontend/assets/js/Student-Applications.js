@@ -169,3 +169,130 @@ function declineApp(id) {
   el.querySelector('.app-right').innerHTML = '<span class="status s-rejected">DECLINED</span>';
   showToast('Application declined.', 'err');
 }
+
+/* ════════════════ APPLICANT PROFILE MODAL ════════════════ */
+
+const APPLICANTS = {
+  'Ali Kaya': {
+    initials: 'AK', color: '#6366f1',
+    dept: 'Computer Engineering', year: '3rd Year', gpa: '3.2',
+    skills: ['Arduino', 'MQTT', 'Raspberry Pi', 'Python', 'C++'],
+    interests: 'IoT, Embedded Systems, Smart Cities',
+    bio: 'Passionate about IoT and smart systems. Looking to contribute to real-world hardware projects.',
+    github: 'github.com/alikaya',
+    linkedin: 'linkedin.com/in/alikaya',
+    projects: ['Smart Home Automation (COURSE)', 'Campus Sensor Network (TÜBİTAK)'],
+    applying: 'IoT Hardware Developer',
+    project: 'Smart Water IoT',
+  },
+  'Selin Öz': {
+    initials: 'SÖ', color: '#f97316',
+    dept: 'Computer Engineering', year: '4th Year', gpa: '3.7',
+    skills: ['Python', 'Computer Vision', 'OpenCV', 'ROS2', 'C++'],
+    interests: 'Computer Vision, Autonomous Systems, Robotics',
+    bio: 'Final year student specializing in computer vision and autonomous systems. Competed in Teknofest 2024.',
+    github: 'github.com/selinoz',
+    linkedin: 'linkedin.com/in/selinoz',
+    projects: ['Line Following Robot (TEKNOFEST)', 'Object Detection System (TÜBİTAK)'],
+    applying: 'Computer Vision Developer',
+    project: 'Autonomous Drone Navigation',
+  }
+};
+
+function openApplicantProfile(name, itemId) {
+  const a = APPLICANTS[name];
+  if (!a) return;
+
+  const skillChips = a.skills.map(s =>
+    `<span class="apm-chip">${s}</span>`
+  ).join('');
+
+  const projectList = a.projects.map(p =>
+    `<div class="apm-proj-item">📁 ${p}</div>`
+  ).join('');
+
+  const overlay = document.createElement('div');
+  overlay.className = 'apm-overlay';
+  overlay.id = 'apmOverlay';
+  overlay.innerHTML = `
+    <div class="apm-modal">
+
+      <!-- Header -->
+      <div class="apm-header">
+        <button class="apm-close" id="apmClose">✕</button>
+        <div class="apm-av" style="background:${a.color}">${a.initials}</div>
+        <h2 class="apm-name">${name}</h2>
+        <div class="apm-meta">${a.dept} · ${a.year}</div>
+        <div class="apm-applying-badge">Applying for: <strong>${a.applying}</strong> → ${a.project}</div>
+      </div>
+
+      <!-- Body -->
+      <div class="apm-body">
+
+        <!-- Bio -->
+        <div class="apm-bio">${a.bio}</div>
+
+        <!-- Stats row -->
+        <div class="apm-stats">
+          <div class="apm-stat"><span class="apm-stat-n">${a.gpa}</span><span class="apm-stat-l">GPA</span></div>
+          <div class="apm-stat"><span class="apm-stat-n">${a.skills.length}</span><span class="apm-stat-l">Skills</span></div>
+          <div class="apm-stat"><span class="apm-stat-n">${a.projects.length}</span><span class="apm-stat-l">Projects</span></div>
+        </div>
+
+        <!-- Skills -->
+        <div class="apm-sec-label">⚡ TECHNICAL SKILLS</div>
+        <div class="apm-chips">${skillChips}</div>
+
+        <!-- Interests -->
+        <div class="apm-sec-label">💡 INTERESTS</div>
+        <div class="apm-interests">${a.interests}</div>
+
+        <!-- Previous Projects -->
+        <div class="apm-sec-label">📁 PREVIOUS PROJECTS</div>
+        <div class="apm-projects">${projectList}</div>
+
+        <!-- Links -->
+        <div class="apm-sec-label">🔗 LINKS</div>
+        <div class="apm-links">
+          <a class="apm-link" href="#">🐙 ${a.github}</a>
+          <a class="apm-link" href="#">💼 ${a.linkedin}</a>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="apm-foot">
+        <button class="apm-accept" id="apmAccept">✓ Accept</button>
+        <button class="apm-decline" id="apmDecline">✕ Decline</button>
+        <button class="apm-close-btn" id="apmCloseBtn">Close</button>
+      </div>
+
+    </div>`;
+
+  document.body.appendChild(overlay);
+  document.body.style.overflow = 'hidden';
+
+  function closeModal() {
+    overlay.remove();
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('apmClose').addEventListener('click', closeModal);
+  document.getElementById('apmCloseBtn').addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function esc(e) {
+    if (e.key === 'Escape') { closeModal(); document.removeEventListener('keydown', esc); }
+  });
+
+  // Accept from profile
+  document.getElementById('apmAccept').addEventListener('click', () => {
+    closeModal();
+    acceptApp(itemId, name);
+  });
+
+  // Decline from profile
+  document.getElementById('apmDecline').addEventListener('click', () => {
+    closeModal();
+    declineApp(itemId);
+  });
+}
