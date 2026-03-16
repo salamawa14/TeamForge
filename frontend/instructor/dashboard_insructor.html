@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/instructor.css/dashboard_insructor.css" />
+  <link rel="stylesheet" href="../assets/instructor.css/notification.css">
 </head>
 <body>
 
@@ -51,6 +52,22 @@
       <span class="topbar-title">📊 Dashboard</span>
       <div class="topbar-right">
         <button id="bellBtn" class="icon-btn">🔔<span class="dot"></span></button>
+
+<div class="notif-wrapper">
+  <div class="notif-dropdown" id="notif-dropdown">
+    <div class="notif-header">NOTIFICATIONS</div>
+
+    <div class="notif-item">
+      <div class="notif-icon green">✓</div>
+      <div>
+        <div class="notif-title">Application Accepted</div>
+        <div class="notif-sub">Autonomous Drone Navigation · 3 days ago</div>
+      </div>
+    </div>
+
+    
+  </div>
+</div>
         <button id="profileBtn" class="icon-btn">👤</button>
       </div>
     </header>
@@ -64,7 +81,7 @@
           <h1 class="welcome-title">Welcome, Dr. Kaplan 👋</h1>
           <p class="welcome-sub">Manage your advisor requests and student projects.</p>
         </div>
-        <button class="btn-view-requests" id="btn-view">👥 View Requests</button>
+       
       </div>
 
       <!-- Stat cards -->
@@ -159,5 +176,6 @@
 </div>
 
 <script src="../assets/instructor.js/dashboard_insructor.js"></script>
+<script src="../assets/instructor.js/notification.js"></script>
 </body>
 </html>

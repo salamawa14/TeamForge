@@ -7,12 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/instructor.css/advisees_instructor.css" />
+  <link rel="stylesheet" href="../assets/instructor.css/notification.css">
 </head>
 <body>
-
 <div class="page">
-
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-logo">
       <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
@@ -20,20 +18,17 @@
       </svg>
       TeamForge
     </div>
-
     <div class="role-badge">INSTRUCTOR</div>
-
     <nav class="sidebar-nav">
       <p class="nav-label">MAIN</p>
-      <a href="instructor_home.html"  class="nav-item">🏠 Home</a>
-      <a href="dashboard_insructor.html"        class="nav-item">📊 Dashboard</a>
-      <a href="advisor_req_insrtoctor.html" class="nav-item ">👤 Advisor Requests <span class="nav-badge">3</span></a>
-      <a href="advisees_instructor.html"      class="nav-item active">👥 My Advisees</a>
+      <a href="instructor_home.html"        class="nav-item">🏠 Home</a>
+      <a href="dashboard_insructor.html"    class="nav-item">📊 Dashboard</a>
+      <a href="advisor_req_insrtoctor.html" class="nav-item">👤 Advisor Requests <span class="nav-badge">3</span></a>
+      <a href="advisees_instructor.html"    class="nav-item active">👥 My Advisees</a>
       <p class="nav-label">ACCOUNT</p>
-      <a href="profile_instructor.html" class="nav-item">👤 My Profile</a>
-      <a href="set_acc_instructor.html"   class="nav-item">⚙️ Settings</a>
+      <a href="profile_instructor.html"     class="nav-item">👤 My Profile</a>
+      <a href="set_acc_instructor.html"     class="nav-item">⚙️ Settings</a>
     </nav>
-
     <div class="sidebar-user">
       <div class="avatar">AK</div>
       <div>
@@ -43,63 +38,134 @@
     </div>
   </aside>
 
-  <!-- MAIN -->
   <div class="main">
-
-    <!-- Topbar -->
     <header class="topbar">
       <span class="topbar-title">👥 My Advisees</span>
       <div class="topbar-right">
         <button id="bellBtn" class="icon-btn">🔔<span class="dot"></span></button>
+
+<div class="notif-wrapper">
+  <div class="notif-dropdown" id="notif-dropdown">
+    <div class="notif-header">NOTIFICATIONS</div>
+
+    <div class="notif-item">
+      <div class="notif-icon green">✓</div>
+      <div>
+        <div class="notif-title">Application Accepted</div>
+        <div class="notif-sub">Autonomous Drone Navigation · 3 days ago</div>
+      </div>
+    </div>
+
+    
+  </div>
+</div>
         <button id="profileBtn" class="icon-btn">👤</button>
       </div>
     </header>
 
-    <!-- Content -->
     <div class="content">
-
       <h1 class="page-title">My Advisees</h1>
       <p class="page-sub">Students you are currently advising (4/5 slots used).</p>
 
-      <div class="advisees-grid">
+      <div class="main-layout" id="main-layout">
 
-        <div class="advisee-card">
-          <div class="advisee-avatar" style="background:#8b5cf6;">HK</div>
-          <div class="advisee-name">Hamza Kadir</div>
-          <div class="advisee-type">Teknofest Project</div>
-          <div class="advisee-project">Drone Navigation</div>
-          <span class="tag teknofest">TEKNOFEST</span>
+        <div class="cards-grid" id="cards-grid">
+
+          <div class="advisee-card"
+            data-av="HK" data-color="#8b5cf6" data-name="Hamza Kadir"
+            data-year="4th Year" data-dept="Computer Engineering" data-gpa="3.7"
+            data-projects="1" data-seeking="No"
+            data-bio="Senior student specializing in robotics. Working on drone navigation for Teknofest."
+            data-skills="C++,ROS,Python,OpenCV" data-interests="Robotics,Computer Vision,UAV"
+            data-proj-tag="TEKNOFEST" data-proj-name="Autonomous Drone Nav.">
+            <div class="card-avatar" style="background:#8b5cf6;">HK</div>
+            <div class="card-name">Hamza Kadir</div>
+            <div class="card-type">Teknofest Project</div>
+            <div class="card-project">Drone Navigation</div>
+            <span class="badge tek">TEKNOFEST</span>
+          </div>
+
+          <div class="advisee-card"
+            data-av="NA" data-color="#1a9e8f" data-name="Nisan Ay"
+            data-year="3rd Year" data-dept="Computer Engineering" data-gpa="3.8"
+            data-projects="1" data-seeking="No"
+            data-bio="Passionate about AI. Researching crop disease detection with deep learning."
+            data-skills="Python,TensorFlow,OpenCV,Data Science" data-interests="Machine Learning,Agriculture Tech,Computer Vision"
+            data-proj-tag="TÜBİTAK" data-proj-name="AI Crop Disease Detection">
+            <div class="card-avatar" style="background:#1a9e8f;">NA</div>
+            <div class="card-name">Nisan Ay</div>
+            <div class="card-type">TÜBİTAK Project</div>
+            <div class="card-project">Crop Disease AI</div>
+            <span class="badge tub">TÜBİTAK</span>
+          </div>
+
+          <div class="advisee-card"
+            data-av="NC" data-color="#3b82f6" data-name="Nurem Can"
+            data-year="3rd Year" data-dept="Electrical Engineering" data-gpa="3.2"
+            data-projects="1" data-seeking="No"
+            data-bio="Working on smart water monitoring systems using IoT and embedded systems."
+            data-skills="Arduino,IoT,MQTT,Raspberry Pi" data-interests="Embedded Systems,Smart Cities,IoT"
+            data-proj-tag="TÜBİTAK" data-proj-name="Smart Water IoT">
+            <div class="card-avatar" style="background:#3b82f6;">NC</div>
+            <div class="card-name">Nurem Can</div>
+            <div class="card-type">TÜBİTAK Project</div>
+            <div class="card-project">Water IoT System</div>
+            <span class="badge tub">TÜBİTAK</span>
+          </div>
+
+          <div class="advisee-card"
+            data-av="ŞY" data-color="#f59e0b" data-name="Şan Yılmaz"
+            data-year="4th Year" data-dept="Computer Engineering" data-gpa="3.3"
+            data-projects="1" data-seeking="No"
+            data-bio="Building AR campus navigation app for Teknofest. Interested in XR technologies."
+            data-skills="Unity,C#,ARCore,3D Modeling" data-interests="Augmented Reality,Game Dev,XR"
+            data-proj-tag="TEKNOFEST" data-proj-name="AR Campus Navigation">
+            <div class="card-avatar" style="background:#f59e0b;">ŞY</div>
+            <div class="card-name">Şan Yılmaz</div>
+            <div class="card-type">Teknofest Project</div>
+            <div class="card-project">AR Campus App</div>
+            <span class="badge tek">TEKNOFEST</span>
+          </div>
+
         </div>
 
-        <div class="advisee-card">
-          <div class="advisee-avatar" style="background:#1a9e8f;">NA</div>
-          <div class="advisee-name">Nisan Ay</div>
-          <div class="advisee-type">TÜBİTAK Project</div>
-          <div class="advisee-project">Crop Disease AI</div>
-          <span class="tag tubitak">TÜBİTAK</span>
-        </div>
+        <!-- DETAIL PANEL -->
+        <div class="detail-panel" id="detail-panel">
+          <button class="panel-close" id="panel-close">✕</button>
+          <div class="panel-header">
+            <div class="panel-avatar" id="panel-av"></div>
+          </div>
+          <div class="panel-body">
+            <div class="panel-name"    id="panel-name"></div>
+            <div class="panel-year"    id="panel-year"></div>
+            <div class="panel-dept"    id="panel-dept"></div>
+            <div class="panel-bio"     id="panel-bio"></div>
 
-        <div class="advisee-card">
-          <div class="advisee-avatar" style="background:#3b82f6;">NC</div>
-          <div class="advisee-name">Nurem Can</div>
-          <div class="advisee-type">TÜBİTAK Project</div>
-          <div class="advisee-project">Water IoT System</div>
-          <span class="tag tubitak">TÜBİTAK</span>
-        </div>
+            <div class="panel-section-label">⚙ TECHNICAL SKILLS</div>
+            <div class="panel-tags" id="panel-skills"></div>
 
-        <div class="advisee-card">
-          <div class="advisee-avatar" style="background:#f59e0b;">ŞY</div>
-          <div class="advisee-name">Şan Yılmaz</div>
-          <div class="advisee-type">Teknofest Project</div>
-          <div class="advisee-project">AR Campus App</div>
-          <span class="tag teknofest">TEKNOFEST</span>
+            <div class="panel-section-label">💡 INTERESTS</div>
+            <div class="panel-tags" id="panel-interests"></div>
+
+            <div class="panel-section-label">📊 STATS</div>
+            <div class="panel-stats">
+              <div class="stat-box"><div class="stat-num" id="panel-proj-num"></div><div class="stat-lbl">Projects</div></div>
+              <div class="stat-box"><div class="stat-num" id="panel-gpa"></div><div class="stat-lbl">GPA</div></div>
+              <div class="stat-box"><div class="stat-num" id="panel-seeking"></div><div class="stat-lbl">Seeking</div></div>
+            </div>
+
+            <div class="panel-section-label">📁 PROJECT</div>
+            <div id="panel-proj-box"></div>
+
+            
+          </div>
         </div>
 
       </div>
     </div>
   </div>
 </div>
-
 <script src="../assets/instructor.js/advisees_instructor.js"></script>
+<script src="../assets/instructor.js/notification.js"></script>
 </body>
 </html>

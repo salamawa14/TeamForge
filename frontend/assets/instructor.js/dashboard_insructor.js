@@ -14,12 +14,11 @@ document.querySelectorAll('.btn-accept, .btn-reject').forEach(function(btn) {
     }, 300);
   });
 });
-document.getElementById("bellBtn").addEventListener("click", function () {
-    window.location.href = "set_not_instructor.html";
-});
+
 document.getElementById("profileBtn").addEventListener("click", function () {
     window.location.href = "profile_instructor.html";
 });
+
 
 // Availability toggle
 document.querySelectorAll('.toggle-btn').forEach(function(btn) {

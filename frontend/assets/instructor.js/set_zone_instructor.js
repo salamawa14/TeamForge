@@ -8,7 +8,7 @@ document.getElementById('btn-pause').addEventListener('click', function() {
   btn.style.borderColor= paused ? '' : '#fed7aa';
   showToast(paused ? 'Account resumed — visible to students' : 'Account paused — hidden from searches', paused ? 'teal' : 'orange');
 });
-
+  
 // Export Data
 document.getElementById('btn-export').addEventListener('click', function() {
   var btn = this;
@@ -20,12 +20,9 @@ document.getElementById('btn-export').addEventListener('click', function() {
     setTimeout(function() { btn.textContent = 'Export Data'; btn.disabled = false; }, 3000);
   }, 1500);
 });
-document.getElementById("bellBtn").addEventListener("click", function () {
-    window.location.href = "set_not_instructor.html";
-});
-document.getElementById("profileBtn").addEventListener("click", function () {
-    window.location.href = "profile_instructor.html";
-});
+
+
+
 // Delete Account
 document.getElementById('btn-delete').addEventListener('click', function() {
   var confirmed = confirm('Are you absolutely sure?\n\nThis will permanently delete your account and all associated data. This action cannot be undone.');
@@ -35,6 +32,9 @@ document.getElementById('btn-delete').addEventListener('click', function() {
 // Save Changes
 document.getElementById('btn-save').addEventListener('click', function() {
   showToast('Settings saved');
+});
+document.getElementById("profileBtn").addEventListener("click", function () {
+    window.location.href = "profile_instructor.html";
 });
 
 // Toast
@@ -51,10 +51,12 @@ function showToast(msg, color) {
     opacity: '0', transform: 'translateY(10px)',
     transition: 'all 0.25s', zIndex: '9999'
   });
+
   document.body.appendChild(t);
   requestAnimationFrame(function() {
     requestAnimationFrame(function() { t.style.opacity = '1'; t.style.transform = 'translateY(0)'; });
   });
+
   setTimeout(function() {
     t.style.opacity = '0';
     setTimeout(function() { t.remove(); }, 300);

@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/instructor.css/advisor_req_instructor.css" />
+  <link rel="stylesheet" href="../assets/instructor.css/notification.css">
 </head>
 <body>
 
@@ -51,6 +52,22 @@
       <span class="topbar-title">👤 Advisor Requests</span>
       <div class="topbar-right">
         <button id="bellBtn" class="icon-btn">🔔<span class="dot"></span></button>
+
+<div class="notif-wrapper">
+  <div class="notif-dropdown" id="notif-dropdown">
+    <div class="notif-header">NOTIFICATIONS</div>
+
+    <div class="notif-item">
+      <div class="notif-icon green">✓</div>
+      <div>
+        <div class="notif-title">Application Accepted</div>
+        <div class="notif-sub">Autonomous Drone Navigation · 3 days ago</div>
+      </div>
+    </div>
+
+    
+  </div>
+</div>
         <button id="profileBtn" class="icon-btn">👤</button>
       </div>
     </header>
@@ -158,5 +175,6 @@
 </div>
 
 <script src="../assets/instructor.js/advisor_req_instructor.js"></script>
+<script src="../assets/instructor.js/notification.js"></script>
 </body>
 </html>
