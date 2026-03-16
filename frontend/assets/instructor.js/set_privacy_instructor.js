@@ -5,9 +5,7 @@ document.getElementById('btn-save').addEventListener('click', function() {
   setTimeout(function() { btn.textContent = '💾 Save Changes'; btn.style.background = ''; }, 2000);
   showToast('Privacy settings saved');
 });
-document.getElementById("bellBtn").addEventListener("click", function () {
-    window.location.href = "set_not_instructor.html";
-});
+
 document.getElementById("profileBtn").addEventListener("click", function () {
     window.location.href = "profile_instructor.html";
 });
@@ -27,6 +25,7 @@ function showToast(msg) {
   requestAnimationFrame(function() {
     requestAnimationFrame(function() { t.style.opacity = '1'; t.style.transform = 'translateY(0)'; });
   });
+  
   setTimeout(function() {
     t.style.opacity = '0';
     setTimeout(function() { t.remove(); }, 300);

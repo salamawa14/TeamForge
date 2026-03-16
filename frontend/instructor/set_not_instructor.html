@@ -7,29 +7,39 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/instructor.css/set_not_instructor.css" />
+  <link rel="stylesheet" href="../assets/instructor.css/notification.css">
 </head>
 <body>
 <div class="page">
 
   <aside class="sidebar">
-    <div class="logo">TeamForge</div>
+    <div class="sidebar-logo">
+      <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+        <path d="M16 2L28 9V23L16 30L4 23V9L16 2Z" stroke="#1a9e8f" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      TeamForge
+    </div>
+
     <div class="role-badge">INSTRUCTOR</div>
-    <nav>
+
+    <nav class="sidebar-nav">
       <p class="nav-label">MAIN</p>
-      <a href="instructor_home.html"             class="nav-item">🏠 Home</a>
-      <a href="dashboard_insructor.html"        class="nav-item">📊 Dashboard</a>
-      <a href="advisor_req_insrtoctor.html" class="nav-item">👤 Advisor Requests <span class="badge">3</span></a>
-      <a href="advisees_instructor.html"      class="nav-item">👥 My Advisees</a>
-      <p class="nav-label">EXPLORE</p>
-      <a href="#" class="nav-item">🔍 Browse Students</a>
-      <a href="#" class="nav-item">📁 Active Projects</a>
+      <a href="instructor_home.html" class="nav-item">🏠 Home</a>
+      <a href="dashboard_insructor.html" class="nav-item">📊 Dashboard</a>
+      <a href="advisor_req_insrtoctor.html" class="nav-item">👤 Advisor Requests <span class="nav-badge">3</span></a>
+      <a href="advisees_instructor.html" class="nav-item">👥 My Advisees</a>
+
       <p class="nav-label">ACCOUNT</p>
       <a href="profile_instructor.html" class="nav-item">👤 My Profile</a>
-      <a href="#"                  class="nav-item active">⚙️ Settings</a>
+      <a href="set_acc_instructor.html" class="nav-item active">⚙️ Settings</a>
     </nav>
+
     <div class="sidebar-user">
       <div class="avatar">AK</div>
-      <div><div class="u-name">Dr. Ahmet Kaplan</div><div class="u-sub">Computer Eng.</div></div>
+      <div>
+        <div class="user-name">Dr. Ahmet Kaplan</div>
+        <div class="user-sub">Computer Eng.</div>
+      </div>
     </div>
   </aside>
 
@@ -37,63 +47,167 @@
     <header class="topbar">
       <span>⚙️ Settings</span>
       <div class="topbar-right">
-        <button id="bellBtn" class="icon-btn">🔔<span class="dot"></span></button>
-        <button id="profileBtn" class="icon-btn">👤</button>
+<button id="bellBtn" class="icon-btn">🔔<span class="dot"></span></button>
+
+<div class="notif-wrapper">
+  <div class="notif-dropdown" id="notif-dropdown">
+    <div class="notif-header">NOTIFICATIONS</div>
+
+    <div class="notif-item">
+      <div class="notif-icon green">✓</div>
+      <div>
+        <div class="notif-title">Application Accepted</div>
+        <div class="notif-sub">Autonomous Drone Navigation · 3 days ago</div>
+      </div>
+    </div>
+
+    
+  </div>
+</div>        <button id="profileBtn" class="icon-btn">👤</button>
       </div>
     </header>
 
     <div class="content">
-      <div class="page-hdr">
-        <div><h1 class="page-title">Settings ⚙️</h1><p class="page-sub">Manage your account preferences, notifications, and security.</p></div>
-        <button class="btn-save" id="btn-save">💾 Save Changes</button>
-      </div>
+      <div class="content-wrap">
 
-      <div class="layout">
-
-        <!-- Settings nav -->
-        <nav class="snav">
-          <a href="set_acc_instructor.html"              class="si">👤 Account</a>
-          <a href="#"                              class="si active">🔔 Notifications</a>
-          <a href="set_avail_instructor.html"  class="si">🎓 Availability</a>
-          <a href="set_privacy_instructor.html"       class="si">🔒 Privacy</a>
-          <a href="set_security_instructor.html"      class="si">🛡️ Security</a>
-          <a href="set_zone_instructor.html"        class="si danger">⚠️ Danger Zone</a>
-        </nav>
-
-        <!-- Panels -->
-        <div class="panels">
-
-          <!-- Email Notifications -->
-          <div class="card">
-            <div class="sec-hdr">
-              <span class="sec-icon">🔔</span>
-              <div><div class="sec-title">Email Notifications</div><div class="sec-sub">Control when we send you email alerts.</div></div>
-            </div>
-            <div class="row"><div><div class="rt">New Advisor Requests</div><div class="rs">Email when a student sends you a new advisor request</div></div><label class="sw"><input type="checkbox" checked /><span class="sl"></span></label></div>
-            <div class="row"><div><div class="rt">Request Reminders</div><div class="rs">Reminder after 48 hours if a request is still pending</div></div><label class="sw"><input type="checkbox" checked /><span class="sl"></span></label></div>
-            <div class="row"><div><div class="rt">Platform Announcements</div><div class="rs">TÜBİTAK and Teknofest deadline alerts from admins</div></div><label class="sw"><input type="checkbox" checked /><span class="sl"></span></label></div>
-            <div class="row"><div><div class="rt">New Student Joined</div><div class="rs">Notify when a student matching your expertise joins</div></div><label class="sw"><input type="checkbox" /><span class="sl"></span></label></div>
-            <div class="row last"><div><div class="rt">Weekly Summary</div><div class="rs">Weekly digest of platform activity and your stats</div></div><label class="sw"><input type="checkbox" checked /><span class="sl"></span></label></div>
+        <div class="page-head">
+          <div>
+            <h1 class="page-title">Settings ⚙️</h1>
+            <p class="page-sub">Manage your account preferences, notifications, and security.</p>
           </div>
-
-          <!-- In-App Notifications -->
-          <div class="card">
-            <div class="sec-hdr">
-              <span class="sec-icon">🔔</span>
-              <div><div class="sec-title">In-App Notifications</div><div class="sec-sub">Control alerts inside the platform.</div></div>
-            </div>
-            <div class="row"><div><div class="rt">Sound Alerts</div><div class="rs">Play a sound when a new notification arrives</div></div><label class="sw"><input type="checkbox" /><span class="sl"></span></label></div>
-            <div class="row"><div><div class="rt">Desktop Push Notifications</div><div class="rs">Show browser notifications when the tab is not active</div></div><label class="sw"><input type="checkbox" /><span class="sl"></span></label></div>
-            <div class="row last"><div><div class="rt">Notification Frequency</div><div class="rs">How often to batch and send digest emails</div></div>
-              <select class="sel"><option>Daily digest</option><option>Instant</option><option>Weekly digest</option></select>
-            </div>
-          </div>
-
+          <button class="btn-save" id="btn-save">💾 Save Changes</button>
         </div>
+
+        <div class="layout">
+          <nav class="settings-nav">
+            <a href="set_acc_instructor.html" class="settings-item">👤 Account</a>
+            <a href="#" class="settings-item active">🔔 Notifications</a>
+            <a href="set_avail_instructor.html" class="settings-item">🎓 Availability</a>
+            <a href="set_privacy_instructor.html" class="settings-item">🔒 Privacy</a>
+            <a href="set_security_instructor.html" class="settings-item">🛡️ Security</a>
+            <a href="set_zone_instructor.html" class="settings-item danger">⚠️ Danger Zone</a>
+          </nav>
+
+          <div class="panels">
+
+            <div class="card">
+              <div class="section-head">
+                <span>🔔</span>
+                <div>
+                  <div class="section-title">Email Notifications</div>
+                  <div class="section-sub">Control when we send you email alerts.</div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <div class="row-title">New Advisor Requests</div>
+                  <div class="row-sub">Email when a student sends you a new advisor request</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="row">
+                <div>
+                  <div class="row-title">Request Reminders</div>
+                  <div class="row-sub">Reminder after 48 hours if a request is still pending</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="row">
+                <div>
+                  <div class="row-title">Platform Announcements</div>
+                  <div class="row-sub">TÜBİTAK and Teknofest deadline alerts from admins</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="row">
+                <div>
+                  <div class="row-title">New Student Joined</div>
+                  <div class="row-sub">Notify when a student matching your expertise joins</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" />
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="row last">
+                <div>
+                  <div class="row-title">Weekly Summary</div>
+                  <div class="row-sub">Weekly digest of platform activity and your stats</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="section-head">
+                <span>🔔</span>
+                <div>
+                  <div class="section-title">In-App Notifications</div>
+                  <div class="section-sub">Control alerts inside the platform.</div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <div class="row-title">Sound Alerts</div>
+                  <div class="row-sub">Play a sound when a new notification arrives</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" />
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="row">
+                <div>
+                  <div class="row-title">Desktop Push Notifications</div>
+                  <div class="row-sub">Show browser notifications when the tab is not active</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" />
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="row last">
+                <div>
+                  <div class="row-title">Notification Frequency</div>
+                  <div class="row-sub">How often to batch and send digest emails</div>
+                </div>
+                <select class="select">
+                  <option>Daily digest</option>
+                  <option>Instant</option>
+                  <option>Weekly digest</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 </div>
+
 <script src="../assets/instructor.js/set_not_instructor.js"></script>
+<script src="../assets/instructor.js/notification.js"></script>
 </body>
 </html>

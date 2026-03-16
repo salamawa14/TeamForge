@@ -17,12 +17,11 @@ document.querySelectorAll('.toggle-btn').forEach(function(btn) {
     btn.classList.add('active');
   });
 });
-document.getElementById("bellBtn").addEventListener("click", function () {
-    window.location.href = "set_not_instructor.html";
-});
+
 document.getElementById("profileBtn").addEventListener("click", function () {
     window.location.href = "profile_instructor.html";
 });
+
 document.getElementById("notBtn").addEventListener("click", function () {
     window.location.href = "set_not_instructor.html";
 });

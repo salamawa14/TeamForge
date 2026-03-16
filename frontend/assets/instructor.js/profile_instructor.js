@@ -26,6 +26,7 @@ document.querySelectorAll('.avail-badge').forEach(function(badge) {
   });
 });
 
+
 // Save Changes
 document.getElementById('btn-save').addEventListener('click', function() {
   var btn = this;
@@ -39,9 +40,7 @@ document.getElementById('btn-save').addEventListener('click', function() {
 });
 
 // Toast
-document.getElementById("bellBtn").addEventListener("click", function () {
-    window.location.href = "set_not_instructor.html";
-});
+
 document.getElementById("profileBtn").addEventListener("click", function () {
     window.location.href = "profile_instructor.html";
 });
