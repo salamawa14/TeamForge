@@ -22,6 +22,16 @@ document.addEventListener('click', function() {
 document.getElementById("profileBtn").addEventListener("click", function () {
     window.location.href = "profile_instructor.html";
 });
+document.getElementById("editprofile").addEventListener("click", function () {
+    window.location.href = "profile_instructor.html";
+});
+document.getElementById("revReq").addEventListener("click", function () {
+    window.location.href = "advisor_req_insrtoctor.html";
+});
+document.getElementById("revReq1").addEventListener("click", function () {
+    window.location.href = "advisor_req_insrtoctor.html";
+});
+
 
   tabs.forEach(tab => {
     tab.addEventListener("click", (e) => {

@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TeamForge — Advisor Requests</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/instructor.css/advisor_req_instructor.css" />
-  <link rel="stylesheet" href="../assets/instructor.css/notification.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>TeamForge · Advisor Requests</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../assets/instructor.css/advisor_req_instructor.css"/>
 </head>
 <body>
+<div class="shell">
 
-<div class="page">
-
-  <!-- SIDEBAR -->
+  <!-- SIDEBAR — unchanged -->
   <aside class="sidebar">
     <div class="sidebar-logo">
       <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
@@ -21,22 +19,19 @@
       </svg>
       TeamForge
     </div>
-
     <div class="role-badge">INSTRUCTOR</div>
-
     <nav class="sidebar-nav">
       <p class="nav-label">MAIN</p>
-      <a href="instructor_home.html"  class="nav-item">🏠 Home</a>
-      <a href="dashboard_insructor.html"        class="nav-item">📊 Dashboard</a>
+      <a href="instructor_home.html"        class="nav-item">🏠 Home</a>
+      <a href="dashboard_insructor.html"    class="nav-item">📊 Dashboard</a>
       <a href="advisor_req_insrtoctor.html" class="nav-item active">👤 Advisor Requests <span class="nav-badge">3</span></a>
-      <a href="advisees_instructor.html"      class="nav-item">👥 My Advisees</a>
+      <a href="advisees_instructor.html"    class="nav-item">👥 My Advisees</a>
       <p class="nav-label">ACCOUNT</p>
-      <a href="profile_instructor.html" class="nav-item">👤 My Profile</a>
-      <a href="set_acc_instructor.html"   class="nav-item">⚙️ Settings</a>
+      <a href="profile_instructor.html"     class="nav-item">👤 My Profile</a>
+      <a href="set_acc_instructor.html"     class="nav-item">⚙️ Settings</a>
     </nav>
-
     <div class="sidebar-user">
-      <div class="avatar">AK</div>
+      <div class="sidebar-avatar">AK</div>
       <div>
         <div class="user-name">Dr. Ahmet Kaplan</div>
         <div class="user-sub">Computer Eng.</div>
@@ -46,135 +41,126 @@
 
   <!-- MAIN -->
   <div class="main">
-
-    <!-- Topbar -->
     <header class="topbar">
-      <span class="topbar-title">👤 Advisor Requests</span>
-      <div class="topbar-right">
-        <button id="bellBtn" class="icon-btn">🔔<span class="dot"></span></button>
-
-<div class="notif-wrapper">
-  <div class="notif-dropdown" id="notif-dropdown">
-    <div class="notif-header">NOTIFICATIONS</div>
-
-    <div class="notif-item">
-      <div class="notif-icon green">✓</div>
-      <div>
-        <div class="notif-title">Application Accepted</div>
-        <div class="notif-sub">Autonomous Drone Navigation · 3 days ago</div>
+      <div class="tb-left">
+        <button class="burger" id="burg">☰</button>
+        <span class="tb-icon">👤</span>
+        <span class="tb-title">Advisor Requests</span>
       </div>
-    </div>
-
-    
-  </div>
-</div>
-        <button id="profileBtn" class="icon-btn">👤</button>
+      <div class="tb-right">
+        <button class="icon-btn" id="nBtn">🔔<span class="notif-dot"></span></button>
+        <a href="profile_instructor.html"><div class="tb-avatar">AK</div></a>
+        <div class="notif-panel" id="nPanel">
+          <div class="np-head">Notifications</div>
+          <div class="np-item unread"><span class="np-ico">✅</span><div class="np-body"><strong>Request Accepted</strong><span>Hamza Kadir — Smart Campus · 3 days ago</span></div></div>
+          <div class="np-item unread"><span class="np-ico">👤</span><div class="np-body"><strong>New Advisor Request</strong><span>Jeren Student → Smart Campus IoT · 2 hours ago</span></div></div>
+          <div class="np-item"><span class="np-ico">📢</span><div class="np-body"><strong>TÜBİTAK 2209-A Open</strong><span>Deadline April 15, 2026</span></div></div>
+        </div>
       </div>
     </header>
 
-    <!-- Content -->
-    <div class="content">
-
-      <h1 class="page-title">Advisor Requests</h1>
-      <p class="page-sub">Review and respond to student advisor requests.</p>
-
-      <!-- Tabs -->
-      <div class="tabs">
-        <button class="tab active" data-tab="pending">Pending (3)</button>
-        <button class="tab"        data-tab="accepted">Accepted (4)</button>
-        <button class="tab"        data-tab="rejected">Rejected (1)</button>
-      </div>
-
-      <!-- Pending -->
-      <div class="tab-content active" id="tab-pending">
-
-        <div class="req-card" id="r1">
-          <div class="req-avatar" style="background:#3b82f6;">JS</div>
-          <div class="req-body">
-            <div class="req-name">Jeren Student</div>
-            <span class="tag teknofest">TEKNOFEST</span>
-            <div class="req-desc"><strong>Smart Campus IoT</strong> – Teknofest project with IoT and ML integration for smart campus environments.</div>
-            <div class="req-time">2 hours ago</div>
-          </div>
-          <div class="req-actions">
-            <button class="btn-accept" data-id="r1">✓ Accept</button>
-            <button class="btn-reject" data-id="r1">✗ Reject</button>
-          </div>
-        </div>
-
-        <div class="req-card" id="r2">
-          <div class="req-avatar" style="background:#f59e0b;">OS</div>
-          <div class="req-body">
-            <div class="req-name">Osama Sami</div>
-            <span class="tag tubitak">TÜBİTAK</span>
-            <div class="req-desc"><strong>AI Healthcare NLP</strong> – TÜBİTAK project using NLP for medical record classification.</div>
-            <div class="req-time">1 day ago</div>
-          </div>
-          <div class="req-actions">
-            <button class="btn-accept" data-id="r2">✓ Accept</button>
-            <button class="btn-reject" data-id="r2">✗ Reject</button>
-          </div>
-        </div>
-
-        <div class="req-card" id="r3">
-          <div class="req-avatar" style="background:#8b5cf6;">AD</div>
-          <div class="req-body">
-            <div class="req-name">Amara Diallo</div>
-            <span class="tag tubitak">TÜBİTAK</span>
-            <div class="req-desc"><strong>Social Media Sentiment</strong> – Analyzing social media for real-time public opinion using ML.</div>
-            <div class="req-time">2 days ago</div>
-          </div>
-          <div class="req-actions">
-            <button class="btn-accept" data-id="r3">✓ Accept</button>
-            <button class="btn-reject" data-id="r3">✗ Reject</button>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Accepted -->
-      <div class="tab-content" id="tab-accepted">
-        <div class="req-card resolved">
-          <div class="req-avatar" style="background:#1a9e8f;">HK</div>
-          <div class="req-body">
-            <div class="req-name">Hamza Kadir</div>
-            <span class="tag teknofest">TEKNOFEST</span>
-            <div class="req-desc"><strong>Smart Campus Scheduling</strong> – Automated campus resource scheduling system.</div>
-            <div class="req-time">3 days ago</div>
-          </div>
-          <span class="status-badge accepted">✓ Accepted</span>
-        </div>
-        <div class="req-card resolved">
-          <div class="req-avatar" style="background:#3b82f6;">NA</div>
-          <div class="req-body">
-            <div class="req-name">Nisan Ay</div>
-            <span class="tag tubitak">TÜBİTAK</span>
-            <div class="req-desc"><strong>Quantum Computing Sim</strong> – Physics-based quantum simulation framework.</div>
-            <div class="req-time">5 days ago</div>
-          </div>
-          <span class="status-badge accepted">✓ Accepted</span>
+    <main class="page">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">👤 Advisor Requests</h1>
+          <p class="page-sub">Review and respond to student advisor requests.</p>
         </div>
       </div>
 
-      <!-- Rejected -->
-      <div class="tab-content" id="tab-rejected">
-        <div class="req-card resolved">
-          <div class="req-avatar" style="background:#ef4444;">MK</div>
-          <div class="req-body">
-            <div class="req-name">Mehmet Kaya</div>
-            <span class="tag teknofest">TEKNOFEST</span>
-            <div class="req-desc"><strong>Drone Navigation</strong> – Autonomous drone path planning using reinforcement learning.</div>
-            <div class="req-time">1 week ago</div>
-          </div>
-          <span class="status-badge rejected">✗ Rejected</span>
+      <div class="card au">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="pending">Pending <span class="tab-count teal">3</span></button>
+          <button class="tab-btn" data-tab="accepted">Accepted <span class="tab-count">4</span></button>
+          <button class="tab-btn" data-tab="rejected">Rejected <span class="tab-count">1</span></button>
         </div>
-      </div>
 
-    </div>
+        <!-- PENDING -->
+        <div class="tab-pane active" id="pane-pending">
+
+          <div class="app-item" id="r1">
+            <div class="app-av" style="background:#3b82f6;">JS</div>
+            <div class="app-body">
+              <strong>Jeren Student</strong>
+              <span class="sub"><span class="badge b-teknofest">TEKNOFEST</span> &nbsp;<b>Smart Campus IoT</b> – IoT and ML for smart campus environments.</span>
+              <span class="ts">📅 2 hours ago</span>
+            </div>
+            <div class="app-right">
+              <button class="btn-view-profile" onclick="openProfile('Jeren Student','r1')">👁 View Profile</button>
+              <button class="btn-acc" onclick="acceptReq('r1','Jeren Student')">✓ Accept</button>
+              <button class="btn-dec" onclick="rejectReq('r1')">✗ Reject</button>
+            </div>
+          </div>
+
+          <div class="app-item" id="r2">
+            <div class="app-av" style="background:#f59e0b;">OS</div>
+            <div class="app-body">
+              <strong>Osama Sami</strong>
+              <span class="sub"><span class="badge b-tubitak">TÜBİTAK</span> &nbsp;<b>AI Healthcare NLP</b> – NLP for medical record classification.</span>
+              <span class="ts">📅 1 day ago</span>
+            </div>
+            <div class="app-right">
+              <button class="btn-view-profile" onclick="openProfile('Osama Sami','r2')">👁 View Profile</button>
+              <button class="btn-acc" onclick="acceptReq('r2','Osama Sami')">✓ Accept</button>
+              <button class="btn-dec" onclick="rejectReq('r2')">✗ Reject</button>
+            </div>
+          </div>
+
+          <div class="app-item" id="r3">
+            <div class="app-av" style="background:#8b5cf6;">AD</div>
+            <div class="app-body">
+              <strong>Amara Diallo</strong>
+              <span class="sub"><span class="badge b-tubitak">TÜBİTAK</span> &nbsp;<b>Social Media Sentiment</b> – Real-time public opinion using ML.</span>
+              <span class="ts">📅 2 days ago</span>
+            </div>
+            <div class="app-right">
+              <button class="btn-view-profile" onclick="openProfile('Amara Diallo','r3')">👁 View Profile</button>
+              <button class="btn-acc" onclick="acceptReq('r3','Amara Diallo')">✓ Accept</button>
+              <button class="btn-dec" onclick="rejectReq('r3')">✗ Reject</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ACCEPTED -->
+        <div class="tab-pane" id="pane-accepted">
+          <div class="app-item">
+            <div class="app-av" style="background:#1a9e8f;">HK</div>
+            <div class="app-body">
+              <strong>Hamza Kadir</strong>
+              <span class="sub"><span class="badge b-teknofest">TEKNOFEST</span> &nbsp;Smart Campus Scheduling</span>
+              <span class="ts">📅 3 days ago</span>
+            </div>
+            <span class="status s-accepted">ACCEPTED ✓</span>
+          </div>
+          <div class="app-item">
+            <div class="app-av" style="background:#3b82f6;">NA</div>
+            <div class="app-body">
+              <strong>Nisan Ay</strong>
+              <span class="sub"><span class="badge b-tubitak">TÜBİTAK</span> &nbsp;Quantum Computing Sim</span>
+              <span class="ts">📅 5 days ago</span>
+            </div>
+            <span class="status s-accepted">ACCEPTED ✓</span>
+          </div>
+        </div>
+
+        <!-- REJECTED -->
+        <div class="tab-pane" id="pane-rejected">
+          <div class="app-item">
+            <div class="app-av" style="background:#ef4444;">MK</div>
+            <div class="app-body">
+              <strong>Mehmet Kaya</strong>
+              <span class="sub"><span class="badge b-teknofest">TEKNOFEST</span> &nbsp;Drone Navigation</span>
+              <span class="ts">📅 1 week ago</span>
+            </div>
+            <span class="status s-rejected">REJECTED</span>
+          </div>
+        </div>
+
+      </div>
+    </main>
   </div>
 </div>
 
 <script src="../assets/instructor.js/advisor_req_instructor.js"></script>
-<script src="../assets/instructor.js/notification.js"></script>
 </body>
 </html>
