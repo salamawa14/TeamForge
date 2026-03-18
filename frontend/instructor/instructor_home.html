@@ -73,8 +73,7 @@
           <h2>You have 3 pending requests.</h2>
           <p>Browse student profiles, manage advisor requests, and track the platform's activity. Your expertise shapes the next generation of researchers.</p>
           <div class="hero-btns">
-            <button id="revReq1" type="button" class="btn-primary" id="heroReviewBtn">✓ Review Requests ( 3 )</button>
-            
+            <button id="heroReviewBtn" type="button" class="btn-primary" >✓ Review Requests ( 3 )</button> 
           </div>
         </div>
         <div class="hero-stats">
@@ -87,14 +86,14 @@
       <div class="avail-bar">
         <span class="avail-label">🔔 My Availability:</span>
         <span class="avail-comp">TÜBİTAK</span>
-        <span class="avail-tag on">✓ Available</span><span class="avail-tag off">✗ Unavailable</span>
+        <span class="avail-tag on active" data-project="tubitak" data-status="available">✓ Available</span><span class="avail-tag off inactive" data-project="tubitak" data-status="unavailable">✗ Unavailable</span>
         <span class="avail-comp">Teknofest</span>
-        <span class="avail-tag on">✓ Available</span><span class="avail-tag off">✗ Unavailable</span>
+        <span class="avail-tag on active" data-project="teknofest" data-status="available">✓ Available</span><span class="avail-tag off inactive" data-project="teknofest" data-status="unavailable">✗ Unavailable</span>
         <span class="avail-quota">Quota: <strong>4/5</strong> slots used</span>
       </div>
 
       <div class="stat-cards">
-        <div class="stat-card"><div class="sicon orange-bg">📋</div><div><div class="snum">3</div><div class="slabel">Pending Requests</div></div><span class="stag orange-tag">Action needed</span></div>
+        <div class="stat-card"><div class="sicon orange-bg">📋</div><div><div class="snum" id="pending-count">3</div><div class="slabel">Pending Requests</div></div><span class="stag orange-tag">Action needed</span></div>
         <div class="stat-card"><div class="sicon teal-bg">✅</div><div><div class="snum">4</div><div class="slabel">Active Advisees</div></div></div>
         <div class="stat-card"><div class="sicon blue-bg">👥</div><div><div class="snum">118</div><div class="slabel">Students Online</div></div><span class="stag blue-tag">+7 new</span></div>
         <div class="stat-card"><div class="sicon gray-bg">📁</div><div><div class="snum">38</div><div class="slabel">Active Projects</div></div></div>
@@ -111,37 +110,37 @@
             <div class="card">
               <div class="card-hdr"><span class="card-title">👤 Pending Advisor Requests</span><a href="04_advisor_requests.html" class="link">Manage All →</a></div>
 
-              <div class="req-item" id="r1">
+              <div class="req-item" id="r1" data-project="teknofest">
                 <div class="ravatar" style="background:#3b82f6;">JS</div>
                 <div class="rbody">
                   <div class="rname">Jeren Student</div>
-                  <span class="tag tek">TEKNOFEST</span>
+                  <span class="tag tek teknofest-tag">TEKNOFEST</span>
                   <div class="rdesc"><strong>Smart Campus IoT</strong> – Teknofest project with IoT and ML integration for smart campus environments.</div>
                   <div class="rtime">2 hours ago</div>
                 </div>
-                <div class="rbtns"><button class="acc" data-id="r1">✓</button><button class="rej" data-id="r1">✗</button></div>
+                <div class="rbtns"><button class="acc" data-id="r1" data-student="Jeren Student" data-project="Smart Campus IoT">✓</button><button class="rej" data-id="r1" data-student="Jeren Student" data-project="Smart Campus IoT">✗</button></div>
               </div>
 
-              <div class="req-item" id="r2">
+              <div class="req-item" id="r2" data-project="tubitak">
                 <div class="ravatar" style="background:#f59e0b;">OS</div>
                 <div class="rbody">
                   <div class="rname">Osama Sami</div>
-                  <span class="tag tub">TÜBİTAK</span>
+                  <span class="tag tub tubitak-tag">TÜBİTAK</span>
                   <div class="rdesc"><strong>AI Healthcare NLP</strong> – TÜBİTAK project using NLP for medical record classification.</div>
                   <div class="rtime">1 day ago</div>
                 </div>
-                <div class="rbtns"><button class="acc" data-id="r2">✓</button><button class="rej" data-id="r2">✗</button></div>
+                <div class="rbtns"><button class="acc" data-id="r2" data-student="Osama Sami" data-project="AI Healthcare NLP">✓</button><button class="rej" data-id="r2" data-student="Osama Sami" data-project="AI Healthcare NLP">✗</button></div>
               </div>
 
-              <div class="req-item" id="r3">
+              <div class="req-item" id="r3" data-project="tubitak">
                 <div class="ravatar" style="background:#8b5cf6;">AD</div>
                 <div class="rbody">
                   <div class="rname">Amara Diallo</div>
-                  <span class="tag tub">TÜBİTAK</span>
+                  <span class="tag tub tubitak-tag">TÜBİTAK</span>
                   <div class="rdesc"><strong>Social Media Sentiment</strong> – Analyzing social media for real-time public opinion using ML.</div>
                   <div class="rtime">2 days ago</div>
                 </div>
-                <div class="rbtns"><button class="acc" data-id="r3">✓</button><button class="rej" data-id="r3">✗</button></div>
+                <div class="rbtns"><button class="acc" data-id="r3" data-student="Amara Diallo" data-project="Social Media Sentiment">✓</button><button class="rej" data-id="r3" data-student="Amara Diallo" data-project="Social Media Sentiment">✗</button></div>
               </div>
             </div>
 

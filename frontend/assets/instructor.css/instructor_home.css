@@ -1157,3 +1157,64 @@ nav{
   text-align:center;
   padding:24px 0;
 }
+
+/* ===== FIXES FOR: Availability, Teknofest Tags, Pending Requests ===== */
+
+.avail-tag {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+.avail-tag.on {
+  background: #ecfdf5;
+  color: #10b981;
+  border: 1px solid #bbf7d0;
+}
+
+.avail-tag.off {
+  background: #fee2e2;
+  color: #ef4444;
+  border: 1px solid #fecaca;
+}
+
+.avail-tag:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+.avail-tag.active {
+  font-weight: 600;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+}
+
+.avail-tag.inactive {
+  opacity: 0.6;
+}
+
+.tag.teknofest-tag {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tag.tubitak-tag {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.req-item.accepted {
+  opacity: 0.5;
+  border-left: 4px solid #10b981;
+}
+
+.req-item.rejected {
+  opacity: 0.5;
+  border-left: 4px solid #ef4444;
+}
+
+.req-item.accepted .rbtns button,
+.req-item.rejected .rbtns button {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
