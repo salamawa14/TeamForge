@@ -91,9 +91,10 @@ function openModal(id) {
         <div class="m-sec">📄 Full Description</div>
         <div class="m-fulldesc">${p.full}</div>
         <div class="m-foot">
-          <button class="btn btn-teal" id="mApply" ${full?'disabled':''}>
-            ${full?'🔒 Team Full':'✅ Apply to Join'}
-          </button>
+          ${full
+            ? `<button class="btn btn-teal" disabled style="flex:1;justify-content:center">🔒 Team Full</button>`
+            : `<button class="btn btn-teal" id="mApply" style="flex:1;justify-content:center;gap:6px">✅ Apply to Join</button>`
+          }
           <button class="btn-notint" id="mNot">🤚 Not Interested</button>
         </div>
       </div>
@@ -103,7 +104,8 @@ function openModal(id) {
   document.getElementById('mClose').onclick=close;
   document.getElementById('mOverlay').onclick=e=>{if(e.target.id==='mOverlay')close()};
   document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',esc)}});
-  document.getElementById('mApply')?.addEventListener('click',()=>{close();showToast(`✓ Applied to "${p.title}"!`,'ok')});
+
+  document.getElementById('mApply')?.addEventListener('click', () => showApplyConfirm(p, close));
   document.getElementById('mNot')?.addEventListener('click',()=>{close();showToast('Marked as not interested.')});
 }
 
@@ -148,31 +150,45 @@ document.addEventListener('DOMContentLoaded', () => {
   const countEl = document.getElementById('resCount');
   const noRes   = document.getElementById('noResults');
 
+  // year map: filter value → minimum year number (graduate = 5)
+  const yearMap = { '1': 1, '2': 2, '3': 3, '4': 4, 'graduate': 5 };
+
   function runFilter() {
-    const q  = document.getElementById('searchInput').value.toLowerCase().trim();
-    const ft = document.getElementById('fType').value;
-    const fs = document.getElementById('fTeam').value;
+    const q     = document.getElementById('searchInput').value.toLowerCase().trim();
+    const ft    = document.getElementById('fType').value;
+    const fs    = document.getElementById('fTeam').value;
+    const fy    = document.getElementById('fYear').value;
     let n = 0;
     cards.forEach(c => {
       const mt    = !q  || c.dataset.t.includes(q) || c.textContent.toLowerCase().includes(q);
       const mtype = !ft || c.dataset.type === ft;
       const mspot = !fs || c.dataset.spots === fs;
-      const show  = mt && mtype && mspot;
+      // year filter: show cards whose data-year <= selected year
+      // e.g. selecting "3rd Year" shows projects open to 1st, 2nd, and 3rd year students
+      let myear = true;
+      if (fy) {
+        const cardYear = parseInt(c.dataset.year) || 1;
+        const selYear  = fy === 'graduate' ? 5 : parseInt(fy);
+        myear = cardYear <= selYear;
+      }
+      const show = mt && mtype && mspot && myear;
       c.style.display = show ? '' : 'none';
       if (show) n++;
     });
-    countEl.textContent  = n;
-    noRes.style.display  = n ? 'none' : 'block';
+    countEl.textContent = n;
+    noRes.style.display = n ? 'none' : 'block';
   }
 
   document.getElementById('doSearch').addEventListener('click', runFilter);
-  document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key==='Enter') runFilter(); });
+  document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') runFilter(); });
   document.getElementById('fType').addEventListener('change', runFilter);
   document.getElementById('fTeam').addEventListener('change', runFilter);
+  document.getElementById('fYear').addEventListener('change', runFilter);
   document.getElementById('clearAll').addEventListener('click', () => {
     document.getElementById('searchInput').value = '';
     document.getElementById('fType').value       = '';
     document.getElementById('fTeam').value       = '';
+    document.getElementById('fYear').value       = '';
     runFilter();
   });
 
@@ -180,3 +196,61 @@ document.addEventListener('DOMContentLoaded', () => {
   const bq = sessionStorage.getItem('bq');
   if (bq) { document.getElementById('searchInput').value=bq; sessionStorage.removeItem('bq'); runFilter(); }
 });
+
+/* ════════════════ APPLY CONFIRM POPUP ════════════════ */
+function showApplyConfirm(p, closeFn) {
+  // Remove any existing confirm
+  document.getElementById("applyConfirmOverlay")?.remove();
+
+  const ov = document.createElement("div");
+  ov.id = "applyConfirmOverlay";
+  ov.className = "apc-overlay";
+
+  const typeColor = { "TEKNOFEST":"#f97316","TÜBİTAK":"#6366f1","COURSE":"#00b8b8" };
+  const typeBg    = { "TEKNOFEST":"rgba(249,115,22,.12)","TÜBİTAK":"rgba(99,102,241,.12)","COURSE":"rgba(0,184,184,.12)" };
+  const c  = typeColor[p.type] || "#00b8b8";
+  const bg = typeBg[p.type]    || "rgba(0,184,184,.12)";
+
+  ov.innerHTML = `
+    <div class="apc-box">
+      <div class="apc-icon-wrap" style="background:${bg}">
+        <span class="apc-icon">✅</span>
+      </div>
+      <h3 class="apc-title">Confirm Application</h3>
+      <div class="apc-project-badge" style="background:${bg};color:${c}">
+        ${p.type}
+      </div>
+      <p class="apc-project-name">${p.title}</p>
+      <p class="apc-desc">The project leader will review your profile and skills before accepting or declining your request.</p>
+      <div class="apc-acts">
+        <button class="apc-cancel" id="apcCancel">Cancel</button>
+        <button class="apc-confirm" id="apcConfirm" style="background:${c}">
+          <span id="apcTxt">✅ Apply Now</span>
+          <span class="apc-spin" id="apcSpin"></span>
+        </button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(ov);
+  setTimeout(() => ov.classList.add("visible"), 10);
+
+  const closeConfirm = () => {
+    ov.classList.remove("visible");
+    setTimeout(() => ov.remove(), 250);
+  };
+
+  document.getElementById("apcCancel").onclick = closeConfirm;
+  ov.addEventListener("click", e => { if (e.target === ov) closeConfirm(); });
+
+  document.getElementById("apcConfirm").onclick = () => {
+    const btn = document.getElementById("apcConfirm");
+    btn.disabled = true;
+    document.getElementById("apcTxt").textContent = "Applying…";
+    document.getElementById("apcSpin").style.display = "inline-block";
+    setTimeout(() => {
+      closeConfirm();
+      if (closeFn) closeFn();
+      showToast(`✓ Applied to "${p.title}"! Waiting for leader response.`, "ok");
+    }, 1000);
+  };
+}
