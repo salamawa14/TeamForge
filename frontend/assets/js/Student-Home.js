@@ -50,9 +50,13 @@ const PD = {
      full:'Ethereum smart contracts for transparent supply chain tracking. CS480 semester project. Team is full.'},
 };
 
+/* ── Projects the current user OWNS — no Apply button shown ── */
+const OWNED_IDS = [1, 2]; // IDs of projects this student created
+
 /* ── Modal open ── */
 function openModal(id) {
   const p = PD[id]; if (!p) return;
+  const isOwned = OWNED_IDS.includes(id);
   const tc = p.type==='TEKNOFEST'?'b-teknofest':p.type==='TÜBİTAK'?'b-tubitak':'b-course';
   const infoHTML = (p.deadline||p.budget)?`<div class="m-infobox">${p.deadline?`📅 <strong style="color:var(--teal)">Deadline</strong> — ${p.deadline}<br>`:''}${p.budget?`💰 <strong style="color:var(--amber)">Budget</strong> — ${p.budget}`:''}</div>`:'';
   const teamHTML = p.team.map(m=>m.open
@@ -91,10 +95,13 @@ function openModal(id) {
         <div class="m-sec">📄 Full Description</div>
         <div class="m-fulldesc">${p.full}</div>
         <div class="m-foot">
-          <button class="btn btn-teal" id="mApply" ${full?'disabled':''}>
-            ${full?'🔒 Team Full':'✅ Apply to Join'}
-          </button>
-          <button class="btn-notint" id="mNot">🤚 Not Interested</button>
+          ${isOwned
+            ? `<button class="btn btn-outline" id="mManage" style="flex:1;justify-content:center">⚙ Manage Project</button>`
+            : full
+              ? `<button class="btn btn-teal" disabled style="flex:1;justify-content:center">🔒 Team Full</button>`
+              : `<button class="btn btn-teal" id="mApply" style="flex:1;justify-content:center">✅ Apply to Join</button>`
+          }
+          ${!isOwned ? `<button class="btn-notint" id="mNot">🤚 Not Interested</button>` : ''}
         </div>
       </div>
     </div>`);
@@ -103,7 +110,39 @@ function openModal(id) {
   document.getElementById('mClose').onclick=close;
   document.getElementById('mOverlay').onclick=e=>{if(e.target.id==='mOverlay')close()};
   document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',esc)}});
-  document.getElementById('mApply')?.addEventListener('click',()=>{close();showToast(`✓ Applied to "${p.title}"!`,'ok')});
+
+  // Apply to Join — confirm popup
+  document.getElementById('mApply')?.addEventListener('click', () => {
+    // Build confirm inside the modal panel
+    const panel = document.querySelector('.modal-panel');
+    const confirm = document.createElement('div');
+    confirm.className = 'apply-confirm';
+    confirm.innerHTML = `
+      <div class="apply-confirm-box">
+        <div class="apply-confirm-icon">✅</div>
+        <h4>Apply to Join?</h4>
+        <p>You're applying to <strong>${p.title}</strong>. The project leader will review your profile and respond.</p>
+        <div class="apply-confirm-acts">
+          <button class="btn btn-outline btn-sm" id="apCancel">Cancel</button>
+          <button class="btn btn-teal btn-sm" id="apConfirm">Yes, Apply</button>
+        </div>
+      </div>`;
+    document.querySelector('.modal-panel').appendChild(confirm);
+    setTimeout(() => confirm.classList.add('visible'), 10);
+
+    document.getElementById('apCancel').onclick  = () => confirm.remove();
+    document.getElementById('apConfirm').onclick = () => {
+      close();
+      showToast(`✓ Applied to "${p.title}"! Waiting for leader response.`, 'ok');
+    };
+  });
+
+  // Manage button (owned projects)
+  document.getElementById('mManage')?.addEventListener('click', () => {
+    close();
+    window.location.href = 'My-Projects.html';
+  });
+
   document.getElementById('mNot')?.addEventListener('click',()=>{close();showToast('Marked as not interested.')});
 }
 
@@ -155,3 +194,61 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(tick);
   });
 });
+
+/* ════════════════ APPLY CONFIRM POPUP ════════════════ */
+function showApplyConfirm(p, closeFn) {
+  // Remove any existing confirm
+  document.getElementById("applyConfirmOverlay")?.remove();
+
+  const ov = document.createElement("div");
+  ov.id = "applyConfirmOverlay";
+  ov.className = "apc-overlay";
+
+  const typeColor = { "TEKNOFEST":"#f97316","TÜBİTAK":"#6366f1","COURSE":"#00b8b8" };
+  const typeBg    = { "TEKNOFEST":"rgba(249,115,22,.12)","TÜBİTAK":"rgba(99,102,241,.12)","COURSE":"rgba(0,184,184,.12)" };
+  const c  = typeColor[p.type] || "#00b8b8";
+  const bg = typeBg[p.type]    || "rgba(0,184,184,.12)";
+
+  ov.innerHTML = `
+    <div class="apc-box">
+      <div class="apc-icon-wrap" style="background:${bg}">
+        <span class="apc-icon">✅</span>
+      </div>
+      <h3 class="apc-title">Confirm Application</h3>
+      <div class="apc-project-badge" style="background:${bg};color:${c}">
+        ${p.type}
+      </div>
+      <p class="apc-project-name">${p.title}</p>
+      <p class="apc-desc">The project leader will review your profile and skills before accepting or declining your request.</p>
+      <div class="apc-acts">
+        <button class="apc-cancel" id="apcCancel">Cancel</button>
+        <button class="apc-confirm" id="apcConfirm" style="background:${c}">
+          <span id="apcTxt">✅ Apply Now</span>
+          <span class="apc-spin" id="apcSpin"></span>
+        </button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(ov);
+  setTimeout(() => ov.classList.add("visible"), 10);
+
+  const closeConfirm = () => {
+    ov.classList.remove("visible");
+    setTimeout(() => ov.remove(), 250);
+  };
+
+  document.getElementById("apcCancel").onclick = closeConfirm;
+  ov.addEventListener("click", e => { if (e.target === ov) closeConfirm(); });
+
+  document.getElementById("apcConfirm").onclick = () => {
+    const btn = document.getElementById("apcConfirm");
+    btn.disabled = true;
+    document.getElementById("apcTxt").textContent = "Applying…";
+    document.getElementById("apcSpin").style.display = "inline-block";
+    setTimeout(() => {
+      closeConfirm();
+      if (closeFn) closeFn();
+      showToast(`✓ Applied to "${p.title}"! Waiting for leader response.`, "ok");
+    }, 1000);
+  };
+}
