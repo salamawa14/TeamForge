@@ -1,17 +1,65 @@
-// Accept / Reject requests
+
+// ===== CUSTOM CONFIRMATION MODAL =====
+function showConfirmModal(title, message, onConfirm) {
+  const modal = document.createElement('div');
+  modal.className = 'confirm-modal-overlay';
+  modal.innerHTML = `
+    <div class="confirm-modal">
+      <div class="confirm-icon">✓</div>
+      <h2 class="confirm-title">${title}</h2>
+      <p class="confirm-message">${message}</p>
+      <div class="confirm-buttons">
+        <button class="btn-cancel">Cancel</button>
+        <button class="btn-confirm">Confirm</button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  const btnConfirm = modal.querySelector('.btn-confirm');
+  const btnCancel = modal.querySelector('.btn-cancel');
+  
+  btnConfirm.addEventListener('click', function() {
+    modal.remove();
+    onConfirm();
+  });
+  
+  btnCancel.addEventListener('click', function() {
+    modal.remove();
+  });
+  
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) {
+      modal.remove();
+    }
+  });
+}
+
+// Accept / Reject requests WITH CONFIRMATION
 document.querySelectorAll('.btn-accept, .btn-reject').forEach(function(btn) {
   btn.addEventListener('click', function() {
-    var id   = btn.getAttribute('data-id');
+    var id = btn.getAttribute('data-id');
     var item = document.getElementById(id);
     var isAccept = btn.classList.contains('btn-accept');
+    var studentName = btn.getAttribute('data-student');
+    var projectName = btn.getAttribute('data-project');
+    
+    // Show custom confirmation modal
+    var title = isAccept ? 'Confirm Application' : 'Confirm Rejection';
+    var message = isAccept
+      ? `The project leader will review ${studentName}'s profile and skills before accepting or declining your request.`
+      : `Are you sure you want to REJECT ${studentName}'s request for ${projectName}?`;
+    
+    showConfirmModal(title, message, function() {
+      item.style.opacity   = '0';
+      item.style.transform = 'translateX(' + (isAccept ? '20px' : '-20px') + ')';
 
-    item.style.opacity   = '0';
-    item.style.transform = 'translateX(' + (isAccept ? '20px' : '-20px') + ')';
-
-    setTimeout(function() {
-      item.remove();
-      showToast(isAccept ? '✓ Request accepted' : '✗ Request rejected', isAccept ? 'green' : 'red');
-    }, 300);
+      setTimeout(function() {
+        item.remove();
+        showToast(isAccept ? '✓ Request accepted' : '✗ Request rejected', isAccept ? 'green' : 'red');
+      }, 300);
+    });
   });
 });
 
@@ -20,14 +68,24 @@ document.getElementById("profileBtn").addEventListener("click", function () {
 });
 
 
-// Availability toggle
+// Availability toggle WITH CONFIRMATION
 document.querySelectorAll('.toggle-btn').forEach(function(btn) {
   btn.addEventListener('click', function() {
     var group = btn.getAttribute('data-group');
-    document.querySelectorAll('[data-group="' + group + '"]').forEach(function(b) {
-      b.classList.remove('active');
+    var val = btn.getAttribute('data-val');
+    var groupName = group === 'tubitak' ? 'TÜBİTAK' : 'Teknofest';
+    var statusText = val === 'available' ? '✓ Available' : '✗ Unavailable';
+    
+    // Show custom confirmation modal
+    var message = `Are you sure you want to set ${groupName} to ${statusText}?`;
+    
+    showConfirmModal('Confirm Availability', message, function() {
+      document.querySelectorAll('[data-group="' + group + '"]').forEach(function(b) {
+        b.classList.remove('active');
+      });
+      btn.classList.add('active');
+      showToast('✓ Availability updated to ' + statusText, 'green');
     });
-    btn.classList.add('active');
   });
 });
 
