@@ -54,9 +54,14 @@ const PD = {
 const OWNED_IDS = [1, 2];
 
 /* ── Modal open ── */
-function openModal(id) {
+function openModal(id, role) {
   const p = PD[id]; if (!p) return;
-  const isOwned = OWNED_IDS.includes(id);
+  // role = 'owner' → show Manage button
+  // role = 'member' → show Leave Project button
+  // role = undefined → default browse behavior (Apply to Join)
+  const isOwner  = role === 'owner';
+  const isMember = role === 'member';
+  const isOwned  = isOwner; // keep compat
   const tc = p.type==='TEKNOFEST'?'b-teknofest':p.type==='TÜBİTAK'?'b-tubitak':'b-course';
   const infoHTML = (p.deadline||p.budget)?`<div class="m-infobox">${p.deadline?`📅 <strong style="color:var(--teal)">Deadline</strong> — ${p.deadline}<br>`:''}${p.budget?`💰 <strong style="color:var(--amber)">Budget</strong> — ${p.budget}`:''}</div>`:'';
   const teamHTML = p.team.map(m=>m.open
@@ -95,13 +100,15 @@ function openModal(id) {
         <div class="m-sec">📄 Full Description</div>
         <div class="m-fulldesc">${p.full}</div>
         <div class="m-foot">
-          ${isOwned
+          ${isOwner
             ? `<button class="btn btn-outline" id="mManage" style="flex:1;justify-content:center;gap:6px">⚙ Manage Project</button>`
-            : full
-              ? `<button class="btn btn-teal" disabled style="flex:1;justify-content:center">🔒 Team Full</button>`
-              : `<button class="btn btn-teal" id="mApply" style="flex:1;justify-content:center;gap:6px">✅ Apply to Join</button>`
+            : isMember
+              ? `<button class="btn btn-outline" id="mLeave" style="flex:1;justify-content:center;gap:6px;border-color:var(--red);color:var(--red)">🚪 Leave Project</button>`
+              : full
+                ? `<button class="btn btn-teal" disabled style="flex:1;justify-content:center">🔒 Team Full</button>`
+                : `<button class="btn btn-teal" id="mApply" style="flex:1;justify-content:center;gap:6px">✅ Apply to Join</button>`
           }
-          ${!isOwned ? `<button class="btn-notint" id="mNot">🤚 Not Interested</button>` : ''}
+          
         </div>
       </div>
     </div>`);
@@ -113,6 +120,30 @@ function openModal(id) {
 
   document.getElementById('mApply')?.addEventListener('click', () => showApplyConfirm(p, close));
   document.getElementById('mManage')?.addEventListener('click', () => { close(); setTimeout(() => openManagePanel(id), 100); });
+  document.getElementById('mLeave')?.addEventListener('click', () => {
+    close();
+    // Confirm leave
+    const ov = document.createElement('div');
+    ov.className = 'apc-overlay';
+    ov.innerHTML = `
+      <div class="apc-box">
+        <div class="apc-icon-wrap" style="background:var(--red-10)"><span class="apc-icon">🚪</span></div>
+        <h3 class="apc-title">Leave Project?</h3>
+        <p class="apc-project-name">${p.title}</p>
+        <p class="apc-desc">You will be removed from this project's team. This action cannot be undone.</p>
+        <div class="apc-acts">
+          <button class="apc-cancel" id="lvCancel">Cancel</button>
+          <button class="apc-confirm" id="lvConfirm" style="background:var(--red)">🚪 Leave</button>
+        </div>
+      </div>`;
+    document.body.appendChild(ov);
+    setTimeout(() => ov.classList.add('visible'), 10);
+    document.getElementById('lvCancel').onclick = () => { ov.classList.remove('visible'); setTimeout(() => ov.remove(), 250); };
+    document.getElementById('lvConfirm').onclick = () => {
+      ov.classList.remove('visible');
+      setTimeout(() => { ov.remove(); showToast('You have left ' + p.title, ''); }, 250);
+    };
+  });
   document.getElementById('mNot')?.addEventListener('click',()=>{close();showToast('Marked as not interested.')});
 }
 
