@@ -154,20 +154,41 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function acceptApp(id, name) {
-  const el = document.getElementById(id);
-  el.querySelector('.btn-acc').disabled = true;
-  el.querySelector('.btn-dec').disabled = true;
-  el.style.opacity = '.6';
-  el.querySelector('.app-right').innerHTML = '<span class="status s-accepted">ACCEPTED ✓</span>';
-  showToast('✓ ' + name + ' accepted!', 'ok');
+  showConfirm({
+    icon: '✅', iconBg: 'rgba(34,197,94,.12)',
+    title: 'Accept Application?',
+    subtitle: name,
+    desc: name + ' will be added to the project team and notified of your decision.',
+    confirmLabel: '✅ Accept',
+    confirmColor: '#22c55e', confirmFg: '#fff',
+    onConfirm: () => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.querySelector('.app-right').innerHTML = '<span class="status s-accepted">ACCEPTED ✓</span>';
+      el.style.opacity = '.7';
+      showToast('✓ ' + name + ' has been accepted!', 'ok');
+    }
+  });
 }
+
 function declineApp(id) {
-  const el = document.getElementById(id);
-  el.style.opacity = '.45';
-  el.querySelector('.btn-acc').disabled = true;
-  el.querySelector('.btn-dec').disabled = true;
-  el.querySelector('.app-right').innerHTML = '<span class="status s-rejected">DECLINED</span>';
-  showToast('Application declined.', 'err');
+  const el   = document.getElementById(id);
+  const name = el?.querySelector('strong')?.textContent?.split(' wants')[0] || 'Applicant';
+  showConfirm({
+    icon: '✕', iconBg: 'rgba(239,68,68,.10)',
+    title: 'Decline Application?',
+    subtitle: name,
+    desc: name + ' will be notified that their application was declined.',
+    confirmLabel: '✕ Decline',
+    confirmColor: '#ef4444', confirmFg: '#fff',
+    onConfirm: () => {
+      const item = document.getElementById(id);
+      if (!item) return;
+      item.querySelector('.app-right').innerHTML = '<span class="status s-rejected">DECLINED ✕</span>';
+      item.style.opacity = '.6';
+      showToast('Application declined.', '');
+    }
+  });
 }
 
 /* ════════════════ APPLICANT PROFILE MODAL ════════════════ */
@@ -295,4 +316,62 @@ function openApplicantProfile(name, itemId) {
     closeModal();
     declineApp(itemId);
   });
+}
+/* ═══════════════════════════════════════════════════
+   showConfirm(options) — Shared Confirm Popup
+   options: {
+     icon, iconBg, title, subtitle, desc,
+     confirmLabel, confirmColor,
+     cancelLabel, onConfirm
+   }
+═══════════════════════════════════════════════════ */
+function showConfirm(opts) {
+  document.getElementById('_confirmOv')?.remove();
+
+  const ov = document.createElement('div');
+  ov.id = '_confirmOv';
+  ov.className = 'sc-overlay';
+
+  const iconBg    = opts.iconBg    || 'rgba(0,184,184,.12)';
+  const confirmBg = opts.confirmColor || '#00b8b8';
+  const confirmFg = opts.confirmFg   || '#1a2540';
+
+  ov.innerHTML = `
+    <div class="sc-box">
+      <div class="sc-icon-wrap" style="background:${iconBg}">
+        <span class="sc-icon">${opts.icon || '❓'}</span>
+      </div>
+      <h3 class="sc-title">${opts.title}</h3>
+      ${opts.subtitle ? `<div class="sc-subtitle">${opts.subtitle}</div>` : ''}
+      ${opts.desc     ? `<p class="sc-desc">${opts.desc}</p>` : ''}
+      <div class="sc-acts">
+        <button class="sc-cancel" id="scCancel">${opts.cancelLabel || 'Cancel'}</button>
+        <button class="sc-confirm" id="scConfirm"
+          style="background:${confirmBg};color:${confirmFg}">
+          <span id="scTxt">${opts.confirmLabel || 'Confirm'}</span>
+          <span class="sc-spin" id="scSpin"></span>
+        </button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(ov);
+  requestAnimationFrame(() => ov.classList.add('visible'));
+
+  const closeIt = () => {
+    ov.classList.remove('visible');
+    setTimeout(() => ov.remove(), 260);
+  };
+
+  document.getElementById('scCancel').onclick = closeIt;
+  ov.addEventListener('click', e => { if (e.target === ov) closeIt(); });
+
+  document.getElementById('scConfirm').onclick = () => {
+    if (opts.loading !== false) {
+      const btn = document.getElementById('scConfirm');
+      btn.disabled = true;
+      document.getElementById('scTxt').textContent = 'Please wait…';
+      document.getElementById('scSpin').style.display = 'inline-block';
+    }
+    setTimeout(() => { closeIt(); if (opts.onConfirm) opts.onConfirm(); }, 900);
+  };
 }

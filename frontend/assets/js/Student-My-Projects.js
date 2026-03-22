@@ -108,7 +108,7 @@ function openModal(id, role) {
                 ? `<button class="btn btn-teal" disabled style="flex:1;justify-content:center">🔒 Team Full</button>`
                 : `<button class="btn btn-teal" id="mApply" style="flex:1;justify-content:center;gap:6px">✅ Apply to Join</button>`
           }
-          
+          ${!isOwner ? `<button class="btn-notint" id="mNot">🤚 Not Interested</button>` : ''}
         </div>
       </div>
     </div>`);
@@ -447,30 +447,56 @@ function openManagePanel(projectId) {
 
   /* ── Save ── */
   document.getElementById('mgSave')?.addEventListener('click', () => {
-    const saveBtn = document.getElementById('mgSave');
-    saveBtn.disabled = true;
-    saveBtn.textContent = 'Saving…';
-    setTimeout(() => {
-      closePanel();
-      showToast('✓ Project updated successfully!', 'ok');
-    }, 1000);
+    showConfirm({
+      icon: '💾', iconBg: 'rgba(0,184,184,.12)',
+      title: 'Save Changes?',
+      subtitle: p.title,
+      desc: 'Your project details, status, and settings will be updated immediately.',
+      confirmLabel: '💾 Save Changes',
+      confirmColor: '#00b8b8', confirmFg: '#1a2540',
+      onConfirm: () => { closePanel(); showToast('✓ Project updated successfully!', 'ok'); }
+    });
   });
 }
 
 /* ── Accept / Decline from manage panel ── */
 function mgAccept(itemId, name) {
-  const el = document.getElementById(itemId);
-  if (!el) return;
-  el.style.background = 'rgba(34,197,94,.06)';
-  el.style.borderColor = 'rgba(34,197,94,.25)';
-  el.querySelector('.mg-req-acts').innerHTML = '<span style="font-size:.75rem;font-weight:700;color:var(--green)">✓ Accepted</span>';
-  showToast(`✓ ${name} accepted!`, 'ok');
+  showConfirm({
+    icon: '✅', iconBg: 'rgba(34,197,94,.12)',
+    title: 'Accept Request?',
+    subtitle: name,
+    desc: `${name} will be added to your project team and notified of your decision.`,
+    confirmLabel: '✅ Accept',
+    confirmColor: '#22c55e', confirmFg: '#fff',
+    onConfirm: () => {
+      const el = document.getElementById(itemId);
+      if (!el) return;
+      el.style.background = 'rgba(34,197,94,.06)';
+      el.style.border = '1px solid rgba(34,197,94,.25)';
+      el.querySelector('.mg-req-acts').innerHTML =
+        '<span style="font-size:.75rem;font-weight:700;color:var(--green)">✓ Accepted</span>';
+      showToast(`✓ ${name} accepted!`, 'ok');
+    }
+  });
 }
 
 function mgDecline(itemId) {
+  // Get name from element
   const el = document.getElementById(itemId);
-  if (el) { el.style.opacity = '.4'; el.style.pointerEvents = 'none'; }
-  showToast('Request declined.', '');
+  const name = el?.querySelector('strong')?.textContent || 'this applicant';
+  showConfirm({
+    icon: '✕', iconBg: 'rgba(239,68,68,.10)',
+    title: 'Decline Request?',
+    subtitle: name,
+    desc: `${name} will be notified that their request was declined.`,
+    confirmLabel: '✕ Decline',
+    confirmColor: '#ef4444', confirmFg: '#fff',
+    onConfirm: () => {
+      const item = document.getElementById(itemId);
+      if (item) { item.style.opacity = '.35'; item.style.pointerEvents = 'none'; }
+      showToast('Request declined.', '');
+    }
+  });
 }
 
 /* ════════════════ APPLY CONFIRM POPUP ════════════════ */
@@ -528,5 +554,64 @@ function showApplyConfirm(p, closeFn) {
       if (closeFn) closeFn();
       showToast(`✓ Applied to "${p.title}"! Waiting for leader response.`, "ok");
     }, 1000);
+  };
+}
+
+/* ═══════════════════════════════════════════════════
+   showConfirm(options) — Shared Confirm Popup
+   options: {
+     icon, iconBg, title, subtitle, desc,
+     confirmLabel, confirmColor,
+     cancelLabel, onConfirm
+   }
+═══════════════════════════════════════════════════ */
+function showConfirm(opts) {
+  document.getElementById('_confirmOv')?.remove();
+
+  const ov = document.createElement('div');
+  ov.id = '_confirmOv';
+  ov.className = 'sc-overlay';
+
+  const iconBg    = opts.iconBg    || 'rgba(0,184,184,.12)';
+  const confirmBg = opts.confirmColor || '#00b8b8';
+  const confirmFg = opts.confirmFg   || '#1a2540';
+
+  ov.innerHTML = `
+    <div class="sc-box">
+      <div class="sc-icon-wrap" style="background:${iconBg}">
+        <span class="sc-icon">${opts.icon || '❓'}</span>
+      </div>
+      <h3 class="sc-title">${opts.title}</h3>
+      ${opts.subtitle ? `<div class="sc-subtitle">${opts.subtitle}</div>` : ''}
+      ${opts.desc     ? `<p class="sc-desc">${opts.desc}</p>` : ''}
+      <div class="sc-acts">
+        <button class="sc-cancel" id="scCancel">${opts.cancelLabel || 'Cancel'}</button>
+        <button class="sc-confirm" id="scConfirm"
+          style="background:${confirmBg};color:${confirmFg}">
+          <span id="scTxt">${opts.confirmLabel || 'Confirm'}</span>
+          <span class="sc-spin" id="scSpin"></span>
+        </button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(ov);
+  requestAnimationFrame(() => ov.classList.add('visible'));
+
+  const closeIt = () => {
+    ov.classList.remove('visible');
+    setTimeout(() => ov.remove(), 260);
+  };
+
+  document.getElementById('scCancel').onclick = closeIt;
+  ov.addEventListener('click', e => { if (e.target === ov) closeIt(); });
+
+  document.getElementById('scConfirm').onclick = () => {
+    if (opts.loading !== false) {
+      const btn = document.getElementById('scConfirm');
+      btn.disabled = true;
+      document.getElementById('scTxt').textContent = 'Please wait…';
+      document.getElementById('scSpin').style.display = 'inline-block';
+    }
+    setTimeout(() => { closeIt(); if (opts.onConfirm) opts.onConfirm(); }, 900);
   };
 }
