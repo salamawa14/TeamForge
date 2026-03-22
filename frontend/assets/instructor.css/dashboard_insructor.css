@@ -252,10 +252,15 @@ html, body { height: 100%; font-family: var(--font); background: var(--gray-100)
 .btn-accept:active, .btn-reject:active { transform: scale(0.95); }
 
 .btn-accept { background: var(--green); color: var(--white); }
-.btn-accept:hover { background: #15803d; }
+.btn-accept:hover { background: #15803d;transform: translateY(-2px); }
 
-.btn-reject { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); }
-.btn-reject:hover { background: #fee2e2; color: var(--red); border-color: #fecaca; }
+.btn-reject {  background: #fee2e2;
+  color: #ef4444;
+  border: 1px solid #fecaca; }
+.btn-reject:hover { background: #fecaca;
+  border-color: #ef4444;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); }
 
 /* AVAILABILITY */
 .avail-note { font-size: 13px; color: var(--gray-500); margin-bottom: 18px; }
