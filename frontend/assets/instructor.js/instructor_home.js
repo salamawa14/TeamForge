@@ -1,3 +1,46 @@
+// ════════════════════════════════════════
+// AUTO-DISAPPEARING TOAST NOTIFICATION
+// ════════════════════════════════════════
+function showSuccessToast(type, studentName, projectName) {
+  const isAvailability = type === 'avail';
+  const isSuccess = type === 'accept' || type === 'avail';
+  
+  let title, student, project;
+  
+  if (isAvailability) {
+    title = 'AVAILABILITY UPDATED!';
+    student = studentName; // This will be project name like "TÜBİTAK"
+    project = projectName; // This will be status like "✓ Available"
+  } else {
+    title = type === 'accept' ? 'REQUEST ACCEPTED!' : 'REQUEST REJECTED!';
+    student = studentName;
+    project = projectName;
+  }
+  
+  const toast = document.createElement('div');
+  toast.className = 'success-toast';
+  toast.innerHTML = `
+    <div class="toast-content ${isSuccess ? '' : 'reject'}">
+      <div class="toast-icon ${isSuccess ? 'success' : 'reject'}">
+        ${isSuccess ? '✓' : '✕'}
+      </div>
+      <div class="toast-text">
+        <div class="toast-title">${title}</div>
+        <div class="toast-student">📌 ${student}</div>
+        <div class="toast-project">${project}</div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.animation = 'toastSlideDown 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+// ════════════════════════════════════════
 document.addEventListener("DOMContentLoaded", () => {
   const tabs = document.querySelectorAll(".tab");
   const panels = document.querySelectorAll(".tab-panel");
@@ -128,6 +171,43 @@ if (heroReviewBtn) {
   filterStudents();
   filterProjects();
   
+  // ===== CUSTOM CONFIRMATION MODAL =====
+  function showConfirmModal(title, message, onConfirm) {
+    const modal = document.createElement('div');
+    modal.className = 'confirm-modal-overlay';
+    modal.innerHTML = `
+      <div class="confirm-modal">
+        <div class="confirm-icon">✓</div>
+        <h2 class="confirm-title">${title}</h2>
+        <p class="confirm-message">${message}</p>
+        <div class="confirm-buttons">
+          <button class="btn-cancel">Cancel</button>
+          <button class="btn-confirm">Confirm</button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    const btnConfirm = modal.querySelector('.btn-confirm');
+    const btnCancel = modal.querySelector('.btn-cancel');
+    
+    btnConfirm.addEventListener('click', function() {
+      modal.remove();
+      onConfirm();
+    });
+    
+    btnCancel.addEventListener('click', function() {
+      modal.remove();
+    });
+    
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.remove();
+      }
+    });
+  }
+  
   // ===== FIXES FOR: Availability, Teknofest Tags, Pending Requests =====
   
   // FIX 1: AVAILABILITY TOGGLE
@@ -140,21 +220,26 @@ if (heroReviewBtn) {
       
       const project = this.dataset.project;
       const status = this.dataset.status;
-      
-      const projectTags = document.querySelectorAll(`[data-project="${project}"]`);
-      
-      projectTags.forEach(tag => {
-        tag.classList.remove('active');
-        tag.classList.add('inactive');
-      });
-      
-      this.classList.remove('inactive');
-      this.classList.add('active');
-      
       const statusText = status === 'available' ? '✓ Available' : '✗ Unavailable';
       const projectName = project === 'teknofest' ? 'TEKNOFEST' : 'TÜBİTAK';
       
-      alert(`Your availability for ${projectName} is now: ${statusText}`);
+      showConfirmModal(
+        'Confirm Availability',
+        `Are you sure you want to set ${projectName} to ${statusText}?`,
+        () => {
+          const projectTags = document.querySelectorAll(`[data-project="${project}"]`);
+          
+          projectTags.forEach(tag => {
+            tag.classList.remove('active');
+            tag.classList.add('inactive');
+          });
+          
+          this.classList.remove('inactive');
+          this.classList.add('active');
+          
+          showSuccessToast('avail', projectName, statusText);
+        }
+      );
     });
   });
 
@@ -215,18 +300,24 @@ if (heroReviewBtn) {
       const studentName = this.dataset.student;
       const projectName = this.dataset.project;
       
-      requestItem.classList.add('accepted');
-      requestItem.classList.remove('rejected');
-      requestItem.style.opacity = '0.6';
-      
-      requestItem.querySelectorAll('button').forEach(b => {
-        b.disabled = true;
-      });
-      
-      pendingCount--;
-      document.getElementById('pending-count').textContent = pendingCount;
-      
-      alert(`ACCEPTED!\n\nStudent: ${studentName}\nProject: ${projectName}`);
+      showConfirmModal(
+        'Confirm Application',
+        `The project leader will review ${studentName}'s profile and skills before accepting or declining your request.`,
+        () => {
+          requestItem.classList.add('accepted');
+          requestItem.classList.remove('rejected');
+          requestItem.style.opacity = '0.6';
+          
+          requestItem.querySelectorAll('button').forEach(b => {
+            b.disabled = true;
+          });
+          
+          pendingCount--;
+          document.getElementById('pending-count').textContent = pendingCount;
+          
+          showSuccessToast('accept', studentName, projectName);
+        }
+      );
     });
   });
 
@@ -237,19 +328,24 @@ if (heroReviewBtn) {
       const studentName = this.dataset.student;
       const projectName = this.dataset.project;
       
-      requestItem.classList.add('rejected');
-      requestItem.classList.remove('accepted');
-      requestItem.style.opacity = '0.6';
-      
-      requestItem.querySelectorAll('button').forEach(b => {
-        b.disabled = true;
-      });
-      
-      pendingCount--;
-      document.getElementById('pending-count').textContent = pendingCount;
-      
-      alert(`REJECTED!\n\nStudent: ${studentName}\nProject: ${projectName}`);
+      showConfirmModal(
+        'Confirm Rejection',
+        `Are you sure you want to REJECT ${studentName}'s request for ${projectName}?`,
+        () => {
+          requestItem.classList.add('rejected');
+          requestItem.classList.remove('accepted');
+          requestItem.style.opacity = '0.6';
+          
+          requestItem.querySelectorAll('button').forEach(b => {
+            b.disabled = true;
+          });
+          
+          pendingCount--;
+          document.getElementById('pending-count').textContent = pendingCount;
+          
+          showSuccessToast('reject', studentName, projectName);
+        }
+      );
     });
   });
 });
-
