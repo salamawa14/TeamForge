@@ -289,8 +289,8 @@ if (heroReviewBtn) {
   });
 
   // FIX 3: PENDING ADVISOR REQUESTS
-  const accButtons = document.querySelectorAll('.acc');
-  const rejButtons = document.querySelectorAll('.rej');
+  const accButtons = document.querySelectorAll('.rbtn-accept');
+  const rejButtons = document.querySelectorAll('.rbtn-reject');
   let pendingCount = 3;
 
   accButtons.forEach(btn => {
