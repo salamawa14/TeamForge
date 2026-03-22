@@ -104,10 +104,6 @@
           <div class="sn-item" data-sec="security">
             <span class="sn-icon">🛡</span>Change Password
           </div>
-          <div class="sn-item" data-sec="danger">
-            <span class="sn-icon" style="color:var(--red)">⚠</span>
-            <span style="color:var(--red)">Danger Zone</span>
-          </div>
         </nav>
 
         <!-- ── Right content panel ── -->
@@ -381,26 +377,13 @@
             <button class="btn-outline" onclick="showToast('All other sessions signed out.','ok')">Sign Out All Other Sessions</button>
           </div> -->
 
-          <!-- ═══ DANGER ZONE ═══ -->
+          <!-- ═══ DANGER ZONE ═══ 
           <div class="sec" id="sec-danger">
             <div class="sec-title" style="color:var(--red)">⚠ Danger Zone</div>
             <div class="sec-sub" style="margin-bottom:18px">Manage account termination options</div>
 
             <div class="s-group">
               <div class="dz-row">
-                <div>
-                  <b>Pause Account</b>
-                  <span>Temporarily hide your profile from all student searches</span>
-                </div>
-                <button class="btn-ghost" onclick="dangerConfirm('pause')">Pause Account</button>
-              </div>
-              <div class="dz-row">
-                <div>
-                  <b>Export My Data</b>
-                  <span>Download all your data including profile, requests, and advisors</span>
-                </div>
-                <button class="btn-ghost" onclick="showToast('Preparing your data export…','ok')">Export Data</button>
-              </div>
               <div class="dz-row" style="border-bottom:none">
                 <div>
                   <b class="red">Delete Account</b>
@@ -409,7 +392,7 @@
                 <button class="btn-danger" onclick="dangerConfirm('delete')">Delete Account</button>
               </div>
             </div>
-          </div>
+          </div> -->
 
         </div><!-- /set-body -->
       </div><!-- /set-wrap -->

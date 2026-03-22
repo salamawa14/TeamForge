@@ -166,7 +166,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ── Save Changes button ── */
   document.getElementById('saveBtn')?.addEventListener('click', () => {
-    showToast('✓ Settings saved!', 'ok');
+    // Find active section name
+    const activeItem = document.querySelector('.sn-item.active');
+    const section = activeItem?.textContent?.trim() || 'Settings';
+    showConfirm({
+      icon: '💾', iconBg: 'rgba(0,184,184,.12)',
+      title: 'Save Changes?',
+      subtitle: section,
+      desc: 'Your settings will be saved and applied immediately.',
+      confirmLabel: '💾 Save Changes',
+      confirmColor: '#00b8b8', confirmFg: '#1a2540',
+      onConfirm: () => showToast('✓ Settings saved successfully!', 'ok')
+    });
   });
 
   /* ── Skill chip input (Academic Info) ── */
@@ -221,3 +232,61 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 });
+/* ═══════════════════════════════════════════════════
+   showConfirm(options) — Shared Confirm Popup
+   options: {
+     icon, iconBg, title, subtitle, desc,
+     confirmLabel, confirmColor,
+     cancelLabel, onConfirm
+   }
+═══════════════════════════════════════════════════ */
+function showConfirm(opts) {
+  document.getElementById('_confirmOv')?.remove();
+
+  const ov = document.createElement('div');
+  ov.id = '_confirmOv';
+  ov.className = 'sc-overlay';
+
+  const iconBg    = opts.iconBg    || 'rgba(0,184,184,.12)';
+  const confirmBg = opts.confirmColor || '#00b8b8';
+  const confirmFg = opts.confirmFg   || '#1a2540';
+
+  ov.innerHTML = `
+    <div class="sc-box">
+      <div class="sc-icon-wrap" style="background:${iconBg}">
+        <span class="sc-icon">${opts.icon || '❓'}</span>
+      </div>
+      <h3 class="sc-title">${opts.title}</h3>
+      ${opts.subtitle ? `<div class="sc-subtitle">${opts.subtitle}</div>` : ''}
+      ${opts.desc     ? `<p class="sc-desc">${opts.desc}</p>` : ''}
+      <div class="sc-acts">
+        <button class="sc-cancel" id="scCancel">${opts.cancelLabel || 'Cancel'}</button>
+        <button class="sc-confirm" id="scConfirm"
+          style="background:${confirmBg};color:${confirmFg}">
+          <span id="scTxt">${opts.confirmLabel || 'Confirm'}</span>
+          <span class="sc-spin" id="scSpin"></span>
+        </button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(ov);
+  requestAnimationFrame(() => ov.classList.add('visible'));
+
+  const closeIt = () => {
+    ov.classList.remove('visible');
+    setTimeout(() => ov.remove(), 260);
+  };
+
+  document.getElementById('scCancel').onclick = closeIt;
+  ov.addEventListener('click', e => { if (e.target === ov) closeIt(); });
+
+  document.getElementById('scConfirm').onclick = () => {
+    if (opts.loading !== false) {
+      const btn = document.getElementById('scConfirm');
+      btn.disabled = true;
+      document.getElementById('scTxt').textContent = 'Please wait…';
+      document.getElementById('scSpin').style.display = 'inline-block';
+    }
+    setTimeout(() => { closeIt(); if (opts.onConfirm) opts.onConfirm(); }, 900);
+  };
+}

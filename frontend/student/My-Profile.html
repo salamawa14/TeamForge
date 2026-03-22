@@ -74,34 +74,38 @@
           <div class="fg"><label>Email Address</label><input type="email" value="jeren@university.edu" readonly/></div>
           <div class="fg"><label>Student Number</label><input type="text" value="2021050012" readonly/></div>
           <div class="g2">
-            <div class="fg"><label>University</label>
-              <select><option selected>ODTÜ</option><option>Boğaziçi</option><option>Bilkent</option><option>İTÜ</option><option>Hacettepe</option></select>
+            <div class="fg">
+              <label>University</label>
+              <input type="text" value="ODTÜ" readonly />
             </div>
-            <div class="fg"><label>Department</label>
-              <select><option selected>Computer Engineering</option><option>Electrical Engineering</option><option>Aerospace Engineering</option></select>
+            <div class="fg">
+              <label>Department</label>
+              <input type="text" value="Computer Engineering" readonly />
             </div>
           </div>
           <div class="g2">
-            <div class="fg"><label>Year of Study</label>
-              <select><option>1st Year</option><option>2nd Year</option><option selected>3rd Year</option><option>4th Year</option><option>Graduate</option></select>
+            <div class="fg">
+              <label>Year of Study</label>
+              <input type="text" value="3rd Year" readonly />
             </div>
-            <div class="fg"><label>GPA</label><input type="text" value="3.4" readonly/></div>
+            <div class="fg">
+              <label>GPA</label>
+              <input type="text" value="3.4" readonly />
+            </div>
           </div>
-          <button class="btn btn-teal" style="margin-top:4px" onclick="showToast('✓ Personal info saved!','ok')">Save Changes</button>
         </div>
 
         <!-- Skills & Links -->
         <div class="card au d2">
           <h3 class="card-title">⚡ Skills &amp; Links</h3>
           <div class="fg"><label>Skills <span style="font-size:.72rem;color:var(--t3);font-weight:400">(comma separated)</span></label>
-            <input type="text" value="Python, React, Node.js, TensorFlow, IoT"/>
+            <input type="text" value="Python, React, Node.js, TensorFlow, IoT" readonly/>
           </div>
-          <div class="fg"><label>GitHub URL</label><input type="text" value="https://github.com/jerenstudent"/></div>
-          <div class="fg"><label>LinkedIn URL</label><input type="text" value="https://linkedin.com/in/jerenstudent"/></div>
+          <div class="fg"><label>GitHub URL</label><input type="text" value="https://github.com/jerenstudent" readonly/></div>
+          <div class="fg"><label>LinkedIn URL</label><input type="text" value="https://linkedin.com/in/jerenstudent" readonly/></div>
           <div class="fg"><label>Bio</label>
-            <textarea rows="4">3rd year Computer Engineering student at ODTÜ. Passionate about IoT, machine learning, and open-source development. Currently working on autonomous drone systems.</textarea>
+            <textarea rows="4" readonly>3rd year Computer Engineering student at ODTÜ. Passionate about IoT, machine learning, and open-source development. Currently working on autonomous drone systems.</textarea>
           </div>
-          <button class="btn btn-teal" style="margin-top:4px" onclick="showToast('✓ Skills & links saved!','ok')">Save Changes</button>
         </div>
 
         

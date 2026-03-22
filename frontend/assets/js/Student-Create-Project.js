@@ -340,14 +340,89 @@ document.addEventListener('DOMContentLoaded', () => {
     const visDepts  = [...document.querySelectorAll('#visDepts input:checked')].map(c => c.value);
     const visSkills = [...document.querySelectorAll('#visSkillsWrap .s-chip')].map(c => c.dataset.val);
 
-    const btn = document.getElementById('publishBtn');
-    btn.disabled = true;
-    document.getElementById('pubTxt').textContent = 'Publishing…';
-    document.getElementById('pubSpin').style.display = 'inline-block';
+    const projectTitle = document.getElementById('cpTitle').value.trim();
+    const projectType  = document.getElementById('cpType').value;
 
-    setTimeout(() => {
-      showToast('🚀 Project published successfully!', 'ok');
-      setTimeout(() => window.location.href = 'My-Projects.html', 1200);
-    }, 1300);
+    const typeColor = { 'TEKNOFEST':'#f97316','TÜBİTAK':'#6366f1','COURSE':'#00b8b8' };
+    const typeIconBg = { 'TEKNOFEST':'rgba(249,115,22,.12)','TÜBİTAK':'rgba(99,102,241,.12)','COURSE':'rgba(0,184,184,.12)' };
+
+    showConfirm({
+      icon: '🚀',
+      iconBg: typeIconBg[projectType] || 'rgba(0,184,184,.12)',
+      title: 'Publish Project?',
+      subtitle: projectTitle,
+      desc: 'Your project will be visible to all eligible students and they can start applying to join your team.',
+      confirmLabel: '🚀 Publish Now',
+      confirmColor: typeColor[projectType] || '#00b8b8',
+      confirmFg: projectType === 'TÜBİTAK' ? '#fff' : '#1a2540',
+      onConfirm: () => {
+        const btn = document.getElementById('publishBtn');
+        btn.disabled = true;
+        document.getElementById('pubTxt').textContent = 'Publishing…';
+        document.getElementById('pubSpin').style.display = 'inline-block';
+        setTimeout(() => {
+          showToast('🚀 Project published successfully!', 'ok');
+          setTimeout(() => window.location.href = 'My-Projects.html', 1200);
+        }, 1000);
+      }
+    });
   });
 });
+/* ═══════════════════════════════════════════════════
+   showConfirm(options) — Shared Confirm Popup
+   options: {
+     icon, iconBg, title, subtitle, desc,
+     confirmLabel, confirmColor,
+     cancelLabel, onConfirm
+   }
+═══════════════════════════════════════════════════ */
+function showConfirm(opts) {
+  document.getElementById('_confirmOv')?.remove();
+
+  const ov = document.createElement('div');
+  ov.id = '_confirmOv';
+  ov.className = 'sc-overlay';
+
+  const iconBg    = opts.iconBg    || 'rgba(0,184,184,.12)';
+  const confirmBg = opts.confirmColor || '#00b8b8';
+  const confirmFg = opts.confirmFg   || '#1a2540';
+
+  ov.innerHTML = `
+    <div class="sc-box">
+      <div class="sc-icon-wrap" style="background:${iconBg}">
+        <span class="sc-icon">${opts.icon || '❓'}</span>
+      </div>
+      <h3 class="sc-title">${opts.title}</h3>
+      ${opts.subtitle ? `<div class="sc-subtitle">${opts.subtitle}</div>` : ''}
+      ${opts.desc     ? `<p class="sc-desc">${opts.desc}</p>` : ''}
+      <div class="sc-acts">
+        <button class="sc-cancel" id="scCancel">${opts.cancelLabel || 'Cancel'}</button>
+        <button class="sc-confirm" id="scConfirm"
+          style="background:${confirmBg};color:${confirmFg}">
+          <span id="scTxt">${opts.confirmLabel || 'Confirm'}</span>
+          <span class="sc-spin" id="scSpin"></span>
+        </button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(ov);
+  requestAnimationFrame(() => ov.classList.add('visible'));
+
+  const closeIt = () => {
+    ov.classList.remove('visible');
+    setTimeout(() => ov.remove(), 260);
+  };
+
+  document.getElementById('scCancel').onclick = closeIt;
+  ov.addEventListener('click', e => { if (e.target === ov) closeIt(); });
+
+  document.getElementById('scConfirm').onclick = () => {
+    if (opts.loading !== false) {
+      const btn = document.getElementById('scConfirm');
+      btn.disabled = true;
+      document.getElementById('scTxt').textContent = 'Please wait…';
+      document.getElementById('scSpin').style.display = 'inline-block';
+    }
+    setTimeout(() => { closeIt(); if (opts.onConfirm) opts.onConfirm(); }, 900);
+  };
+}
