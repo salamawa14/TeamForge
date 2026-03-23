@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard – TeamForge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="..\assets\admin.css\dashboard.css"/>
+</head>
+<body>
+
+<!-- NOTIF PANEL -->
+<div class="notif-panel" id="notif-panel">
+  <div class="np-head">
+    <h4>Notifications</h4>
+    <div class="np-head-right">
+      <button class="lbtn np-mark-btn" onclick="markAllRead()">Mark all read</button>
+      <button class="np-x-btn" onclick="closeNotifs()">✕</button>
+    </div>
+  </div>
+  <div class="np-body" id="notif-body"></div>
+  <div class="np-foot">
+    <button class="lbtn" onclick="closeNotifs()">View all activity →</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sb-logo" onclick="window.location='dashboard.html'">
+    <span class="li">⬡</span>TeamForge
+  </div>
+  <div class="sb-badge">Admin</div>
+  <nav class="sb-nav">
+    <div class="nlbl">Main</div>
+    <div class="ni on"  onclick="window.location='dashboard.html'">    <span class="ic">🏠</span>Dashboard</div>
+    <div class="ni"     onclick="window.location='categories.html'">   <span class="ic">🗂️</span>Project Categories</div>
+    <div class="ni"     onclick="window.location='announcements.html'"><span class="ic">📢</span>Announcements</div>
+    <div class="nlbl">System</div>
+    <div class="ni"     onclick="window.location='settings.html'">     <span class="ic">⚙️</span>System Settings</div>
+  </nav>
+  <div class="sb-usr">
+    <div class="av">AD</div>
+    <div>
+      <div class="un">Admin User</div>
+      <div class="ud">System Admin</div>
+    </div>
+    <button class="sobt" title="Sign Out" onclick="if(confirm('Sign out?')) toast('Signed out.','tinf')">⎋</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="tbar" id="main-tbar">
+    <span class="tt">Dashboard</span>
+    <div class="tbar-srch">
+      <span class="srch-icon">🔍</span>
+      <input placeholder="Search users, announcements…" id="gq" oninput="gSearch(this.value)"/>
+    </div>
+    <div class="tra">
+      <div class="ibt" id="notif-btn" onclick="toggleNotifs()" title="Notifications">
+        🔔<span class="dot" id="notif-dot"></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="pb">
+
+    <!-- PAGE HEADER -->
+    <div class="ph">
+      <div>
+        <h2>Admin Dashboard</h2>
+        <p id="dash-date">Loading…</p>
+      </div>
+      <button class="btn btn-o" onclick="refreshDash()">🔄 Refresh</button>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="st" onclick="window.location='categories.html'">
+        <div class="stic ct">📁</div>
+        <div><div class="sv" id="d-projs">38</div><div class="slb">Active Projects</div></div>
+      </div>
+      <div class="st" onclick="window.location='categories.html'">
+        <div class="stic cg">🗂️</div>
+        <div><div class="sv" id="d-cats">3</div><div class="slb">Categories</div></div>
+      </div>
+      <div class="st" onclick="window.location='announcements.html'">
+        <div class="stic co">📢</div>
+        <div><div class="sv" id="d-anns">3</div><div class="slb">Announcements</div></div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS + OVERVIEW -->
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><h3>Quick Actions</h3></div>
+        <div class="cb2 quick-actions">
+          <button class="btn btn-t  btn-block" onclick="window.location='categories.html'">➕ Add Project Category</button>
+          <button class="btn btn-n  btn-block" onclick="window.location='announcements.html'">📢 Publish Announcement</button>
+          <button class="btn btn-pur btn-block" onclick="window.location='settings.html'">⚙️ System Settings</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><h3>Platform Overview</h3></div>
+        <div class="cb2">
+          <div class="pbar-row">
+            <span class="ov-label">🗂️ Categories</span>
+            <strong class="ov-val" id="d-cats-big">3</strong>
+          </div>
+          <div class="pbar-row">
+            <span class="ov-label">📢 Announcements</span>
+            <strong class="ov-val" id="d-anns-big">3</strong>
+          </div>
+          <div class="pbar-row">
+            <span class="ov-label">📁 Active Projects</span>
+            <strong class="ov-val">38</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECENT ACTIVITY -->
+    <div class="card">
+      <div class="ch"><h3>Recent Activity</h3></div>
+      <div class="act-list" id="dash-activity"></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="..\assets\admin.js\dashboard.js"></script>
+</body>
+</html>

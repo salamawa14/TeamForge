@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Announcements – TeamForge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="..\assets\admin.css\announcements.css"/>
+</head>
+<body>
+
+<!-- NOTIF PANEL -->
+<div class="notif-panel" id="notif-panel">
+  <div class="np-head">
+    <h4>Notifications</h4>
+    <div class="np-head-right">
+      <button class="lbtn np-mark-btn" onclick="markAllRead()">Mark all read</button>
+      <button class="np-x-btn" onclick="closeNotifs()">✕</button>
+    </div>
+  </div>
+  <div class="np-body" id="notif-body"></div>
+  <div class="np-foot">
+    <button class="lbtn" onclick="closeNotifs()">View all activity →</button>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div id="confirm-modal" class="mol" style="display:none">
+  <div class="mod mod-sm">
+    <div class="moh moh-borderless">
+      <div class="confirm-row">
+        <div class="confirm-icon" id="confirm-icon">📢</div>
+        <div>
+          <h3 class="confirm-title" id="confirm-title">Delete?</h3>
+          <p  class="confirm-sub"   id="confirm-sub">This action cannot be undone.</p>
+        </div>
+      </div>
+    </div>
+    <div class="mob mob-tight">
+      <div class="confirm-body" id="confirm-body"></div>
+    </div>
+    <div class="mof">
+      <button class="btn btn-o"  onclick="closeConfirm()">✕ Cancel</button>
+      <button class="btn btn-er" onclick="runConfirm()">🗑 Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ANNOUNCEMENT MODAL -->
+<div id="ann-modal" class="mol" style="display:none" onclick="if(event.target===this) closeMol('ann-modal')">
+  <div class="mod">
+    <div class="moh">
+      <h3 id="ann-modal-title">Publish Announcement</h3>
+      <button class="moc" onclick="closeMol('ann-modal')">✕</button>
+    </div>
+    <div class="mob">
+      <div class="fg">
+        <label>Title *</label>
+        <input class="fi" id="ann-title" placeholder="e.g. TÜBİTAK 2209-A Deadline Extended"/>
+      </div>
+      <div class="g2f">
+        <div class="fg">
+          <label>Category *</label>
+          <select class="fi" id="ann-cat">
+            <option value="TÜBİTAK">TÜBİTAK</option>
+            <option value="Teknofest">Teknofest</option>
+            <option value="Course">Course</option>
+            <option value="System">System</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Priority</label>
+          <select class="fi" id="ann-priority">
+            <option value="normal" selected>Normal</option>
+            <option value="high">High – show at top</option>
+            <option value="urgent">Urgent – highlight red</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Description *</label>
+        <textarea class="fi" id="ann-desc" rows="4" placeholder="Write the announcement content…"></textarea>
+      </div>
+      <div class="fg">
+        <label>Expiry Date <span class="lbl-opt">(optional – leave blank for no expiry)</span></label>
+        <input class="fi" id="ann-expiry" type="date"/>
+      </div>
+    </div>
+    <div class="mof">
+      <button class="btn btn-o" onclick="closeMol('ann-modal')">Cancel</button>
+      <button class="btn btn-t" onclick="saveAnn()">📢 Publish</button>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sb-logo" onclick="window.location='dashboard.html'">
+    <span class="li">⬡</span>TeamForge
+  </div>
+  <div class="sb-badge">Admin</div>
+  <nav class="sb-nav">
+    <div class="nlbl">Main</div>
+    <div class="ni"     onclick="window.location='dashboard.html'">    <span class="ic">🏠</span>Dashboard</div>
+    <div class="ni"     onclick="window.location='categories.html'">   <span class="ic">🗂️</span>Project Categories</div>
+    <div class="ni on"  onclick="window.location='announcements.html'"><span class="ic">📢</span>Announcements</div>
+    <div class="nlbl">System</div>
+    <div class="ni"     onclick="window.location='settings.html'">     <span class="ic">⚙️</span>System Settings</div>
+  </nav>
+  <div class="sb-usr">
+    <div class="av">AD</div>
+    <div>
+      <div class="un">Admin User</div>
+      <div class="ud">System Admin</div>
+    </div>
+    <button class="sobt" title="Sign Out" onclick="if(confirm('Sign out?')) toast('Signed out.','tinf')">⎋</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="tbar">
+    <span class="tt">Announcements</span>
+    <div class="tbar-srch">
+      <span class="srch-icon">🔍</span>
+      <input placeholder="Search users, announcements…" id="gq" oninput="gSearch(this.value)"/>
+    </div>
+    <div class="tra">
+      <div class="ibt" id="notif-btn" onclick="toggleNotifs()" title="Notifications">
+        🔔<span class="dot" id="notif-dot"></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="pb">
+    <div class="ph">
+      <div>
+        <h2>Announcements</h2>
+        <p>Publish important dates and news for students.</p>
+      </div>
+      <div class="ph-actions">
+        <button class="btn btn-o" onclick="toggleTemplates()">📋 Use Template</button>
+        <button class="btn btn-t" onclick="openAnnModal()">📢 New Announcement</button>
+      </div>
+    </div>
+
+    <!-- TEMPLATE BAR -->
+    <div class="tpl-bar" id="tpl-bar">
+      <span class="tpl-label">Quick templates:</span>
+      <button class="btn btn-o btn-sm" onclick="fillAnnTemplate('tubitak')">🔬 TÜBİTAK Deadline</button>
+      <button class="btn btn-o btn-sm" onclick="fillAnnTemplate('teknofest')">🚀 Teknofest Open</button>
+      <button class="btn btn-o btn-sm" onclick="fillAnnTemplate('results')">📋 Results</button>
+      <button class="btn btn-o btn-sm" onclick="fillAnnTemplate('maint')">🔧 Maintenance</button>
+    </div>
+
+    <div class="card">
+      <div class="anns-list" id="anns-list"></div>
+    </div>
+  </div>
+</div>
+
+<script src="..\assets\admin.js\announcements.js"></script>
+</body>
+</html>

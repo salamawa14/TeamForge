@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Project Categories – TeamForge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="..\assets\admin.css\categories.css"/>
+</head>
+<body>
+
+<!-- NOTIF PANEL -->
+<div class="notif-panel" id="notif-panel">
+  <div class="np-head">
+    <h4>Notifications</h4>
+    <div class="np-head-right">
+      <button class="lbtn np-mark-btn" onclick="markAllRead()">Mark all read</button>
+      <button class="np-x-btn" onclick="closeNotifs()">✕</button>
+    </div>
+  </div>
+  <div class="np-body" id="notif-body"></div>
+  <div class="np-foot">
+    <button class="lbtn" onclick="closeNotifs()">View all activity →</button>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div id="confirm-modal" class="mol" style="display:none">
+  <div class="mod mod-sm">
+    <div class="moh moh-borderless">
+      <div class="confirm-row">
+        <div class="confirm-icon" id="confirm-icon">🗑️</div>
+        <div>
+          <h3 class="confirm-title" id="confirm-title">Delete?</h3>
+          <p  class="confirm-sub"   id="confirm-sub">This action cannot be undone.</p>
+        </div>
+      </div>
+    </div>
+    <div class="mob mob-tight">
+      <div class="confirm-body" id="confirm-body"></div>
+    </div>
+    <div class="mof">
+      <button class="btn btn-o"  onclick="closeConfirm()">✕ Cancel</button>
+      <button class="btn btn-er" onclick="runConfirm()">🗑 Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY MODAL -->
+<div id="cat-modal" class="mol" style="display:none" onclick="if(event.target===this) closeMol('cat-modal')">
+  <div class="mod mod-wide">
+    <div class="moh">
+      <h3 id="cat-modal-title">Add Project Category</h3>
+      <button class="moc" onclick="closeMol('cat-modal')">✕</button>
+    </div>
+
+    <div class="cat-tab-bar">
+      <button class="cm-tab on" id="cmt-info"     onclick="cmTab('info')"    >📋 Category Info</button>
+      <button class="cm-tab"    id="cmt-rules"    onclick="cmTab('rules')"   >📁 Project Rules</button>
+      <button class="cm-tab"    id="cmt-quotas"   onclick="cmTab('quotas')"  >📊 Quota Limits</button>
+      <button class="cm-tab"    id="cmt-catrules" onclick="cmTab('catrules')">🔧 Category Rules</button>
+    </div>
+
+    <div class="mob mob-scroll">
+
+      <!-- TAB: Category Info -->
+      <div id="cmp-info" class="cmp on">
+        <div class="fg">
+          <label>Category Name *</label>
+          <input class="fi" id="cat-name" placeholder="e.g. EU Horizon Project"/>
+        </div>
+        <div class="g2f">
+          <div class="fg">
+            <label>Max Team Size</label>
+            <input class="fi" id="cat-size" type="number" min="1" max="20" placeholder="e.g. 4"/>
+          </div>
+          <div class="fg">
+            <label>Budget (₺)</label>
+            <input class="fi" id="cat-budget" type="number" placeholder="e.g. 9000"/>
+          </div>
+        </div>
+        <div class="fg">
+          <label>Advisor Required?</label>
+          <select class="fi" id="cat-adv">
+            <option value="yes">Yes – Required</option>
+            <option value="no">No – Not Required</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Description <span class="lbl-opt">(optional)</span></label>
+          <textarea class="fi" id="cat-desc" rows="2" placeholder="Brief description of this project category…"></textarea>
+        </div>
+      </div>
+
+      <!-- TAB: Project Rules -->
+      <div id="cmp-rules" class="cmp">
+        <p class="tab-note">These rules apply platform-wide to all project categories.</p>
+        <div class="as-row">
+          <div><div class="as-lbl">Students Can Create Projects</div><div class="as-desc">If disabled, only instructors can create new projects</div></div>
+          <label class="tog"><input type="checkbox" id="cfg-stu-create" checked onchange="tn(this,'Student project creation')"><span class="tog-sl"></span></label>
+        </div>
+        <div class="as-row">
+          <div><div class="as-lbl">Require Advisor for TÜBİTAK Projects</div><div class="as-desc">Cannot be submitted without a linked advisor</div></div>
+          <label class="tog"><input type="checkbox" id="cfg-tub-adv" checked onchange="tn(this,'TÜBİTAK advisor requirement')"><span class="tog-sl"></span></label>
+        </div>
+        <div class="as-row">
+          <div><div class="as-lbl">Require Advisor for Teknofest Projects</div></div>
+          <label class="tog"><input type="checkbox" id="cfg-tek-adv" checked onchange="tn(this,'Teknofest advisor requirement')"><span class="tog-sl"></span></label>
+        </div>
+        <div class="as-row as-row-last">
+          <div><div class="as-lbl">Admin Approval for New Projects</div><div class="as-desc">Projects must be approved before going public</div></div>
+          <label class="tog"><input type="checkbox" id="cfg-proj-appr" onchange="tn(this,'Project approval')"><span class="tog-sl"></span></label>
+        </div>
+      </div>
+
+      <!-- TAB: Quota Limits -->
+      <div id="cmp-quotas" class="cmp">
+        <p class="tab-note">Platform-wide caps that apply to all students and instructors.</p>
+        <div class="as-row">
+          <div><div class="as-lbl">Max Active Projects per Student</div></div>
+          <select class="as-sel" id="cfg-max-proj" onchange="tn(this,'Max projects/student')"><option>1</option><option>2</option><option selected>3</option><option>5</option></select>
+        </div>
+        <div class="as-row">
+          <div><div class="as-lbl">Max Pending Applications per Student</div></div>
+          <select class="as-sel" id="cfg-max-app" onchange="tn(this,'Max applications')"><option>3</option><option selected>5</option><option>10</option><option>Unlimited</option></select>
+        </div>
+        <div class="as-row">
+          <div><div class="as-lbl">Max Advisor Requests per Student</div></div>
+          <select class="as-sel" id="cfg-max-adv-req" onchange="tn(this,'Max advisor requests')"><option>1</option><option selected>2</option><option>3</option></select>
+        </div>
+        <div class="as-row as-row-last">
+          <div><div class="as-lbl">Global Max Advisees per Instructor</div><div class="as-desc">Hard cap regardless of personal settings</div></div>
+          <select class="as-sel" id="cfg-max-advisees" onchange="tn(this,'Global max advisees')"><option>3</option><option>4</option><option selected>5</option><option>8</option><option>Unlimited</option></select>
+        </div>
+      </div>
+
+      <!-- TAB: Category Rules -->
+      <div id="cmp-catrules" class="cmp">
+        <p class="tab-note">Rules that govern how categories are displayed and used.</p>
+        <div class="as-row">
+          <div><div class="as-lbl">Allow Custom Categories by Instructors</div><div class="as-desc">Instructors can propose new types (admin approval required)</div></div>
+          <label class="tog"><input type="checkbox" id="cfg-custom-cats" onchange="tn(this,'Custom categories')"><span class="tog-sl"></span></label>
+        </div>
+        <div class="as-row">
+          <div><div class="as-lbl">Show Budget on Project Cards</div></div>
+          <label class="tog"><input type="checkbox" id="cfg-show-budget" checked onchange="tn(this,'Show budget on cards')"><span class="tog-sl"></span></label>
+        </div>
+        <div class="as-row">
+          <div><div class="as-lbl">Show Team Size Range on Project Cards</div></div>
+          <label class="tog"><input type="checkbox" id="cfg-show-size" checked onchange="tn(this,'Show team size on cards')"><span class="tog-sl"></span></label>
+        </div>
+        <div class="as-row as-row-last">
+          <div><div class="as-lbl">Default Category for New Projects</div><div class="as-desc">Pre-selected when students open the Create Project form</div></div>
+          <select class="as-sel" id="cfg-def-cat" onchange="tn(this,'Default category')">
+            <option selected>Course Project</option>
+            <option>TÜBİTAK Student Project</option>
+            <option>Teknofest Student Project</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mof mof-shrink">
+      <button class="btn btn-o" onclick="closeMol('cat-modal')">Cancel</button>
+      <button class="btn btn-t" onclick="saveCat()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sb-logo" onclick="window.location='dashboard.html'">
+    <span class="li">⬡</span>TeamForge
+  </div>
+  <div class="sb-badge">Admin</div>
+  <nav class="sb-nav">
+    <div class="nlbl">Main</div>
+    <div class="ni"     onclick="window.location='dashboard.html'">    <span class="ic">🏠</span>Dashboard</div>
+    <div class="ni on"  onclick="window.location='categories.html'">   <span class="ic">🗂️</span>Project Categories</div>
+    <div class="ni"     onclick="window.location='announcements.html'"><span class="ic">📢</span>Announcements</div>
+    <div class="nlbl">System</div>
+    <div class="ni"     onclick="window.location='settings.html'">     <span class="ic">⚙️</span>System Settings</div>
+  </nav>
+  <div class="sb-usr">
+    <div class="av">AD</div>
+    <div>
+      <div class="un">Admin User</div>
+      <div class="ud">System Admin</div>
+    </div>
+    <button class="sobt" title="Sign Out" onclick="if(confirm('Sign out?')) toast('Signed out.','tinf')">⎋</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="tbar">
+    <span class="tt">Project Categories</span>
+    <div class="tbar-srch">
+      <span class="srch-icon">🔍</span>
+      <input placeholder="Search users, announcements…" id="gq" oninput="gSearch(this.value)"/>
+    </div>
+    <div class="tra">
+      <div class="ibt" id="notif-btn" onclick="toggleNotifs()" title="Notifications">
+        🔔<span class="dot" id="notif-dot"></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="pb">
+    <div class="ph">
+      <div>
+        <h2>Project Categories</h2>
+        <p>Manage project types and platform-wide project rules.</p>
+      </div>
+      <button class="btn btn-t" onclick="openCatModal()">➕ Add Category</button>
+    </div>
+
+    <div class="card">
+      <div class="ch">
+        <h3>Active Categories</h3>
+        <span class="bdg bc" id="cats-count-badge">3 categories</span>
+      </div>
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Category Name</th><th>Team Size</th><th>Budget</th>
+            <th>Advisor</th><th>Projects</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="cats-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="..\assets\admin.js\categories.js"></script>
+</body>
+</html>

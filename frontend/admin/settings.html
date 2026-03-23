@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>System Settings – TeamForge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="..\assets\admin.css\settings.css"/>
+</head>
+<body>
+
+<!-- MAINTENANCE BANNER -->
+<div class="maint-banner" id="maint-banner">
+  ⚠️ <span id="maint-txt">Scheduled maintenance soon.</span>
+  <button class="banner-dismiss" onclick="hideBanner()">Dismiss</button>
+</div>
+
+<!-- NOTIF PANEL -->
+<div class="notif-panel" id="notif-panel">
+  <div class="np-head">
+    <h4>Notifications</h4>
+    <div class="np-head-right">
+      <button class="lbtn np-mark-btn" onclick="markAllRead()">Mark all read</button>
+      <button class="np-x-btn" onclick="closeNotifs()">✕</button>
+    </div>
+  </div>
+  <div class="np-body" id="notif-body"></div>
+  <div class="np-foot">
+    <button class="lbtn" onclick="closeNotifs()">View all activity →</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sb-logo" id="sb-logo" onclick="window.location='dashboard.html'">
+    <span class="li">⬡</span><span id="sb-logo-name">TeamForge</span>
+  </div>
+  <div class="sb-badge">Admin</div>
+  <nav class="sb-nav">
+    <div class="nlbl">Main</div>
+    <div class="ni"     onclick="window.location='dashboard.html'">    <span class="ic">🏠</span>Dashboard</div>
+    <div class="ni"     onclick="window.location='categories.html'">   <span class="ic">🗂️</span>Project Categories</div>
+    <div class="ni"     onclick="window.location='announcements.html'"><span class="ic">📢</span>Announcements</div>
+    <div class="nlbl">System</div>
+    <div class="ni on"  onclick="window.location='settings.html'">     <span class="ic">⚙️</span>System Settings</div>
+  </nav>
+  <div class="sb-usr">
+    <div class="av">AD</div>
+    <div>
+      <div class="un">Admin User</div>
+      <div class="ud">System Admin</div>
+    </div>
+    <button class="sobt" title="Sign Out" onclick="if(confirm('Sign out?')) toast('Signed out.','tinf')">⎋</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="tbar" id="main-tbar">
+    <span class="tt">⚙️ System Settings</span>
+    <div class="tbar-srch">
+      <span class="srch-icon">🔍</span>
+      <input placeholder="Search users, announcements…" id="gq" oninput="gSearch(this.value)"/>
+    </div>
+    <div class="tra">
+      <div class="ibt" id="notif-btn" onclick="toggleNotifs()" title="Notifications">
+        🔔<span class="dot" id="notif-dot"></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="pb">
+    <div class="ph">
+      <div>
+        <h2>System Settings ⚙️</h2>
+        <p>Platform-wide configuration — changes apply to all users.</p>
+      </div>
+      <div class="ph-actions">
+        <button class="btn btn-o" onclick="exportConfig()">📥 Export Config</button>
+        <button class="btn btn-t" onclick="saveAllSettings()">💾 Save All Changes</button>
+      </div>
+    </div>
+
+    <div class="aset-layout">
+
+      <!-- LEFT NAV -->
+      <div class="aset-nav">
+        <div class="asnlbl">Settings</div>
+        <div class="asni on" id="asn-general" onclick="aSec('general')">
+          <div class="asic">🌐</div>General Settings
+        </div>
+        <div class="asni" id="asn-access" onclick="aSec('access')">
+          <div class="asic">🔑</div>Access Control
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div>
+
+        <!-- ═══ GENERAL SETTINGS ═══ -->
+        <div class="asec on" id="as-general">
+
+          <div class="as-block">
+            <div class="as-bh">
+              <div class="bic bic-teal">🏷️</div>
+              <div>
+                <h3>Platform Identity</h3>
+                <p>Basic info shown across the platform</p>
+              </div>
+            </div>
+            <div class="as-body">
+              <div class="g2f as-g2f-gap">
+                <div class="fg fg-no-margin"><label>Platform Name</label><input class="fi" id="cfg-pname" value="TeamForge"/></div>
+                <div class="fg fg-no-margin"><label>University / Institution</label><input class="fi" id="cfg-uni" value="Istanbul Technical University"/></div>
+              </div>
+              <div class="g2f as-g2f-gap">
+                <div class="fg fg-no-margin"><label>Support Email</label><input class="fi" id="cfg-email" type="email" value="support@teamforge.edu.tr"/></div>
+                <div class="fg fg-no-margin"><label>Platform Tagline</label><input class="fi" id="cfg-tag" value="Match. Build. Succeed."/></div>
+              </div>
+              <div class="fg fg-no-margin">
+                <label>Platform Description</label>
+                <textarea class="fi" rows="2" id="cfg-desc">A web-based project matching and team formation platform for university students and instructors.</textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="as-block">
+            <div class="as-bh">
+              <div class="bic bic-purple">🔧</div>
+              <div>
+                <h3>Platform Status</h3>
+                <p>Control platform availability in real-time</p>
+              </div>
+            </div>
+            <div class="as-body">
+              <div class="as-row">
+                <div><div class="as-lbl">Platform Online</div><div class="as-desc">Disable to show a maintenance page to all non-admin users</div></div>
+                <label class="tog"><input type="checkbox" checked id="tog-online" onchange="updatePlatformStatus(this)"><span class="tog-sl"></span></label>
+              </div>
+              <div class="as-row">
+                <div><div class="as-lbl">Show Maintenance Banner</div><div class="as-desc">Show a warning bar to all logged-in users</div></div>
+                <label class="tog"><input type="checkbox" id="tog-banner" onchange="toggleMaintBanner(this)"><span class="tog-sl"></span></label>
+              </div>
+              <div class="as-row as-row-col">
+                <div><div class="as-lbl">Maintenance Message</div><div class="as-desc">Text shown in the banner above</div></div>
+                <input class="fi fi-full" id="cfg-maint-msg" value="Scheduled maintenance on Sunday March 10, 02:00–04:00 UTC+3."/>
+              </div>
+              <div class="as-row as-row-last">
+                <div><div class="as-lbl">New User Registrations</div><div class="as-desc">Allow new students and instructors to register</div></div>
+                <label class="tog"><input type="checkbox" checked onchange="tn(this,'New registrations')"><span class="tog-sl"></span></label>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /as-general -->
+
+        <!-- ═══ ACCESS CONTROL ═══ -->
+        <div class="asec" id="as-access">
+
+          <div class="as-block">
+            <div class="as-bh">
+              <div class="bic bic-green">🛡️</div>
+              <div>
+                <h3>Password Policy</h3>
+                <p>Security rules enforced for all user passwords</p>
+              </div>
+            </div>
+            <div class="as-body">
+              <div class="as-row">
+                <div><div class="as-lbl">Minimum Password Length</div></div>
+                <select class="as-sel" onchange="tn(this,'Min password length')">
+                  <option>6 chars</option><option selected>8 chars</option><option>12 chars</option>
+                </select>
+              </div>
+              <div class="as-row">
+                <div><div class="as-lbl">Require Uppercase Letter</div></div>
+                <label class="tog"><input type="checkbox" checked onchange="tn(this,'Require uppercase')"><span class="tog-sl"></span></label>
+              </div>
+              <div class="as-row">
+                <div><div class="as-lbl">Require Numbers</div></div>
+                <label class="tog"><input type="checkbox" checked onchange="tn(this,'Require numbers')"><span class="tog-sl"></span></label>
+              </div>
+              <div class="as-row">
+                <div><div class="as-lbl">Require Special Characters</div></div>
+                <label class="tog"><input type="checkbox" onchange="tn(this,'Require special chars')"><span class="tog-sl"></span></label>
+              </div>
+              <div class="as-row">
+                <div><div class="as-lbl">Max Login Attempts Before Lockout</div></div>
+                <select class="as-sel" onchange="tn(this,'Login attempt limit')">
+                  <option>3</option><option selected>5</option><option>10</option>
+                </select>
+              </div>
+              <div class="as-row as-row-last">
+                <div><div class="as-lbl">Lockout Duration</div></div>
+                <select class="as-sel" onchange="tn(this,'Lockout duration')">
+                  <option>5 min</option><option selected>15 min</option><option>1 hour</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /as-access -->
+
+      </div><!-- /right -->
+    </div><!-- /aset-layout -->
+  </div><!-- /pb -->
+</div><!-- /main -->
+
+<script src="..\assets\admin.js\settings.js"></script>
+</body>
+</html>
