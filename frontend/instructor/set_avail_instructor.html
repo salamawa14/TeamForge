@@ -40,6 +40,19 @@
       </div>
     </div>
   </aside>
+<!-- Save Confirmation Modal -->
+<div class="confirm-modal-overlay" id="saveConfirmModal">
+  <div class="confirm-modal">
+    <div class="confirm-icon">✓</div>
+    <h2>Confirm Changes</h2>
+    <p>Are you sure you want to save these changes?</p>
+
+    <div class="confirm-actions">
+      <button type="button" class="confirm-btn cancel" id="cancelSaveBtn">Cancel</button>
+      <button type="button" class="confirm-btn confirm" id="confirmSaveBtn">Confirm</button>
+    </div>
+  </div>
+</div>
 
   <!-- MAIN -->
   <div class="main">
@@ -87,7 +100,7 @@
           <a href="#"                              class="snav-item active">🎓 Availability</a>
           <a href="set_privacy_instructor.html"                              class="snav-item">🔒 Privacy</a>
           <a href="set_security_instructor.html"                              class="snav-item">🛡️ Security</a>
-          <a href="set_zone_instructor.html"                              class="snav-item danger">⚠️ Danger Zone</a>
+          
         </nav>
 
         <!-- Availability panel -->
