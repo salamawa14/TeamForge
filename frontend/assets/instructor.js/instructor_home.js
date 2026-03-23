@@ -211,37 +211,37 @@ if (heroReviewBtn) {
   // ===== FIXES FOR: Availability, Teknofest Tags, Pending Requests =====
   
   // FIX 1: AVAILABILITY TOGGLE
-  const availTags = document.querySelectorAll('.avail-tag');
+   // ===== const availTags = document.querySelectorAll('.avail-tag');
   
-  availTags.forEach(tag => {
-    tag.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
+  // availTags.forEach(tag => {
+   //  tag.addEventListener('click', function(e) {
+    //   e.preventDefault();
+    //   e.stopPropagation();
       
-      const project = this.dataset.project;
-      const status = this.dataset.status;
-      const statusText = status === 'available' ? '✓ Available' : '✗ Unavailable';
-      const projectName = project === 'teknofest' ? 'TEKNOFEST' : 'TÜBİTAK';
+     //  const project = this.dataset.project;
+     //  const status = this.dataset.status;
+      // const statusText = status === 'available' ? '✓ Available' : '✗ Unavailable';
+      // const projectName = project === 'teknofest' ? 'TEKNOFEST' : 'TÜBİTAK';
       
-      showConfirmModal(
-        'Confirm Availability',
-        `Are you sure you want to set ${projectName} to ${statusText}?`,
-        () => {
-          const projectTags = document.querySelectorAll(`[data-project="${project}"]`);
+      // showConfirmModal(
+       //  'Confirm Availability',
+       //  `Are you sure you want to set ${projectName} to ${statusText}?`,
+        // () => {
+        //   const projectTags = document.querySelectorAll(`[data-project="${project}"]`);
           
-          projectTags.forEach(tag => {
-            tag.classList.remove('active');
-            tag.classList.add('inactive');
-          });
+        //   projectTags.forEach(tag => {
+        //     tag.classList.remove('active');
+        //     tag.classList.add('inactive');
+      //     });
           
-          this.classList.remove('inactive');
-          this.classList.add('active');
+       //    this.classList.remove('inactive');
+        //   this.classList.add('active');
           
-          showSuccessToast('avail', projectName, statusText);
-        }
-      );
-    });
-  });
+       //    showSuccessToast('avail', projectName, statusText);
+       //  }
+     //  );
+    // });
+   //});
 
   // FIX 2: TEKNOFEST & TUBITAK TAGS
   const teknofestTags = document.querySelectorAll('.teknofest-tag');
