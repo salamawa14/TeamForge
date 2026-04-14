@@ -1,4 +1,7 @@
 <?php
+ini_set('session.cookie_samesite', 'Lax');
+ini_set('session.cookie_path', '/');
+
 // ============================================================
 //  Database Connection
 //  XAMPP defaults: host=localhost, user=root, pass=""

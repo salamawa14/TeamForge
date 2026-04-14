@@ -15,7 +15,8 @@ $uid  = $user['user_id'];
 
 // Projects this student owns
 $owned = $db->prepare('
-    SELECT p.project_id, p.title, p.project_type, p.status, p.created_at,
+    SELECT p.project_id, p.title, p.project_type, p.description,
+           p.required_skills, p.team_size_needed, p.status, p.created_at,
            (SELECT COUNT(*) FROM team_memberships tm WHERE tm.project_id = p.project_id) AS member_count
     FROM projects p
     WHERE p.owner_student_id = ?

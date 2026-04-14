@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $status = $_GET['status'] ?? 'Active';
 
     $sql    = '
-        SELECT p.project_id, p.title, p.project_type, p.description,
+        SELECT p.project_id, p.owner_student_id, p.title, p.project_type, p.description,
                p.required_skills, p.team_size_needed, p.roles_needed,
                p.advisor_required, p.status, p.created_at,
                u.full_name AS owner_name, u.department AS owner_department,
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $roles_needed    = $body['roles_needed']          ?? [];
     $advisor_required = !empty($body['advisor_required']) ? 1 : 0;
 
-    $allowed_types = ['Course','Tubitak','Teknofest'];
+    $allowed_types = ['Course', 'Tubitak', 'Teknofest', 'COURSE', 'TÜBİTAK', 'TEKNOFEST'];
     if (!$title || !$project_type || !$description) {
         error('title, project_type and description are required.');
     }

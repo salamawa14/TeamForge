@@ -1,256 +1,225 @@
-/* ── Project data store ── */
-const PD = {
-  1:{title:'Autonomous Drone Navigation',type:'TEKNOFEST',
-     desc:'Full autonomous drone for Teknofest 2026 UAV category — ROS2, sensor fusion, obstacle avoidance.',
-     members:3,max:6,age:'2d',deadline:'April 15, 2026',budget:null,cap:'3/6 (3 open)',pct:50,
-     team:[{i:'NC',n:'Nurem Can',r:'Project Lead / Hardware',c:'#00b8b8'},{i:'JS',n:'Jeren Student',r:'Computer Vision',c:'#6366f1'},{open:true,r:'ROS2 Engineer'},{open:true,r:'Computer Vision Dev'}],
-     adv:{n:'Prof. Ömer Şahin',s:'ok'},roles:['Computer Vision Developer','ROS2 Engineer'],
-     skills:['C++','ROS2','Python','Computer Vision','Sensor Fusion'],
-     full:'30+ autonomous navigation sensors with obstacle detection. Targets Teknofest 2026 UAV Advanced category.'},
-  2:{title:'Smart Water IoT',type:'TÜBİTAK',
-     desc:'IoT sensor network for real-time water usage monitoring and leak detection on campus.',
-     members:1,max:3,age:'5d',deadline:'April 15, 2026',budget:'₺9,000',cap:'1/3 (2 open)',pct:33,
-     team:[{i:'NC',n:'Nurem Can',r:'Project Lead / Hardware',c:'#00b8b8'},{open:true,r:'IoT Hardware Developer'},{open:true,r:'Cloud Backend Dev'}],
-     adv:{n:null,s:'seek'},roles:['IoT Hardware Developer','Cloud Backend Dev'],
-     skills:['Arduino','MQTT','Raspberry Pi','Python','InfluxDB','Grafana'],
-     full:'30+ low-power sensors stream data via MQTT. Anomaly detection flags leaks. Targets 20% reduction in campus water waste. Fully funded by TÜBİTAK if approved.'},
-  3:{title:'E-Commerce Platform',type:'COURSE',
-     desc:'SE405 course project. JWT auth, Stripe mock payment, real-time order tracking, seller analytics.',
-     members:3,max:4,age:'7d',deadline:null,budget:null,cap:'3/4 (1 open)',pct:75,
-     team:[{i:'BS',n:'Beza Sara',r:'Project Lead / Frontend',c:'#ef4444'},{i:'RH',n:'Rami Hassan',r:'Backend / Database',c:'#22c55e'},{i:'JS',n:'Jeren Student',r:'Frontend',c:'#6366f1'},{open:true,r:'Backend Developer'}],
-     adv:{n:null,s:'none'},roles:['Frontend Developer','Backend Developer'],
-     skills:['React','Node.js','MySQL','Tailwind CSS','REST API'],
-     full:'SE405 course project. Features: JWT auth, Stripe mock payment, real-time order tracking, seller analytics. No advisor needed.'},
-  4:{title:'AR Campus Navigation App',type:'TEKNOFEST',
-     desc:'Augmented reality campus map using ARCore, real-time indoor positioning via BLE beacons.',
-     members:2,max:4,age:'3d',deadline:null,budget:null,cap:'2/4 (2 open)',pct:50,
-     team:[{i:'DK',n:'Deniz Kara',r:'Project Lead',c:'#f97316'},{i:'AL',n:'Alp Lale',r:'AR Developer',c:'#a855f7'},{open:true,r:'Backend / Firebase'},{open:true,r:'UI Designer'}],
-     adv:{n:'Dr. Ayşe Kaya',s:'ok'},roles:['Backend / Firebase Developer','UI Designer'],
-     skills:['Unity','ARCore','Firebase','Kotlin','BLE'],
-     full:'AR-powered indoor navigation using BLE beacon positioning. Targets Teknofest Smart Campus category.'},
-  5:{title:'Smart Campus Energy Monitor',type:'TEKNOFEST',
-     desc:'Real-time energy usage tracking for campus buildings using embedded sensors and dashboards.',
-     members:1,max:5,age:'1d',deadline:null,budget:null,cap:'1/5 (4 open)',pct:20,
-     team:[{i:'MK',n:'Mert Koç',r:'Project Lead',c:'#00b8b8'},{open:true,r:'Embedded Systems'},{open:true,r:'Data Engineer'},{open:true,r:'Frontend Dev'},{open:true,r:'ML Engineer'}],
-     adv:{n:null,s:'seek'},roles:['Embedded Systems Dev','Data Engineer','Frontend Developer','ML Engineer'],
-     skills:['Raspberry Pi','Python','Grafana','InfluxDB','MQTT'],
-     full:'Monitor real-time energy consumption across campus buildings. Targets 25% energy reduction via smart analytics.'},
-  6:{title:'NLP News Summarizer',type:'TÜBİTAK',
-     desc:'Turkish-language news summarization model using transformer fine-tuning on large corpus.',
-     members:1,max:4,age:'6d',deadline:'May 30, 2026',budget:'₺12,000',cap:'1/4 (3 open)',pct:25,
-     team:[{i:'ED',n:'Emre Doğan',r:'Project Lead / ML',c:'#6366f1'},{open:true,r:'NLP Researcher'},{open:true,r:'Data Engineer'},{open:true,r:'Backend Developer'}],
-     adv:{n:'Prof. Emre Demir',s:'ok'},roles:['NLP Researcher','Data Engineer','Backend Developer'],
-     skills:['Python','PyTorch','HuggingFace','NLP','FastAPI'],
-     full:'Fine-tuning multilingual transformer models for Turkish news. Dataset 500k+ articles. TÜBİTAK 2209-A grant applied.'},
-  7:{title:'Blockchain Supply Chain',type:'COURSE',
-     desc:'CS480 course project. Smart contracts on Ethereum for supply chain transparency.',
-     members:4,max:4,age:'9d',deadline:null,budget:null,cap:'4/4 (Full)',pct:100,
-     team:[{i:'AK',n:'Ali Kaya',r:'Lead / Smart Contracts',c:'#f97316'},{i:'SÖ',n:'Selin Öz',r:'Frontend / Web3',c:'#a855f7'},{i:'CY',n:'Can Yıl',r:'Backend',c:'#22c55e'},{i:'NK',n:'Nur Kol',r:'Testing / DevOps',c:'#ef4444'}],
-     adv:{n:null,s:'none'},roles:[],skills:['Solidity','Web3.js','React','Hardhat','IPFS'],
-     full:'Ethereum smart contracts for transparent supply chain tracking. CS480 semester project. Team is full.'},
-};
+/* ═══════════════════════════════════════════════════
+   Student-Browse-Projects.js — Backend Connected
+═══════════════════════════════════════════════════ */
 
-/* ── Modal open ── */
-function openModal(id) {
-  const p = PD[id]; if (!p) return;
-  const tc = p.type==='TEKNOFEST'?'b-teknofest':p.type==='TÜBİTAK'?'b-tubitak':'b-course';
-  const infoHTML = (p.deadline||p.budget)?`<div class="m-infobox">${p.deadline?`📅 <strong style="color:var(--teal)">Deadline</strong> — ${p.deadline}<br>`:''}${p.budget?`💰 <strong style="color:var(--amber)">Budget</strong> — ${p.budget}`:''}</div>`:'';
-  const teamHTML = p.team.map(m=>m.open
-    ?`<div class="m-member"><div class="m-av open">+</div><div class="m-mbody"><b style="color:var(--t3)">Open Spot</b><span>${m.r}</span></div></div>`
-    :`<div class="m-member"><div class="m-av" style="background:${m.c}">${m.i}</div><div class="m-mbody"><b>${m.n}</b><span>${m.r}</span></div></div>`
-  ).join('');
-  const advHTML = p.adv.s==='none'
-    ?`<p style="font-size:.77rem;color:var(--t3);font-style:italic">No advisor required for this project type.</p>`
-    :p.adv.s==='seek'
-    ?`<div class="m-seeking">⚠ Seeking Advisor — Required for TÜBİTAK project</div>`
-    :`<p class="m-advisor-name">🎓 ${p.adv.n}</p>`;
-  const rolesHTML = p.roles.length
-    ?p.roles.map(r=>`<div class="m-role">🔍 ${r}</div>`).join('')
-    :`<p style="font-size:.77rem;color:var(--t3)">No specific roles listed.</p>`;
-  const full = p.pct>=100;
-  document.body.insertAdjacentHTML('beforeend',`
-    <div class="overlay" id="mOverlay">
-      <div class="modal-panel">
-        <button class="modal-x" id="mClose">✕</button>
-        <div class="m-badge"><span class="badge ${tc}">${p.type}</span></div>
-        <h2 class="m-title">${p.title}</h2>
-        <p class="m-desc">${p.desc}</p>
-        <div class="m-stats">
-          <div class="m-stat"><b>${p.members}</b><small>Members</small></div>
-          <div class="m-stat"><b>${p.max}</b><small>Max Team</small></div>
-          <div class="m-stat"><b>${p.age}</b><small>Age</small></div>
-        </div>
-        ${infoHTML}
-        <div class="m-cap-row"><span>Team Capacity</span><span class="m-cap-val">${p.cap}</span></div>
-        <div class="prog" style="margin-bottom:16px"><div class="prog-fill" style="width:${p.pct}%"></div></div>
-        <div class="m-sec">👥 Team Members</div>${teamHTML}
-        <div class="m-sec">🎓 Academic Advisor</div>${advHTML}
-        <div class="m-sec">🔍 Roles Needed</div>${rolesHTML}
-        <div class="m-sec">⚡ Required Skills</div>
-        <div class="m-skills">${p.skills.map(s=>`<span class="chip">${s}</span>`).join('')}</div>
-        <div class="m-sec">📄 Full Description</div>
-        <div class="m-fulldesc">${p.full}</div>
-        <div class="m-foot">
-          ${full
-            ? `<button class="btn btn-teal" disabled style="flex:1;justify-content:center">🔒 Team Full</button>`
-            : `<button class="btn btn-teal" id="mApply" style="flex:1;justify-content:center;gap:6px">✅ Apply to Join</button>`
-          }
-          <button class="btn-notint" id="mNot">🤚 Not Interested</button>
-        </div>
-      </div>
-    </div>`);
-  document.body.style.overflow='hidden';
-  const close=()=>{document.getElementById('mOverlay')?.remove();document.body.style.overflow=''};
-  document.getElementById('mClose').onclick=close;
-  document.getElementById('mOverlay').onclick=e=>{if(e.target.id==='mOverlay')close()};
-  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',esc)}});
+document.addEventListener('DOMContentLoaded', async () => {
 
-  document.getElementById('mApply')?.addEventListener('click', () => showApplyConfirm(p, close));
-  document.getElementById('mNot')?.addEventListener('click',()=>{close();showToast('Marked as not interested.')});
-}
+  // 1. Guard
+  const user = await requireLogin(['student']);
+  if (!user) return;
 
-/* ── Toast ── */
-function showToast(msg, type='') {
-  let t = document.getElementById('_toast');
-  if (!t) { t=document.createElement('div'); t.id='_toast'; t.className='toast'; document.body.appendChild(t); }
-  t.textContent=msg; t.className='toast show'+(type?' '+type:'');
-  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),3400);
-}
-
-/* ── Sidebar & header init ── */
-document.addEventListener('DOMContentLoaded', () => {
-  // active nav
-  const page = location.pathname.split('/').pop()||'';
-  document.querySelectorAll('.sb-link').forEach(a=>{
-    if (a.getAttribute('href')===page) a.classList.add('active');
-  });
-  // burger
-  const sb=document.getElementById('sb'), burg=document.getElementById('burg');
-  burg?.addEventListener('click',()=>sb.classList.toggle('open'));
-  document.addEventListener('click',e=>{
-    if(sb?.classList.contains('open')&&!sb.contains(e.target)&&e.target!==burg) sb.classList.remove('open');
-  });
-  // notif
-  const nBtn=document.getElementById('nBtn'), nPanel=document.getElementById('nPanel');
-  nBtn?.addEventListener('click',e=>{e.stopPropagation();nPanel.classList.toggle('open')});
-  document.addEventListener('click',e=>{if(nPanel&&!nPanel.contains(e.target)&&e.target!==nBtn)nPanel.classList.remove('open')});
-  // global search
-  const gs=document.getElementById('gs');
-  gs?.addEventListener('keydown',e=>{
-    if(e.key==='Enter'&&gs.value.trim()){
-      sessionStorage.setItem('bq',gs.value.trim());
-      window.location.href='Browse-Projects.html';
-    }
-  });
-});
-
-/* ── Browse Projects filter logic ── */
-document.addEventListener('DOMContentLoaded', () => {
-  const cards   = document.querySelectorAll('.proj-card');
-  const countEl = document.getElementById('resCount');
-  const noRes   = document.getElementById('noResults');
-
-  // year map: filter value → minimum year number (graduate = 5)
-  const yearMap = { '1': 1, '2': 2, '3': 3, '4': 4, 'graduate': 5 };
-
-  function runFilter() {
-    const q     = document.getElementById('searchInput').value.toLowerCase().trim();
-    const ft    = document.getElementById('fType').value;
-    const fs    = document.getElementById('fTeam').value;
-    const fy    = document.getElementById('fYear').value;
-    let n = 0;
-    cards.forEach(c => {
-      const mt    = !q  || c.dataset.t.includes(q) || c.textContent.toLowerCase().includes(q);
-      const mtype = !ft || c.dataset.type === ft;
-      const mspot = !fs || c.dataset.spots === fs;
-      // year filter: show cards whose data-year <= selected year
-      // e.g. selecting "3rd Year" shows projects open to 1st, 2nd, and 3rd year students
-      let myear = true;
-      if (fy) {
-        const cardYear = parseInt(c.dataset.year) || 1;
-        const selYear  = fy === 'graduate' ? 5 : parseInt(fy);
-        myear = cardYear <= selYear;
-      }
-      const show = mt && mtype && mspot && myear;
-      c.style.display = show ? '' : 'none';
-      if (show) n++;
-    });
-    countEl.textContent = n;
-    noRes.style.display = n ? 'none' : 'block';
+  // Show initials in avatar
+  const avatar = document.querySelector('.avatar');
+  if (avatar) {
+    const parts = user.full_name.trim().split(' ');
+    avatar.textContent = parts.length >= 2
+      ? parts[0][0] + parts[parts.length - 1][0]
+      : parts[0].slice(0, 2);
   }
 
-  document.getElementById('doSearch').addEventListener('click', runFilter);
-  document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') runFilter(); });
-  document.getElementById('fType').addEventListener('change', runFilter);
-  document.getElementById('fTeam').addEventListener('change', runFilter);
-  document.getElementById('fYear').addEventListener('change', runFilter);
-  document.getElementById('clearAll').addEventListener('click', () => {
-    document.getElementById('searchInput').value = '';
-    document.getElementById('fType').value       = '';
-    document.getElementById('fTeam').value       = '';
-    document.getElementById('fYear').value       = '';
-    runFilter();
+  // 2. Find the container where cards go
+  // Try to find the existing cards container, fall back to .page
+  const cardGrid = document.querySelector('.proj-list')
+    || document.querySelector('.cards-grid')
+    || document.querySelector('.proj-grid')
+    || document.querySelector('.page main')
+    || document.querySelector('main')
+    || document.querySelector('.page');
+
+  let currentProjects = [];
+
+  // 3. Fetch from real backend
+  async function loadProjects(params = {}) {
+    try {
+      const data = await Projects.browse(params);
+      currentProjects = Array.isArray(data) ? data : [];
+      renderProjects(currentProjects);
+    } catch (err) {
+      console.error('Failed to load projects:', err);
+      if (cardGrid) {
+        cardGrid.innerHTML = `
+          <div style="padding:40px;text-align:center;color:var(--red)">
+            Error loading projects: ${err.message}
+          </div>`;
+      }
+    }
+  }
+
+  // 4. Render cards — keeps your existing card HTML structure
+  function renderProjects(projects) {
+    if (!cardGrid) return;
+
+    // Remove only project cards, keep search/filter UI
+    document.querySelectorAll('.proj-card').forEach(c => c.remove());
+
+    if (projects.length === 0) {
+      cardGrid.insertAdjacentHTML('beforeend', `
+        <div class="no-results" style="text-align:center;padding:60px 20px">
+          <div style="font-size:3rem">🔍</div>
+          <h3>No projects found</h3>
+          <p style="color:var(--t3)">Try adjusting your filters or check back later.</p>
+        </div>`);
+      return;
+    }
+
+    // Update "Showing X projects" count
+    const countEl = document.querySelector('.results-count, [data-count]');
+    if (countEl) countEl.textContent = `Showing ${projects.length} projects`;
+
+    projects.forEach(p => {
+      const pt = (p.project_type || '').toLowerCase();
+      let badgeClass = 'b-course';
+      if (pt === 'tubitak')   badgeClass = 'b-tubitak';
+      if (pt === 'teknofest') badgeClass = 'b-teknofest';
+
+      const skillsHtml = Array.isArray(p.required_skills)
+        ? p.required_skills.map(s => `<span class="chip">${s}</span>`).join('')
+        : '';
+
+      const card = document.createElement('div');
+      card.className = 'proj-card au';
+      card.innerHTML = `
+        <div class="pc-left">
+          <div class="pc-emoji">📁</div>
+          <div class="pc-body">
+            <div class="pc-top">
+              <span class="badge ${badgeClass}">${p.project_type}</span>
+            </div>
+            <h3>${p.title}</h3>
+            <p>${p.description}</p>
+            <div class="pc-chips">${skillsHtml}</div>
+          </div>
+        </div>
+        <div class="pc-right">
+          <div class="pc-meta">👤 ${p.owner_name || 'Unknown'}</div>
+          <div class="pc-meta">👥 ${p.member_count || 0} / ${p.team_size_needed} members</div>
+         ${p.owner_student_id === user.user_id
+  ? `<span style="font-size:.75rem;color:var(--t3);font-style:italic">Your project</span>`
+  : `<button class="btn btn-outline btn-sm view-btn"
+      data-id="${p.project_id}"
+      data-title="${p.title}"
+      data-type="${p.project_type}">
+      View & Apply
+    </button>`
+}
+        </div>`;
+
+   // After appending the card to the grid
+cardGrid.appendChild(card);
+
+// FIX: Check if the button exists first
+const viewBtn = card.querySelector('.view-btn');
+if (viewBtn) {
+  viewBtn.addEventListener('click', e => {
+    const btn = e.currentTarget;
+    openApplyModal(btn.dataset.id, btn.dataset.title, btn.dataset.type);
+  });
+}
+    });
+  }
+
+  // 5. Apply modal
+  function openApplyModal(projectId, projectTitle, projectType) {
+    const pt = (projectType || '').toLowerCase();
+    let c = '#6366f1', bg = 'rgba(99,102,241,.1)';
+    if (pt === 'tubitak')   { c = '#00b8b8'; bg = 'rgba(0,184,184,.1)'; }
+    if (pt === 'teknofest') { c = '#ef4444'; bg = 'rgba(239,68,68,.1)'; }
+
+    const ov = document.createElement('div');
+    ov.className = 'apc-overlay';
+    ov.innerHTML = `
+      <div class="apc-modal" style="border-top:4px solid ${c}">
+        <div class="apc-icon-wrap" style="background:${bg};color:${c}">
+          <span class="apc-icon">📨</span>
+        </div>
+        <h3 class="apc-title">Confirm Application</h3>
+        <div class="apc-project-badge" style="background:${bg};color:${c}">${projectType}</div>
+        <p class="apc-project-name">${projectTitle}</p>
+        <p class="apc-desc">The project leader will review your profile before accepting or declining.</p>
+        <div class="apc-acts">
+          <button class="apc-cancel" id="apcCancel">Cancel</button>
+          <button class="apc-confirm" id="apcConfirm" style="background:${c};color:#fff">
+            <span id="apcTxt">✅ Apply Now</span>
+          </button>
+        </div>
+      </div>`;
+
+    document.body.appendChild(ov);
+    setTimeout(() => ov.classList.add('visible'), 10);
+
+    const close = () => {
+      ov.classList.remove('visible');
+      setTimeout(() => ov.remove(), 250);
+    };
+
+    document.getElementById('apcCancel').onclick = close;
+    ov.addEventListener('click', e => { if (e.target === ov) close(); });
+
+    document.getElementById('apcConfirm').onclick = async () => {
+      const btn   = document.getElementById('apcConfirm');
+      const txt   = document.getElementById('apcTxt');
+      btn.disabled = true;
+      txt.textContent = 'Sending…';
+
+      try {
+        await Student.applyToProject(projectId);
+        showToast('✓ Application sent!', 'ok');
+        close();
+      } catch (err) {
+        btn.disabled = false;
+        txt.textContent = 'Try Again';
+        showToast(err.message, 'error');
+      }
+    };
+  }
+
+  // 6. Search & filter hooks — wire up your existing UI
+  const searchInput = document.getElementById('gs')
+    || document.querySelector('input[type="text"][placeholder*="earch"]');
+  const searchBtn = document.querySelector('.search-btn, button[type="submit"]');
+
+  function doSearch() {
+    const q = searchInput?.value.trim() || '';
+    const params = {};
+    if (q) params.search = q;
+    loadProjects(params);
+  }
+
+  searchBtn?.addEventListener('click', doSearch);
+  searchInput?.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+
+  // Type filter buttons (All Types / TÜBİTAK / Teknofest / Course)
+  document.querySelectorAll('[data-type]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-type]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const type = btn.dataset.type;
+      loadProjects(type === 'all' ? {} : { type });
+    });
   });
 
-  // pre-fill from global search
-  const bq = sessionStorage.getItem('bq');
-  if (bq) { document.getElementById('searchInput').value=bq; sessionStorage.removeItem('bq'); runFilter(); }
+  // 7. Initial load
+  loadProjects();
+
+  // 8. Sidebar & notification toggles
+  const sb   = document.getElementById('sb');
+  const burg = document.getElementById('burg');
+  const nBtn  = document.getElementById('nBtn');
+  const nPanel = document.getElementById('nPanel');
+
+  burg?.addEventListener('click', () => sb?.classList.toggle('open'));
+  document.addEventListener('click', e => {
+    if (sb?.classList.contains('open') && !sb.contains(e.target) && e.target !== burg)
+      sb.classList.remove('open');
+    if (nPanel && !nPanel.contains(e.target) && e.target !== nBtn)
+      nPanel.classList.remove('open');
+  });
+  nBtn?.addEventListener('click', e => { e.stopPropagation(); nPanel?.classList.toggle('open'); });
+
+  // 9. Logout
+  document.getElementById('logout-btn')?.addEventListener('click', async () => {
+    await Auth.logout();
+    window.location.href = 'http://teamforge.local/frontend/auth/login.html';
+  });
+
 });
-
-/* ════════════════ APPLY CONFIRM POPUP ════════════════ */
-function showApplyConfirm(p, closeFn) {
-  // Remove any existing confirm
-  document.getElementById("applyConfirmOverlay")?.remove();
-
-  const ov = document.createElement("div");
-  ov.id = "applyConfirmOverlay";
-  ov.className = "apc-overlay";
-
-  const typeColor = { "TEKNOFEST":"#f97316","TÜBİTAK":"#6366f1","COURSE":"#00b8b8" };
-  const typeBg    = { "TEKNOFEST":"rgba(249,115,22,.12)","TÜBİTAK":"rgba(99,102,241,.12)","COURSE":"rgba(0,184,184,.12)" };
-  const c  = typeColor[p.type] || "#00b8b8";
-  const bg = typeBg[p.type]    || "rgba(0,184,184,.12)";
-
-  ov.innerHTML = `
-    <div class="apc-box">
-      <div class="apc-icon-wrap" style="background:${bg}">
-        <span class="apc-icon">✅</span>
-      </div>
-      <h3 class="apc-title">Confirm Application</h3>
-      <div class="apc-project-badge" style="background:${bg};color:${c}">
-        ${p.type}
-      </div>
-      <p class="apc-project-name">${p.title}</p>
-      <p class="apc-desc">The project leader will review your profile and skills before accepting or declining your request.</p>
-      <div class="apc-acts">
-        <button class="apc-cancel" id="apcCancel">Cancel</button>
-        <button class="apc-confirm" id="apcConfirm" style="background:${c}">
-          <span id="apcTxt">✅ Apply Now</span>
-          <span class="apc-spin" id="apcSpin"></span>
-        </button>
-      </div>
-    </div>`;
-
-  document.body.appendChild(ov);
-  setTimeout(() => ov.classList.add("visible"), 10);
-
-  const closeConfirm = () => {
-    ov.classList.remove("visible");
-    setTimeout(() => ov.remove(), 250);
-  };
-
-  document.getElementById("apcCancel").onclick = closeConfirm;
-  ov.addEventListener("click", e => { if (e.target === ov) closeConfirm(); });
-
-  document.getElementById("apcConfirm").onclick = () => {
-    const btn = document.getElementById("apcConfirm");
-    btn.disabled = true;
-    document.getElementById("apcTxt").textContent = "Applying…";
-    document.getElementById("apcSpin").style.display = "inline-block";
-    setTimeout(() => {
-      closeConfirm();
-      if (closeFn) closeFn();
-      showToast(`✓ Applied to "${p.title}"! Waiting for leader response.`, "ok");
-    }, 1000);
-  };
-}

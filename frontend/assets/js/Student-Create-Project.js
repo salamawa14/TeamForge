@@ -141,8 +141,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+document.addEventListener('DOMContentLoaded', async () => {
 
-document.addEventListener('DOMContentLoaded', () => {
+  const user = await requireLogin(['student']);
+  if (!user) return;
+
+  const avatar = document.querySelector('.avatar');
+  if (avatar) {
+    const parts = user.full_name.trim().split(' ');
+    avatar.textContent = parts.length >= 2 ? parts[0][0] + parts[parts.length-1][0] : parts[0].slice(0,2);
+  }
+
+  /* ── Char counter ── */
 
   /* ── Char counter ── */
   const descTA = document.getElementById('cpDesc');
@@ -355,15 +365,43 @@ document.addEventListener('DOMContentLoaded', () => {
       confirmLabel: '🚀 Publish Now',
       confirmColor: typeColor[projectType] || '#00b8b8',
       confirmFg: projectType === 'TÜBİTAK' ? '#fff' : '#1a2540',
-      onConfirm: () => {
+      onConfirm: async () => {
         const btn = document.getElementById('publishBtn');
         btn.disabled = true;
         document.getElementById('pubTxt').textContent = 'Publishing…';
         document.getElementById('pubSpin').style.display = 'inline-block';
-        setTimeout(() => {
+
+        try {
+          // Collect all form data
+          const skills = [...document.querySelectorAll('#skillsWrap .s-chip')]
+            .map(c => c.dataset.val);
+          const roles = [...document.querySelectorAll('#rolesList .role-tag')]
+            .map(t => t.textContent.replace('✕','').trim());
+          const visYears  = [...document.querySelectorAll('#visYears input:checked')].map(c => c.value);
+          const visDepts  = [...document.querySelectorAll('#visDepts input:checked')].map(c => c.value);
+          const visSkills = [...document.querySelectorAll('#visSkillsWrap .s-chip')].map(c => c.dataset.val);
+
+          await Projects.create({
+            title:            document.getElementById('cpTitle').value.trim(),
+            project_type:     document.getElementById('cpType').value,
+            team_size_needed: parseInt(document.getElementById('cpSize').value),
+            description:      document.getElementById('cpDesc').value.trim(),
+            required_skills:  skills,
+            roles_needed:     roles,
+            advisor_required: document.getElementById('advisorToggle').checked ? 1 : 0,
+            status:           document.getElementById('activeToggle').checked ? 'Active' : 'Inactive',
+            visibility_filters: { academic_year: visYears, departments: visDepts, skills: visSkills },
+          });
+
           showToast('🚀 Project published successfully!', 'ok');
           setTimeout(() => window.location.href = 'My-Projects.html', 1200);
-        }, 1000);
+
+        } catch (err) {
+          btn.disabled = false;
+          document.getElementById('pubTxt').textContent = '🚀 Publish Project';
+          document.getElementById('pubSpin').style.display = 'none';
+          showToast(err.message || 'Failed to publish. Try again.', 'error');
+        }
       }
     });
   });

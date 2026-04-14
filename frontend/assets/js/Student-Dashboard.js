@@ -142,3 +142,62 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 /* Dashboard — all logic in base JS */
+/* ── Backend Connection ── */
+document.addEventListener('DOMContentLoaded', async () => {
+
+  // 1. Guard — redirect to login if not a student
+  const user = await requireLogin(['student']);
+  if (!user) return;
+
+  // 2. Show initials in avatar
+  const avatar = document.querySelector('.avatar');
+  if (avatar) {
+    const parts = user.full_name.trim().split(' ');
+    avatar.textContent = parts.length >= 2
+      ? parts[0][0] + parts[parts.length - 1][0]
+      : parts[0].slice(0, 2);
+  }
+
+  // 3. Load dashboard stats
+  try {
+    const data = await Student.dashboard();
+
+    // Update stat cards
+    const s = data.stats;
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    set('stat-projects', s.projects_owned + s.projects_joined);
+    set('stat-pending',  s.pending_requests);
+
+    // Notification dot — show if there are unread notifications
+    const unread = data.notifications.filter(n => !n.is_read).length;
+    if (unread > 0) {
+      const dot = document.querySelector('.notif-dot');
+      if (dot) dot.style.display = 'block';
+    }
+
+    // Replace notification panel with real data
+    const nPanel = document.getElementById('nPanel');
+    if (nPanel && data.notifications.length) {
+      const items = data.notifications.map(n => `
+        <div class="np-item ${n.is_read ? '' : 'unread'}">
+          <span class="np-ico">🔔</span>
+          <div class="np-body">
+            <strong>${n.type.replace(/_/g, ' ')}</strong>
+            <span>${n.message}</span>
+          </div>
+        </div>
+      `).join('');
+      nPanel.innerHTML = `<div class="np-head">Notifications</div>${items}`;
+    }
+
+  } catch (err) {
+    console.error('Dashboard load error:', err.message);
+  }
+
+  // 4. Logout
+  document.getElementById('logout-btn')?.addEventListener('click', async () => {
+    await Auth.logout();
+    window.location.href = 'http://teamforge.local/frontend/auth/login.html';
+  });
+
+});

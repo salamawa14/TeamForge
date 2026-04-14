@@ -4,8 +4,7 @@
 //  every HTML page.  Adjust BASE_URL if your XAMPP port differs.
 // ============================================================
 
-const BASE_URL = 'http://localhost/teamforge-backend/api';
-
+const BASE_URL = 'http://teamforge.local/teamforge-backend/api';
 // ── Core fetch wrapper ────────────────────────────────────────
 async function apiRequest(endpoint, method = 'GET', body = null) {
     const options = {
@@ -18,14 +17,13 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
     const res  = await fetch(BASE_URL + endpoint, options);
     const data = await res.json();
 
-    if (!data.success) {
-        // Redirect to login if session expired
-        if (res.status === 401) {
-            window.location.href = '/teamforge/frontend/auth/login.html';
-            return null;
-        }
-        throw new Error(data.message || 'Something went wrong.');
+  if (!data.success) {
+    if (res.status === 401 && !endpoint.includes('/auth/login')) {
+        window.location.href = 'http://teamforge.local/frontend/auth/login.html';
+        return null;
     }
+    throw new Error(data.message || 'Something went wrong.');
+}
     return data.data;
 }
 
@@ -71,7 +69,7 @@ const Student = {
 
 // ── Projects ──────────────────────────────────────────────────
 const Projects = {
-    browse:   (params = {}) => {
+    browse: (params = {}) => {
         const q = new URLSearchParams(params).toString();
         return apiRequest('/projects/index.php' + (q ? '?' + q : ''));
     },

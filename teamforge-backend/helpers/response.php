@@ -6,7 +6,8 @@
 
 // Allow your frontend origin (update port if needed)
 header('Access-Control-Allow-Origin: http://localhost');
-header('Access-Control-Allow-Origin: *');          // Use during development
+header('Access-Control-Allow-Origin: http://teamforge.local');
+header('Access-Control-Allow-Credentials: true');         // Use during development
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json; charset=utf-8');
