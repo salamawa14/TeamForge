@@ -49,50 +49,9 @@
         </div>
       </div>
 
-      <div class="adv-grid">
-        <div class="adv-card au d1" onclick="">
-          <div class="adv-top"><div class="adv-av" style="background:#00b8b8;cursor:pointer" onclick="openAdvisorProfile('Dr. Ahmet Kaplan', this.closest('.adv-card').querySelector('.btn-teal'))">AK</div><div><div class="adv-name" style="cursor:pointer" onclick="openAdvisorProfile('Dr. Ahmet Kaplan', this.closest('.adv-card').querySelector('.btn-teal'))">Dr. Ahmet Kaplan</div><div class="adv-dept-txt">Computer Engineering</div></div></div>
-          <div class="adv-univ">Middle East Technical University</div>
-          <div class="adv-specs"><span class="chip">IoT</span><span class="chip">Embedded Systems</span><span class="chip">MQTT</span><span class="chip">TÜBİTAK</span></div>
-          <div class="adv-avail-row"><span class="avail">Available</span><span class="slots-txt">2 slots open</span></div>
-          <button class="btn btn-teal" onclick="openRequestModal('Dr. Ahmet Kaplan', this)">📨 Send Request</button>
-        </div>
-        <div class="adv-card au d2">
-          <div class="adv-top"><div class="adv-av" style="background:#6366f1;cursor:pointer" onclick="openAdvisorProfile('Prof. Ömer Şahin', null)">ÖŞ</div><div><div class="adv-name" style="cursor:pointer" onclick="openAdvisorProfile('Prof. Ömer Şahin', null)">Prof. Ömer Şahin</div><div class="adv-dept-txt">Aerospace Engineering</div></div></div>
-          <div class="adv-univ">ODTÜ – Ankara</div>
-          <div class="adv-specs"><span class="chip">ROS2</span><span class="chip">Computer Vision</span><span class="chip">UAV</span><span class="chip">Teknofest</span></div>
-          <div class="adv-avail-row"><span class="avail busy">Busy</span><span class="slots-txt">0 slots</span></div>
-          <button class="btn btn-outline" style="width:100%;justify-content:center;opacity:.6;cursor:not-allowed" disabled>Unavailable</button>
-        </div>
-        <div class="adv-card au d3">
-          <div class="adv-top"><div class="adv-av" style="background:#f97316;cursor:pointer" onclick="openAdvisorProfile('Dr. Ayşe Kaya', this.closest('.adv-card').querySelector('.btn-teal'))">AK</div><div><div class="adv-name" style="cursor:pointer" onclick="openAdvisorProfile('Dr. Ayşe Kaya', this.closest('.adv-card').querySelector('.btn-teal'))">Dr. Ayşe Kaya</div><div class="adv-dept-txt">Computer Engineering</div></div></div>
-          <div class="adv-univ">Boğaziçi University</div>
-          <div class="adv-specs"><span class="chip">ARCore</span><span class="chip">Mobile Dev</span><span class="chip">HCI</span><span class="chip">Teknofest</span></div>
-          <div class="adv-avail-row"><span class="avail">Available</span><span class="slots-txt">1 slot open</span></div>
-          <button class="btn btn-teal" onclick="openRequestModal('Dr. Ayşe Kaya', this)">📨 Send Request</button>
-        </div>
-        <div class="adv-card au d4">
-          <div class="adv-top"><div class="adv-av" style="background:#a855f7;cursor:pointer" onclick="openAdvisorProfile('Prof. Emre Demir', this.closest('.adv-card').querySelector('.btn-teal'))">ED</div><div><div class="adv-name" style="cursor:pointer" onclick="openAdvisorProfile('Prof. Emre Demir', this.closest('.adv-card').querySelector('.btn-teal'))">Prof. Emre Demir</div><div class="adv-dept-txt">Artificial Intelligence</div></div></div>
-          <div class="adv-univ">Bilkent University</div>
-          <div class="adv-specs"><span class="chip">NLP</span><span class="chip">PyTorch</span><span class="chip">HuggingFace</span><span class="chip">TÜBİTAK</span></div>
-          <div class="adv-avail-row"><span class="avail">Available</span><span class="slots-txt">3 slots open</span></div>
-          <button class="btn btn-teal" onclick="openRequestModal('Prof. Emre Demir', this)">📨 Send Request</button>
-        </div>
-        <div class="adv-card au d5">
-          <div class="adv-top"><div class="adv-av" style="background:#22c55e;cursor:pointer" onclick="openAdvisorProfile('Dr. Zeynep Arslan', this.closest('.adv-card').querySelector('.btn-teal'))">ZA</div><div><div class="adv-name" style="cursor:pointer" onclick="openAdvisorProfile('Dr. Zeynep Arslan', this.closest('.adv-card').querySelector('.btn-teal'))">Dr. Zeynep Arslan</div><div class="adv-dept-txt">Electrical Engineering</div></div></div>
-          <div class="adv-univ">İstanbul Technical University</div>
-          <div class="adv-specs"><span class="chip">Energy Systems</span><span class="chip">IoT</span><span class="chip">Grafana</span><span class="chip">TÜBİTAK</span></div>
-          <div class="adv-avail-row"><span class="avail">Available</span><span class="slots-txt">2 slots open</span></div>
-          <button class="btn btn-teal" onclick="openRequestModal('Dr. Zeynep Arslan', this)">📨 Send Request</button>
-        </div>
-        <div class="adv-card au d6">
-          <div class="adv-top"><div class="adv-av" style="background:#ef4444;cursor:pointer" onclick="openAdvisorProfile('Prof. Mehmet Yıldız', null)">MY</div><div><div class="adv-name" style="cursor:pointer" onclick="openAdvisorProfile('Prof. Mehmet Yıldız', null)">Prof. Mehmet Yıldız</div><div class="adv-dept-txt">Software Engineering</div></div></div>
-          <div class="adv-univ">Hacettepe University</div>
-          <div class="adv-specs"><span class="chip">Blockchain</span><span class="chip">Solidity</span><span class="chip">Web3</span></div>
-          <div class="adv-avail-row"><span class="avail busy">Busy</span><span class="slots-txt">0 slots</span></div>
-          <button class="btn btn-outline" style="width:100%;justify-content:center;opacity:.6;cursor:not-allowed" disabled>Unavailable</button>
-        </div>
-      </div>
+      <div class="adv-grid" id="advGrid">
+  <!-- loaded by JS -->
+</div>
     </main>
   </div>
 </div>
