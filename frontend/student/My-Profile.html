@@ -26,6 +26,10 @@
       <a class="sb-link" href="My-Profile.html"><span class="sb-icon">👤</span>My Profile</a>
       <p class="sb-group">SETTINGS</p>
       <a class="sb-link" href="Settings.html"><span class="sb-icon">⚙</span>Settings</a>
+      <p class="sb-group">SESSION</p>
+      <button class="sb-link sb-logout" id="logoutBtn" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;color:var(--red)">
+        <span class="sb-icon">🚪</span>Log Out
+      </button>
     </nav>
   </aside>
   <div class="main">
@@ -64,49 +68,35 @@
       <!-- Form grid -->
       <div class="profile-grid">
 
-        <!-- Personal Info -->
-        <div class="card au d1">
-          <h3 class="card-title">👤 Personal Information</h3>
-          <div class="g2">
-            <div class="fg"><label>First Name</label><input type="text" value="Jeren" readonly/></div>
-            <div class="fg"><label>Last Name</label><input type="text" value="Student" readonly/></div>
-          </div>
-          <div class="fg"><label>Email Address</label><input type="email" value="jeren@university.edu" readonly/></div>
-          <div class="fg"><label>Student Number</label><input type="text" value="2021050012" readonly/></div>
-          <div class="g2">
-            <div class="fg">
-              <label>University</label>
-              <input type="text" value="ODTÜ" readonly />
-            </div>
-            <div class="fg">
-              <label>Department</label>
-              <input type="text" value="Computer Engineering" readonly />
-            </div>
-          </div>
-          <div class="g2">
-            <div class="fg">
-              <label>Year of Study</label>
-              <input type="text" value="3rd Year" readonly />
-            </div>
-            <div class="fg">
-              <label>GPA</label>
-              <input type="text" value="3.4" readonly />
-            </div>
-          </div>
-        </div>
+       <!-- Personal Info -->
+<div class="card au d1">
+  <h3 class="card-title">👤 Personal Information</h3>
+  <div class="g2">
+    <div class="fg"><label>Full Name</label><input type="text" id="profName" readonly/></div>
+    <div class="fg"><label>Email Address</label><input type="email" id="profEmail" readonly/></div>
+  </div>
+  <div class="g2">
+    <div class="fg"><label>Department</label><input type="text" id="profDept" readonly/></div>
+    <div class="fg"><label>Year of Study</label><input type="text" id="profYear" readonly/></div>
+  </div>
+</div>
 
-        <!-- Skills & Links -->
-        <div class="card au d2">
-          <h3 class="card-title">⚡ Skills &amp; Links</h3>
-          <div class="fg"><label>Skills <span style="font-size:.72rem;color:var(--t3);font-weight:400">(comma separated)</span></label>
-            <input type="text" value="Python, React, Node.js, TensorFlow, IoT" readonly/>
-          </div>
-          <div class="fg"><label>GitHub URL</label><input type="text" value="https://github.com/jerenstudent" readonly/></div>
-          <div class="fg"><label>LinkedIn URL</label><input type="text" value="https://linkedin.com/in/jerenstudent" readonly/></div>
-          <div class="fg"><label>Bio</label>
-            <textarea rows="4" readonly>3rd year Computer Engineering student at ODTÜ. Passionate about IoT, machine learning, and open-source development. Currently working on autonomous drone systems.</textarea>
-          </div>
-        </div>
+         <!-- Skills & Links -->
+<div class="card au d2">
+  <h3 class="card-title">⚡ Skills & Links</h3>
+  <div class="fg"><label>Skills</label>
+    <input type="text" id="profSkills" readonly/>
+  </div>
+  <div class="fg"><label>GitHub URL</label>
+    <input type="text" id="profGithub" readonly/>
+  </div>
+  <div class="fg"><label>LinkedIn URL</label>
+    <input type="text" id="profLinkedin" readonly/>
+  </div>
+  <div class="fg"><label>Bio</label>
+    <textarea id="profBio" rows="4" readonly></textarea>
+  </div>
+</div>
 
         
         <!-- Password

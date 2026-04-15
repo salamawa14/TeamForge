@@ -156,6 +156,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ── Sidebar & notifications ───────────────────────────────────
   const burg = document.getElementById('burg'), sb = document.getElementById('sb');
   burg?.addEventListener('click', () => sb?.classList.toggle('open'));
+  // ---> ADD LOGOUT HERE <---
+  document.getElementById('logoutBtn')?.addEventListener('click', async () => {  
+      await Auth.logout();  
+      window.location.href = 'http://teamforge.local/frontend/auth/login.html';
+  });
   const nBtn = document.getElementById('nBtn'), nPanel = document.getElementById('nPanel');
   nBtn?.addEventListener('click', e => { e.stopPropagation(); nPanel?.classList.toggle('open'); });
   document.addEventListener('click', e => {

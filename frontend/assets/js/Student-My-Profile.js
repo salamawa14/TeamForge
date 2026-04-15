@@ -1,117 +1,88 @@
-/* ═══════════════════════════════════════════════════ 
-   Student-My-Profile.js — Backend Connected 
+/* ═══════════════════════════════════════════════════
+   Student-My-Profile.js — Backend Connected
 ═══════════════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Guard — redirect to login if not logged in
+
   const user = await requireLogin(['student']);
   if (!user) return;
 
-  // Show user name in header
-  document.querySelectorAll('.user-name, [data-user-name]').forEach(el => el.textContent = user.full_name);
+  try {
+    const p = await Student.getProfile();
 
-  const form = document.getElementById('profileForm') || document.querySelector('form');
-  const chipInp = document.getElementById('chipInp');
-  const chipContainer = chipInp ? chipInp.parentElement : null;
-
-  // 2. Fetch Profile Data from Database
-  async function loadProfile() {
-    try {
-      // Assuming you create a profile.php endpoint
-      const data = await apiRequest('/students/profile.php', 'GET');
-      
-      if (data && data.profile) {
-        const p = data.profile;
-        
-        // Populate standard fields
-        if(document.getElementById('fullName')) document.getElementById('fullName').value = p.full_name || '';
-        if(document.getElementById('email')) document.getElementById('email').value = p.email || '';
-        if(document.getElementById('department')) document.getElementById('department').value = p.department || '';
-        if(document.getElementById('academicYear')) document.getElementById('academicYear').value = p.academic_year || '';
-        if(document.getElementById('bio')) document.getElementById('bio').value = p.bio || '';
-        if(document.getElementById('github')) document.getElementById('github').value = p.github_url || '';
-        if(document.getElementById('linkedin')) document.getElementById('linkedin').value = p.linkedin_url || '';
-
-        // Populate skills chips
-        if (chipContainer && p.technical_skills) {
-          let skills = [];
-          try {
-             skills = typeof p.technical_skills === 'string' ? JSON.parse(p.technical_skills) : p.technical_skills;
-          } catch(e) {}
-          
-          skills.forEach(skill => addChip(skill));
-        }
-      }
-    } catch (err) {
-      console.error('Failed to load profile:', err);
-      if (typeof showToast === 'function') showToast('Could not load profile data', 'error');
+    // ── Banner ──────────────────────────────────────
+    const pbAv = document.querySelector('.pb-av');
+    if (pbAv) {
+      const parts = (p.full_name || '').trim().split(' ');
+      pbAv.textContent = parts.length >= 2
+        ? parts[0][0] + parts[parts.length - 1][0]
+        : (parts[0] || '').slice(0, 2);
     }
+
+    const pbName = document.querySelector('.pb-inner h2');
+    if (pbName) pbName.textContent = p.full_name || '';
+
+    const pbSub = document.querySelector('.pb-inner .sub');
+    if (pbSub) {
+      const parts = [p.department, p.academic_year].filter(Boolean);
+      pbSub.textContent = parts.join(' · ');
+    }
+
+    // Skills chips in banner
+    const pbChips = document.querySelector('.pb-chips');
+    if (pbChips && Array.isArray(p.technical_skills) && p.technical_skills.length) {
+      pbChips.innerHTML = p.technical_skills
+        .map(s => `<span class="tag-dark">${s}</span>`).join('');
+    }
+
+    // GitHub / LinkedIn links in banner
+    const pbLinks = document.querySelector('.pb-links');
+    if (pbLinks) {
+      pbLinks.innerHTML = `
+        ${p.github_url   ? `<a href="${p.github_url}"   target="_blank" class="pb-lnk">🔗 GitHub</a>`   : ''}
+        ${p.linkedin_url ? `<a href="${p.linkedin_url}" target="_blank" class="pb-lnk">💼 LinkedIn</a>` : ''}
+      `;
+    }
+
+    // ── Avatar in topbar ────────────────────────────
+    const avatar = document.querySelector('.avatar');
+    if (avatar) {
+      const parts = (p.full_name || '').trim().split(' ');
+      avatar.textContent = parts.length >= 2
+        ? parts[0][0] + parts[parts.length - 1][0]
+        : (parts[0] || '').slice(0, 2);
+    }
+
+    // ── Form fields ─────────────────────────────────
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+    set('profName',    p.full_name);
+    set('profEmail',   p.email);
+    set('profDept',    p.department);
+    set('profYear',    p.academic_year);
+    set('profGithub',  p.github_url);
+    set('profLinkedin',p.linkedin_url);
+    set('profSkills',  Array.isArray(p.technical_skills) ? p.technical_skills.join(', ') : '');
+
+    const bioEl = document.getElementById('profBio');
+    if (bioEl) bioEl.value = p.bio || '';
+
+  } catch (err) {
+    console.error('Profile load error:', err.message);
   }
 
-  // Helper to add a skill chip visually
-  function addChip(val) {
-      if (!val || !chipContainer || !chipInp) return;
-      const chip = document.createElement('span');
-      chip.className = 's-chip';
-      chip.innerHTML = `${val} <button type="button" onclick="event.stopPropagation();this.parentElement.remove()">✕</button>`;
-      chipContainer.insertBefore(chip, chipInp);
-  }
+  // ── Sidebar & notifications ───────────────────────
+  const burg = document.getElementById('burg'), sb = document.getElementById('sb');
+  burg?.addEventListener('click', () => sb?.classList.toggle('open'));
+  // ---> ADD LOGOUT HERE <---
+  document.getElementById('logoutBtn')?.addEventListener('click', async () => {  
+      await Auth.logout();  
+      window.location.href = 'http://teamforge.local/frontend/auth/login.html';
+  });
+  const nBtn = document.getElementById('nBtn'), nPanel = document.getElementById('nPanel');
+  nBtn?.addEventListener('click', e => { e.stopPropagation(); nPanel?.classList.toggle('open'); });
+  document.addEventListener('click', e => {
+    if (sb?.classList.contains('open') && !sb.contains(e.target) && e.target !== burg) sb.classList.remove('open');
+    if (nPanel && !nPanel.contains(e.target) && e.target !== nBtn) nPanel.classList.remove('open');
+  });
 
-  // 3. Handle Skill Input
-  if (chipInp) {
-      chipInp.addEventListener('keydown', e => {
-        if ((e.key === 'Enter' || e.key === ',') && chipInp.value.trim()) {
-          e.preventDefault();
-          const val = chipInp.value.replace(',', '').trim();
-          addChip(val);
-          chipInp.value = '';
-        }
-        if (e.key === 'Backspace' && !chipInp.value) {
-          const chips = chipContainer.querySelectorAll('.s-chip');
-          if (chips.length) chips[chips.length - 1].remove();
-        }
-      });
-  }
-
-  // 4. Save Profile Data
-  if (form) {
-      form.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const btn = form.querySelector('button[type="submit"]') || document.getElementById('saveBtn');
-          const originalText = btn.textContent;
-          btn.disabled = true;
-          btn.textContent = 'Saving...';
-
-          // Gather skills from chips
-          const skills = Array.from(document.querySelectorAll('.s-chip')).map(chip => chip.childNodes[0].textContent.trim());
-
-          const payload = {
-              full_name: document.getElementById('fullName')?.value,
-              department: document.getElementById('department')?.value,
-              academic_year: document.getElementById('academicYear')?.value,
-              bio: document.getElementById('bio')?.value,
-              github_url: document.getElementById('github')?.value,
-              linkedin_url: document.getElementById('linkedin')?.value,
-              technical_skills: JSON.stringify(skills) // Send as JSON string
-          };
-
-          try {
-              await apiRequest('/students/profile.php', 'POST', payload);
-              if (typeof showToast === 'function') showToast('✓ Profile updated successfully!', 'ok');
-          } catch (err) {
-              if (typeof showToast === 'function') showToast(err.message, 'error');
-          } finally {
-              btn.disabled = false;
-              btn.textContent = originalText;
-          }
-      });
-  }
-
-  // 5. Initial Load
-  loadProfile();
-
-  // 6. Keep UI Toggles working
-  const burg = document.getElementById('burg');
-  const sb = document.getElementById('sb');
-  if(burg && sb) burg.addEventListener('click', () => sb.classList.toggle('open'));
 });

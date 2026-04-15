@@ -79,10 +79,7 @@ async function doUpdatePw(curId, newId, confId, barId, lblId) {
   // 2. Send request to backend
   try {
       // Assuming you create a change-password.php endpoint
-      await apiRequest('/auth/change-password.php', 'POST', {
-          current_password: cur.value,
-          new_password: nw.value
-      });
+      await Auth.changePassword(cur.value, nw.value);
 
       showToast('✓ Password updated successfully!', 'ok');
       cur.value = ''; nw.value = ''; conf.value = '';
