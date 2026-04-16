@@ -98,7 +98,10 @@ async function doUpdatePw(curId, newId, confId, barId, lblId) {
 
 /* ═══════════════════ DOM READY ═══════════════════ */
 document.addEventListener('DOMContentLoaded', async () => {
-
+document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+  await Auth.logout();
+  window.location.href = 'http://teamforge.local/frontend/auth/login.html';
+});
   // Guard — redirect to login if not logged in
   const user = await requireLogin(['student']);
   if (!user) return;
