@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 1. Guard — redirect to login if not logged in
   const user = await requireLogin(['student']);
   if (!user) return;
-
+loadNotifications();
   // Show user name in header
   document.querySelectorAll('.user-name, [data-user-name]').forEach(el => el.textContent = user.full_name);
 

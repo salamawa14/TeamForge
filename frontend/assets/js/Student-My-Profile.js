@@ -1,82 +1,140 @@
-/* ═══════════════════════════════════════════════════
-   Student-My-Profile.js — Backend Connected
-═══════════════════════════════════════════════════ */
-
 document.addEventListener('DOMContentLoaded', async () => {
-
   const user = await requireLogin(['student']);
   if (!user) return;
+loadNotifications();
+  let profile = null;
 
-  try {
-    const p = await Student.getProfile();
-
-    // ── Banner ──────────────────────────────────────
-    const pbAv = document.querySelector('.pb-av');
-    if (pbAv) {
-      const parts = (p.full_name || '').trim().split(' ');
-      pbAv.textContent = parts.length >= 2
-        ? parts[0][0] + parts[parts.length - 1][0]
-        : (parts[0] || '').slice(0, 2);
+  // ── Load profile ─────────────────────────────────────────────
+  async function loadProfile() {
+    try {
+      profile = await Student.getProfile();
+      renderProfile(profile);
+    } catch(err) {
+      showToast('Failed to load profile: ' + err.message, 'error');
     }
-
-    const pbName = document.querySelector('.pb-inner h2');
-    if (pbName) pbName.textContent = p.full_name || '';
-
-    const pbSub = document.querySelector('.pb-inner .sub');
-    if (pbSub) {
-      const parts = [p.department, p.academic_year].filter(Boolean);
-      pbSub.textContent = parts.join(' · ');
-    }
-
-    // Skills chips in banner
-    const pbChips = document.querySelector('.pb-chips');
-    if (pbChips && Array.isArray(p.technical_skills) && p.technical_skills.length) {
-      pbChips.innerHTML = p.technical_skills
-        .map(s => `<span class="tag-dark">${s}</span>`).join('');
-    }
-
-    // GitHub / LinkedIn links in banner
-    const pbLinks = document.querySelector('.pb-links');
-    if (pbLinks) {
-      pbLinks.innerHTML = `
-        ${p.github_url   ? `<a href="${p.github_url}"   target="_blank" class="pb-lnk">🔗 GitHub</a>`   : ''}
-        ${p.linkedin_url ? `<a href="${p.linkedin_url}" target="_blank" class="pb-lnk">💼 LinkedIn</a>` : ''}
-      `;
-    }
-
-    // ── Avatar in topbar ────────────────────────────
-    const avatar = document.querySelector('.avatar');
-    if (avatar) {
-      const parts = (p.full_name || '').trim().split(' ');
-      avatar.textContent = parts.length >= 2
-        ? parts[0][0] + parts[parts.length - 1][0]
-        : (parts[0] || '').slice(0, 2);
-    }
-
-    // ── Form fields ─────────────────────────────────
-    const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
-    set('profName',    p.full_name);
-    set('profEmail',   p.email);
-    set('profDept',    p.department);
-    set('profYear',    p.academic_year);
-    set('profGithub',  p.github_url);
-    set('profLinkedin',p.linkedin_url);
-    set('profSkills',  Array.isArray(p.technical_skills) ? p.technical_skills.join(', ') : '');
-
-    const bioEl = document.getElementById('profBio');
-    if (bioEl) bioEl.value = p.bio || '';
-
-  } catch (err) {
-    console.error('Profile load error:', err.message);
   }
 
-  // ── Sidebar & notifications ───────────────────────
+  function renderProfile(p) {
+    // Banner
+    const parts = (p.full_name || '').trim().split(' ');
+    const initials = parts.length >= 2 ? parts[0][0] + parts[parts.length-1][0] : parts[0].slice(0,2);
+    document.getElementById('pbAv').textContent   = initials.toUpperCase();
+    document.querySelector('.avatar').textContent = initials.toUpperCase();
+    document.getElementById('pbName').textContent = p.full_name || '';
+    document.getElementById('pbSub').textContent  =
+      [p.department, p.academic_year ? p.academic_year + ' Year' : ''].filter(Boolean).join(' · ');
+
+    const skills = Array.isArray(p.technical_skills) ? p.technical_skills : [];
+    document.getElementById('pbChips').innerHTML =
+      skills.map(s => `<span class="tag-dark">${s}</span>`).join('');
+
+    const links = [];
+    if (p.github_url)   links.push(`<a href="${p.github_url}"   class="pb-lnk" target="_blank">🔗 GitHub</a>`);
+    if (p.linkedin_url) links.push(`<a href="${p.linkedin_url}" class="pb-lnk" target="_blank">💼 LinkedIn</a>`);
+    document.getElementById('pbLinks').innerHTML = links.join('');
+
+    // Personal Info fields
+    const nameParts = (p.full_name || '').split(' ');
+    document.getElementById('pfFirstName').value = nameParts[0] || '';
+    document.getElementById('pfLastName').value  = nameParts.slice(1).join(' ') || '';
+    document.getElementById('pfEmail').value     = p.email || '';
+    document.getElementById('pfDept').value      = p.department || '';
+    const yearSel = document.getElementById('pfYear');
+    yearSel.value = p.academic_year || '';
+
+    // Skills & Links fields
+    document.getElementById('pfSkills').value   = skills.join(', ');
+    document.getElementById('pfGithub').value   = p.github_url   || '';
+    document.getElementById('pfLinkedin').value = p.linkedin_url || '';
+    document.getElementById('pfBio').value      = p.bio          || '';
+  }
+
+  // ── Edit / Save — Personal Info ──────────────────────────────
+  const infoFields = ['pfFirstName', 'pfLastName', 'pfDept'];
+  document.getElementById('editInfoBtn')?.addEventListener('click', () => {
+    infoFields.forEach(id => document.getElementById(id).removeAttribute('readonly'));
+    document.getElementById('pfYear').removeAttribute('disabled');
+    document.getElementById('editInfoBtn').style.display = 'none';
+    document.getElementById('saveInfoBtn').style.display = '';
+  });
+
+  document.getElementById('saveInfoBtn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('saveInfoBtn');
+    btn.textContent = 'Saving…'; btn.disabled = true;
+    try {
+      const full_name = (document.getElementById('pfFirstName').value.trim() + ' ' +
+                         document.getElementById('pfLastName').value.trim()).trim();
+      await Student.updateProfile({
+        full_name,
+        department:    document.getElementById('pfDept').value.trim(),
+        academic_year: document.getElementById('pfYear').value || null,
+        technical_skills: profile?.technical_skills || [],
+        github_url:    profile?.github_url    || null,
+        linkedin_url:  profile?.linkedin_url  || null,
+        bio:           profile?.bio           || null,
+      });
+      await loadProfile();
+      infoFields.forEach(id => document.getElementById(id).setAttribute('readonly', true));
+      document.getElementById('pfYear').setAttribute('disabled', true);
+      document.getElementById('editInfoBtn').style.display = '';
+      document.getElementById('saveInfoBtn').style.display = 'none';
+      showToast('✓ Profile updated!', 'ok');
+    } catch(err) {
+      showToast(err.message, 'error');
+    } finally {
+      btn.textContent = '💾 Save Changes'; btn.disabled = false;
+    }
+  });
+
+  // ── Edit / Save — Skills & Links ─────────────────────────────
+  const skillFields = ['pfSkills', 'pfGithub', 'pfLinkedin', 'pfBio'];
+  document.getElementById('editSkillsBtn')?.addEventListener('click', () => {
+    skillFields.forEach(id => document.getElementById(id).removeAttribute('readonly'));
+    document.getElementById('editSkillsBtn').style.display = 'none';
+    document.getElementById('saveSkillsBtn').style.display = '';
+  });
+
+  document.getElementById('saveSkillsBtn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('saveSkillsBtn');
+    btn.textContent = 'Saving…'; btn.disabled = true;
+    try {
+      const skillsRaw = document.getElementById('pfSkills').value;
+      const skills = skillsRaw.split(',').map(s => s.trim()).filter(Boolean);
+      await Student.updateProfile({
+        full_name:        profile?.full_name   || user.full_name,
+        department:       profile?.department  || '',
+        academic_year:    profile?.academic_year || null,
+        technical_skills: skills,
+        github_url:       document.getElementById('pfGithub').value.trim()   || null,
+        linkedin_url:     document.getElementById('pfLinkedin').value.trim() || null,
+        bio:              document.getElementById('pfBio').value.trim()       || null,
+      });
+      await loadProfile();
+      skillFields.forEach(id => document.getElementById(id).setAttribute('readonly', true));
+      document.getElementById('editSkillsBtn').style.display = '';
+      document.getElementById('saveSkillsBtn').style.display = 'none';
+      showToast('✓ Skills & links updated!', 'ok');
+    } catch(err) {
+      showToast(err.message, 'error');
+    } finally {
+      btn.textContent = '💾 Save Changes'; btn.disabled = false;
+    }
+  });
+
+  // ── Toast ─────────────────────────────────────────────────────
+  function showToast(msg, type = '') {
+    let t = document.getElementById('_toast');
+    if (!t) { t = document.createElement('div'); t.id = '_toast'; t.className = 'toast'; document.body.appendChild(t); }
+    t.textContent = msg; t.className = 'toast show' + (type ? ' ' + type : '');
+    clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 3400);
+  }
+
+  // ── Sidebar & notifications ───────────────────────────────────
   const burg = document.getElementById('burg'), sb = document.getElementById('sb');
   burg?.addEventListener('click', () => sb?.classList.toggle('open'));
-  // ---> ADD LOGOUT HERE <---
-  document.getElementById('logoutBtn')?.addEventListener('click', async () => {  
-      await Auth.logout();  
-      window.location.href = 'http://teamforge.local/frontend/auth/login.html';
+  document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+    await Auth.logout();
+    window.location.href = 'http://teamforge.local/frontend/auth/login.html';
   });
   const nBtn = document.getElementById('nBtn'), nPanel = document.getElementById('nPanel');
   nBtn?.addEventListener('click', e => { e.stopPropagation(); nPanel?.classList.toggle('open'); });
@@ -85,4 +143,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (nPanel && !nPanel.contains(e.target) && e.target !== nBtn) nPanel.classList.remove('open');
   });
 
+  // ── Initial load ──────────────────────────────────────────────
+  loadProfile();
 });

@@ -37,65 +37,62 @@
       <div class="tb-left"><button class="burger" id="burg">☰</button><span class="tb-icon">👤</span><span class="tb-title">My Profile</span><div class="tb-search"><span>🔍</span><input id="gs" type="text" placeholder="Search projects"/></div></div>
       <div class="tb-right"><button class="icon-btn" id="nBtn">🔔<span class="notif-dot"></span></button><a href="My-Profile.html">
        <div class="avatar">JS</div>
-        </a><div class="notif-panel" id="nPanel"><div class="np-head">Notifications</div><div class="np-item unread"><span class="np-ico">✅</span><div class="np-body"><strong>Application Accepted</strong><span>Autonomous Drone Navigation · 3 days ago</span></div></div></div></div>
-    </header>
+        <div class="notif-panel" id="nPanel">
+  <div class="np-head">Notifications <span id="notif-unread-count"></span></div>
+  <!-- loaded by JS -->
+</div></header>
     <main class="page">
       <div class="page-head"><div><h1 class="page-title">👤 My Profile</h1><p class="page-sub">Manage your student profile and preferences.</p></div></div>
 
       <!-- Profile Banner — exact Figma: centered avatar, name, sub, chips, links -->
-      <div class="profile-banner au">
-        <div class="pb-glow"></div>
-        <div class="pb-hex">⬡</div>
-        
-        <div class="pb-inner">
-          <div class="pb-av">JS</div>
-          <h2>Jeren Student</h2>
-          <div class="sub">Computer Engineering · 3rd Year · GPA 3.4</div>
-          <div class="pb-chips">
-            <span class="tag-dark">Python</span>
-            <span class="tag-dark">React</span>
-            <span class="tag-dark">Node.js</span>
-            <span class="tag-dark">TensorFlow</span>
-            <span class="tag-dark">IoT</span>
-          </div>
-          <div class="pb-links">
-            <a href="#" class="pb-lnk">🔗 GitHub</a>
-            <a href="#" class="pb-lnk">💼 LinkedIn</a>
-          </div>
-        </div>
-      </div>
+      <div class="pb-av" id="pbAv">JS</div>
+<h2 id="pbName">…</h2>
+<div class="sub" id="pbSub">…</div>
+<div class="pb-chips" id="pbChips"></div>
+<div class="pb-links" id="pbLinks"></div>
 
       <!-- Form grid -->
       <div class="profile-grid">
 
-       <!-- Personal Info -->
+     <!-- Personal Info -->
 <div class="card au d1">
   <h3 class="card-title">👤 Personal Information</h3>
   <div class="g2">
-    <div class="fg"><label>Full Name</label><input type="text" id="profName" readonly/></div>
-    <div class="fg"><label>Email Address</label><input type="email" id="profEmail" readonly/></div>
+    <div class="fg"><label>First Name</label><input type="text" id="pfFirstName" readonly/></div>
+    <div class="fg"><label>Last Name</label><input type="text" id="pfLastName" readonly/></div>
   </div>
+  <div class="fg"><label>Email Address</label><input type="email" id="pfEmail" readonly/></div>
   <div class="g2">
-    <div class="fg"><label>Department</label><input type="text" id="profDept" readonly/></div>
-    <div class="fg"><label>Year of Study</label><input type="text" id="profYear" readonly/></div>
+    <div class="fg"><label>Department</label><input type="text" id="pfDept" readonly/></div>
+    <div class="fg">
+      <label>Year of Study</label>
+      <select id="pfYear" disabled>
+        <option value="">— Select —</option>
+        <option value="1st">1st Year</option>
+        <option value="2nd">2nd Year</option>
+        <option value="3rd">3rd Year</option>
+        <option value="4th">4th Year</option>
+        <option value="5th">5th Year</option>
+      </select>
+    </div>
   </div>
+  <button class="btn btn-outline" id="editInfoBtn" style="margin-top:12px">✏️ Edit</button>
+  <button class="btn btn-teal"    id="saveInfoBtn" style="margin-top:12px;display:none">💾 Save Changes</button>
 </div>
 
          <!-- Skills & Links -->
 <div class="card au d2">
-  <h3 class="card-title">⚡ Skills & Links</h3>
-  <div class="fg"><label>Skills</label>
-    <input type="text" id="profSkills" readonly/>
+  <h3 class="card-title">⚡ Skills &amp; Links</h3>
+  <div class="fg"><label>Skills <span style="font-size:.72rem;color:var(--t3);font-weight:400">(comma separated)</span></label>
+    <input type="text" id="pfSkills" readonly/>
   </div>
-  <div class="fg"><label>GitHub URL</label>
-    <input type="text" id="profGithub" readonly/>
-  </div>
-  <div class="fg"><label>LinkedIn URL</label>
-    <input type="text" id="profLinkedin" readonly/>
-  </div>
+  <div class="fg"><label>GitHub URL</label><input type="text" id="pfGithub" readonly/></div>
+  <div class="fg"><label>LinkedIn URL</label><input type="text" id="pfLinkedin" readonly/></div>
   <div class="fg"><label>Bio</label>
-    <textarea id="profBio" rows="4" readonly></textarea>
+    <textarea rows="4" id="pfBio" readonly></textarea>
   </div>
+  <button class="btn btn-outline" id="editSkillsBtn" style="margin-top:12px">✏️ Edit</button>
+  <button class="btn btn-teal"    id="saveSkillsBtn" style="margin-top:12px;display:none">💾 Save Changes</button>
 </div>
 
         

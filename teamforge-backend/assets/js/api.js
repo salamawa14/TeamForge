@@ -156,3 +156,105 @@ async function requireLogin(allowedRoles = []) {
         window.location.href = '/teamforge/frontend/auth/login.html';
     }
 }
+// ── Load notifications into panel (call on every page) ────────
+async function loadNotifications() {
+  const panel = document.getElementById('nPanel');
+  const dot   = document.querySelector('.notif-dot');
+  if (!panel) return;
+
+  try {
+    const data = await Notifications.getAll();
+    const notifs      = data.notifications || [];
+    const unreadCount = data.unread_count  || 0;
+
+    // Show/hide red dot on bell
+    if (dot) dot.style.display = unreadCount > 0 ? 'block' : 'none';
+
+    // Update unread count badge in panel header
+    const countEl = document.getElementById('notif-unread-count');
+    if (countEl) {
+      countEl.textContent  = unreadCount > 0 ? `(${unreadCount})` : '';
+      countEl.style.color  = 'var(--teal)';
+      countEl.style.fontSize = '.75rem';
+    }
+
+    if (!notifs.length) {
+      panel.innerHTML = `
+        <div class="np-head">Notifications</div>
+        <div style="padding:24px;text-align:center;color:var(--t3);font-size:.85rem">
+          No notifications yet
+        </div>`;
+      return;
+    }
+
+    const typeIcon = {
+      join_request:       '📨',
+      application_update: '✅',
+      advisor_request:    '🎓',
+      advisor_response:   '🎓',
+    };
+
+    function timeAgo(str) {
+      const diff  = Date.now() - new Date(str).getTime();
+      const mins  = Math.floor(diff / 60000);
+      const hours = Math.floor(mins / 60);
+      const days  = Math.floor(hours / 24);
+      if (days >= 1)  return `${days}d ago`;
+      if (hours >= 1) return `${hours}h ago`;
+      return `${mins}m ago`;
+    }
+
+    panel.innerHTML = `
+      <div class="np-head">
+        Notifications
+        <span id="notif-unread-count" style="color:var(--teal);font-size:.75rem">
+          ${unreadCount > 0 ? `(${unreadCount})` : ''}
+        </span>
+        ${unreadCount > 0
+          ? `<button id="markAllBtn" style="margin-left:auto;font-size:.72rem;color:var(--teal);background:none;border:none;cursor:pointer">Mark all read</button>`
+          : ''}
+      </div>
+      ${notifs.map(n => `
+        <div class="np-item ${n.is_read ? '' : 'unread'}"
+             data-id="${n.notification_id}"
+             style="cursor:pointer">
+          <span class="np-ico">${typeIcon[n.type] || '🔔'}</span>
+          <div class="np-body">
+            <strong>${n.type.replace(/_/g,' ')}</strong>
+            <span>${n.message}</span>
+            <span style="font-size:.7rem;color:var(--t3)">${timeAgo(n.created_at)}</span>
+          </div>
+        </div>
+      `).join('')}
+    `;
+
+    // Mark individual as read on click
+    panel.querySelectorAll('.np-item[data-id]').forEach(item => {
+      item.addEventListener('click', async () => {
+        if (item.classList.contains('unread')) {
+          item.classList.remove('unread');
+          await Notifications.markRead(item.dataset.id).catch(() => {});
+          // Update dot
+          const remaining = panel.querySelectorAll('.np-item.unread').length;
+          if (dot) dot.style.display = remaining > 0 ? 'block' : 'none';
+          const countEl2 = document.getElementById('notif-unread-count');
+          if (countEl2) countEl2.textContent = remaining > 0 ? `(${remaining})` : '';
+        }
+      });
+    });
+
+    // Mark all read button
+    document.getElementById('markAllBtn')?.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      await Notifications.markAllRead().catch(() => {});
+      panel.querySelectorAll('.np-item.unread').forEach(i => i.classList.remove('unread'));
+      if (dot) dot.style.display = 'none';
+      document.getElementById('markAllBtn')?.remove();
+      const countEl3 = document.getElementById('notif-unread-count');
+      if (countEl3) countEl3.textContent = '';
+    });
+
+  } catch (err) {
+    console.error('Notifications error:', err.message);
+  }
+}

@@ -2,7 +2,7 @@
 // ============================================================
 //  api/students/profile.php
 //  GET  — get own profile
-//  PUT  — update own profile
+//  POST — update own profile
 // ============================================================
 
 require_once __DIR__ . '/../../helpers/response.php';
@@ -14,6 +14,8 @@ $db   = getDB();
 
 // ── GET ──────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Note: If you do not have an 'interests' column in your database, 
+    // remove 'sp.interests,' from this SELECT query!
     $stmt = $db->prepare('
         SELECT u.user_id, u.full_name, u.email, u.department, u.created_at,
                sp.academic_year, sp.interests, sp.technical_skills,
@@ -32,40 +34,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     success($profile);
 }
 
-// ── PUT ──────────────────────────────────────────────────────
-if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+// ── POST / PUT ─────────────────────────────────────────────────
+if (in_array($_SERVER['REQUEST_METHOD'], ['POST', 'PUT'], true)) {
     $body = getBody();
 
-    $full_name    = trim($body['full_name']    ?? '');
-    $department   = trim($body['department']   ?? '');
-    $academic_year = $body['academic_year']    ?? null;
-    $interests    = $body['interests']         ?? null;
-    $skills       = $body['technical_skills']  ?? [];
-    $github       = $body['github_url']        ?? null;
-    $linkedin     = $body['linkedin_url']      ?? null;
-    $bio          = $body['bio']               ?? null;
+    $full_name     = trim($body['full_name']    ?? '');
+    $department    = trim($body['department']   ?? '');
+    $academic_year = $body['academic_year']     ?? null;
+    $interests     = $body['interests']         ?? null;
+    $skills        = $body['technical_skills']  ?? [];
+    $github        = $body['github_url']        ?? null;
+    $linkedin      = $body['linkedin_url']      ?? null;
+    $bio           = $body['bio']               ?? null;
 
     if (!$full_name || !$department) {
         error('full_name and department are required.');
     }
 
+    // 1. Update the main users table
     $db->prepare('
         UPDATE users SET full_name = ?, department = ? WHERE user_id = ?
     ')->execute([$full_name, $department, $user['user_id']]);
 
+    // 2. Upsert the student_profiles table
+    // Note: If you do not have an 'interests' column in your database, 
+    // remove it from the INSERT, VALUES, and UPDATE sections below!
     $db->prepare('
-        UPDATE student_profiles
-        SET academic_year = ?, interests = ?, technical_skills = ?,
-            github_url = ?, linkedin_url = ?, bio = ?
-        WHERE user_id = ?
+        INSERT INTO student_profiles (user_id, academic_year, interests, technical_skills, github_url, linkedin_url, bio)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+            academic_year    = VALUES(academic_year),
+            interests        = VALUES(interests),
+            technical_skills = VALUES(technical_skills),
+            github_url       = VALUES(github_url),
+            linkedin_url     = VALUES(linkedin_url),
+            bio              = VALUES(bio)
     ')->execute([
+        $user['user_id'],
         $academic_year,
         $interests,
         json_encode($skills),
         $github,
         $linkedin,
         $bio,
-        $user['user_id'],
     ]);
 
     success([], 'Profile updated successfully.');

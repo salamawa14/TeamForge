@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 1. Guard
   const user = await requireLogin(['student']);
   if (!user) return;
-
+loadNotifications();
   // Show initials in avatar
   const avatar = document.querySelector('.avatar');
   if (avatar) {

@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Guard — redirect to login if not logged in
   const user = await requireLogin(['student']);
   if (!user) return;
-
+loadNotifications();
   /* ── Mobile sidebar toggle ── */
   const sb   = document.getElementById('sb');
   const burg = document.getElementById('burg');

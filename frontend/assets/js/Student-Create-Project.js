@@ -150,6 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const user = await requireLogin(['student']);
   if (!user) return;
+loadNotifications();
 
   const avatar = document.querySelector('.avatar');
   if (avatar) {

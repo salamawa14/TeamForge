@@ -153,6 +153,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 1. Guard — redirect to login if not a student
   const user = await requireLogin(['student']);
   if (!user) return;
+  loadNotifications();
 
   // 2. Show initials in avatar
   const avatar = document.querySelector('.avatar');
