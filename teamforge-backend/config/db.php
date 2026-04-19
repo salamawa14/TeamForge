@@ -7,10 +7,10 @@ ini_set('session.cookie_path', '/');
 //  XAMPP defaults: host=localhost, user=root, pass=""
 // ============================================================
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'teamforge');
-define('DB_USER', 'root');
-define('DB_PASS', '');        // Leave empty for default XAMPP
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'teamforge');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
 
 function getDB(): PDO {
     static $pdo = null;

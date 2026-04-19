@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 4. Logout
   document.getElementById('logout-btn')?.addEventListener('click', async () => {
     await Auth.logout();
-    window.location.href = 'http://teamforge.local/frontend/auth/login.html';
+    window.location.href = '../auth/login.html';
   });
 
 });

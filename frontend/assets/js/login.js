@@ -168,13 +168,9 @@
       showToast('✓ Signed in successfully! Redirecting…');
 
       setTimeout(() => {
-        if (user.role === 'student') {
-          window.location.href = 'http://teamforge.local/frontend/student/dashboard.html';
-        } else if (user.role === 'instructor') {
-          window.location.href = 'http://teamforge.local/frontend/instructor/dashboard_insructor.html';
-        } else if (user.role === 'admin') {
-          window.location.href = 'http://teamforge.local/frontend/admin/dashboard.html';
-        }
+        // Use the redirect path from the server, but prepend the PROJECT_ROOT
+        // (PROJECT_ROOT is defined in api.js)
+        window.location.href = PROJECT_ROOT + user.redirect;
       }, 1400);
 
     } catch (err) {

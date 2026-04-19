@@ -4,7 +4,10 @@
 //  every HTML page.  Adjust BASE_URL if your XAMPP port differs.
 // ============================================================
 
-const BASE_URL = 'http://teamforge.local/teamforge-backend/api';
+// Detect project root automatically (supports Docker root and XAMPP subdirectories)
+const PROJECT_ROOT = window.location.pathname.toLowerCase().includes('/teamforge/') ? '/TeamForge' : '';
+const BASE_URL = PROJECT_ROOT + '/teamforge-backend/api';
+
 // ── Core fetch wrapper ────────────────────────────────────────
 async function apiRequest(endpoint, method = 'GET', body = null) {
     const options = {
@@ -19,7 +22,7 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
 
   if (!data.success) {
     if (res.status === 401 && !endpoint.includes('/auth/login')) {
-        window.location.href = 'http://teamforge.local/frontend/auth/login.html';
+        window.location.href = PROJECT_ROOT + '/frontend/auth/login.html';
         return null;
     }
     throw new Error(data.message || 'Something went wrong.');
@@ -149,11 +152,11 @@ async function requireLogin(allowedRoles = []) {
         if (!user) return;   // me() already redirects on 401
         if (allowedRoles.length && !allowedRoles.includes(user.role)) {
             alert('Access denied.');
-            window.location.href = '/teamforge/frontend/auth/login.html';
+            window.location.href = PROJECT_ROOT + '/frontend/auth/login.html';
         }
         return user;
     } catch {
-        window.location.href = '/teamforge/frontend/auth/login.html';
+        window.location.href = PROJECT_ROOT + '/frontend/auth/login.html';
     }
 }
 // ── Load notifications into panel (call on every page) ────────

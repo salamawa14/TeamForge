@@ -178,6 +178,6 @@ VALUES (
     UUID(),
     'Admin',
     'admin@teamforge.com',
-    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+    '$2y$12$7u9wLfP76evTd/iVE5OaWeKfSx2nOIw3XNuNrj9svFeQLDr6htMJ6',
     'admin'
 );

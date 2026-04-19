@@ -4,10 +4,11 @@
 //  Sets headers and provides JSON response helpers
 // ============================================================
 
-// Allow your frontend origin (update port if needed)
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-if (in_array($origin, ['http://localhost', 'http://teamforge.local'])) {
-    header("Access-Control-Allow-Origin: $origin");
+// Allow origin for development (works for both Docker and XAMPP)
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+    header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+} else {
+    header('Access-Control-Allow-Origin: *');
 }
 header('Access-Control-Allow-Credentials: true');         // Use during development
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');

@@ -86,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $check->execute([$user_id]);
     $target = $check->fetch();
     if (!$target) error('User not found.', 404);
+    if ($user_id === $_SESSION['user_id']) error('You cannot delete your own account.', 403);
     if ($target['role'] === 'admin') error('Cannot delete admin accounts.', 403);
 
     $db->prepare('DELETE FROM users WHERE user_id = ?')->execute([$user_id]);

@@ -40,9 +40,14 @@ $_SESSION['role']      = $user['role'];
 $_SESSION['email']     = $user['email'];
 $_SESSION['full_name'] = $user['full_name'];
 
+$redirect = '/frontend/student/dashboard.html';
+if ($user['role'] === 'instructor') $redirect = '/frontend/instructor/dashboard_insructor.html';
+if ($user['role'] === 'admin')      $redirect = '/frontend/admin/dashboard.html';
+
 success([
     'user_id'   => $user['user_id'],
     'full_name' => $user['full_name'],
     'email'     => $user['email'],
     'role'      => $user['role'],
+    'redirect'  => $redirect
 ], 'Login successful.');
