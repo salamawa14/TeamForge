@@ -5,7 +5,7 @@ ini_set('session.cookie_path', '/');
 // ============================================================
 //  Database Connection
 //  XAMPP defaults: host=localhost, user=root, pass=""
-// ============================================================
+// ============================================================ test
 
 define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
 define('DB_NAME', getenv('DB_NAME') ?: 'teamforge');
