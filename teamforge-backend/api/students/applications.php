@@ -146,5 +146,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 
     success([], ucfirst($action) . 'ed successfully.');
 }
+// ── DELETE: remove a team member (owner only) ─────────────────
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    $project_id = $_GET['project_id'] ?? '';
+    $student_id = $_GET['student_id'] ?? '';
+    if (!$project_id || !$student_id) error('project_id and student_id required.');
+
+    // Verify requester is the project owner
+    $check = $db->prepare('SELECT owner_student_id FROM projects WHERE project_id = ?');
+    $check->execute([$project_id]);
+    $proj = $check->fetch();
+    if (!$proj) error('Project not found.', 404);
+    if ($proj['owner_student_id'] !== $uid) error('Only the project owner can remove members.', 403);
+    if ($student_id === $uid) error('You cannot remove yourself (you are the owner).');
+
+    $db->prepare('DELETE FROM team_memberships WHERE project_id = ? AND student_id = ?')
+       ->execute([$project_id, $student_id]);
+    success([], 'Member removed.');
+}
 
 error('Method not allowed.', 405);
