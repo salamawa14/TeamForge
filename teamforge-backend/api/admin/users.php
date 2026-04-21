@@ -89,6 +89,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     if ($user_id === $_SESSION['user_id']) error('You cannot delete your own account.', 403);
     if ($target['role'] === 'admin') error('Cannot delete admin accounts.', 403);
 
+    if ($target['role'] === 'student') {
+        $ownedProjects = $db->prepare('SELECT COUNT(*) FROM projects WHERE owner_student_id = ?');
+        $ownedProjects->execute([$user_id]);
+        if ((int)$ownedProjects->fetchColumn() > 0) {
+            error('Cannot delete a student who still owns projects.', 409);
+        }
+    }
+
+    if ($target['role'] === 'instructor') {
+        $activeAdvising = $db->prepare('SELECT COUNT(*) FROM projects WHERE advisor_id = ? AND status = "Active"');
+        $activeAdvising->execute([$user_id]);
+        if ((int)$activeAdvising->fetchColumn() > 0) {
+            error('Cannot delete an instructor who is assigned to active projects.', 409);
+        }
+    }
+
     $db->prepare('DELETE FROM users WHERE user_id = ?')->execute([$user_id]);
     success([], 'User deleted.');
 }

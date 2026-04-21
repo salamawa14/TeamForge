@@ -1,3 +1,102 @@
+/* ══════════════════════════════════════════
+   INSTRUCTOR DASHBOARD — Connected to Backend
+   ══════════════════════════════════════════ */
+
+/* ── Data ── */
+let dashboardData = null;
+
+/* ── Fetch Data ── */
+async function loadDashboard() {
+  try {
+    dashboardData = await Instructor.dashboard();
+    updateUI();
+  } catch (err) {
+    showToast('Error loading dashboard: ' + err.message, 'red');
+  }
+}
+
+function updateUI() {
+  if (!dashboardData) return;
+
+  const s = dashboardData.stats;
+  const pendingRequests = (dashboardData.recent_requests || []).filter(req => req.status === 'Pending');
+  
+  // Update Stats
+  const statNums = document.querySelectorAll('.stat-num');
+  if (statNums.length >= 3) {
+    statNums[0].textContent = s.pending_requests;
+    statNums[1].textContent = s.active_projects;
+    statNums[2].textContent = 5 - s.active_projects; // Assuming quota is 5
+  }
+
+  // Update Welcome
+  const welcomeTitle = document.querySelector('.welcome-title');
+  if (welcomeTitle) {
+      // We can get the name from the session or Auth.me
+  }
+
+  // Update Requests
+  const requestsList = document.querySelector('.card .request-item')?.parentElement;
+  if (requestsList) {
+    const existingItems = requestsList.querySelectorAll('.request-item');
+    existingItems.forEach(item => item.remove());
+
+    if (pendingRequests.length === 0) {
+      const emptyMsg = document.createElement('p');
+      emptyMsg.textContent = 'No pending requests.';
+      emptyMsg.style.padding = '1rem';
+      emptyMsg.style.textAlign = 'center';
+      emptyMsg.style.opacity = '0.6';
+      requestsList.appendChild(emptyMsg);
+    } else {
+      pendingRequests.forEach(req => {
+        const item = document.createElement('div');
+        item.className = 'request-item';
+        item.id = 'req-' + req.adv_request_id;
+        item.innerHTML = `
+          <div class="req-avatar blue">${req.student_name.split(' ').map(n => n[0]).join('')}</div>
+          <div class="req-body">
+            <div class="req-name">${req.student_name}</div>
+            <div class="req-desc"><strong>${req.project_title}</strong> – ${req.project_type} project. ${req.description.substring(0, 80)}...</div>
+            <div class="req-time">${timeAgo(req.requested_at)}</div>
+          </div>
+          <div class="req-btns">
+             <button class="btn-accept" onclick="respondRequest('${req.adv_request_id}', 'accept', '${req.student_name}', '${req.project_title}')">Accept</button>
+             <button class="btn-reject" onclick="respondRequest('${req.adv_request_id}', 'reject', '${req.student_name}', '${req.project_title}')">Reject</button>
+          </div>
+        `;
+        requestsList.appendChild(item);
+      });
+    }
+  }
+}
+
+async function respondRequest(id, action, studentName, projectName) {
+  const title = action === 'accept' ? 'Confirm Application' : 'Confirm Rejection';
+  const message = action === 'accept'
+    ? `You are about to accept ${studentName}'s request for "${projectName}".`
+    : `Are you sure you want to REJECT ${studentName}'s request for "${projectName}"?`;
+
+  showConfirmModal(title, message, async () => {
+    try {
+      const result = await Instructor.reviewRequest(id, action);
+      showToast(result?.message || `✓ Request ${action}ed`, action === 'accept' ? 'green' : 'red');
+      loadDashboard(); // Refresh
+    } catch (err) {
+      showToast('Error: ' + err.message, 'red');
+    }
+  });
+}
+
+function timeAgo(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now - date) / 1000);
+  if (diffInSeconds < 60) return 'just now';
+  if (diffInSeconds < 3600) return Math.floor(diffInSeconds / 60) + 'm ago';
+  if (diffInSeconds < 86400) return Math.floor(diffInSeconds / 3600) + 'h ago';
+  return Math.floor(diffInSeconds / 86400) + 'd ago';
+}
 
 // ===== CUSTOM CONFIRMATION MODAL =====
 function showConfirmModal(title, message, onConfirm) {
@@ -30,68 +129,12 @@ function showConfirmModal(title, message, onConfirm) {
   });
   
   modal.addEventListener('click', function(e) {
-    if (e.target === modal) {
-      modal.remove();
-    }
+    if (e.target === modal) modal.remove();
   });
 }
 
-// Accept / Reject requests WITH CONFIRMATION
-document.querySelectorAll('.btn-accept, .btn-reject').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    var id = btn.getAttribute('data-id');
-    var item = document.getElementById(id);
-    var isAccept = btn.classList.contains('btn-accept');
-    var studentName = btn.getAttribute('data-student');
-    var projectName = btn.getAttribute('data-project');
-    
-    // Show custom confirmation modal
-    var title = isAccept ? 'Confirm Application' : 'Confirm Rejection';
-    var message = isAccept
-      ? `The project leader will review ${studentName}'s profile and skills before accepting or declining your request.`
-      : `Are you sure you want to REJECT ${studentName}'s request for ${projectName}?`;
-    
-    showConfirmModal(title, message, function() {
-      item.style.opacity   = '0';
-      item.style.transform = 'translateX(' + (isAccept ? '20px' : '-20px') + ')';
-
-      setTimeout(function() {
-        item.remove();
-        showToast(isAccept ? '✓ Request accepted' : '✗ Request rejected', isAccept ? 'green' : 'red');
-      }, 300);
-    });
-  });
-});
-
-document.getElementById("profileBtn").addEventListener("click", function () {
+document.getElementById("profileBtn")?.addEventListener("click", function () {
     window.location.href = "profile_instructor.html";
-});
-
-
-// Availability toggle WITH CONFIRMATION
-document.querySelectorAll('.toggle-btn').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    var group = btn.getAttribute('data-group');
-    var val = btn.getAttribute('data-val');
-    var groupName = group === 'tubitak' ? 'TÜBİTAK' : 'Teknofest';
-    var statusText = val === 'available' ? '✓ Available' : '✗ Unavailable';
-    
-    // Show custom confirmation modal
-    var message = `Are you sure you want to set ${groupName} to ${statusText}?`;
-    
-    showConfirmModal('Confirm Availability', message, function() {
-      document.querySelectorAll('[data-group="' + group + '"]').forEach(function(b) {
-        b.classList.remove('active');
-      });
-      btn.classList.add('active');
-      showToast('✓ Availability updated to ' + statusText, 'green');
-    });
-  });
-});
-
-// View Requests button scrolls to requests card
-document.getElementById('btn-view').addEventListener('click', function() {
-  document.querySelector('.card').scrollIntoView({ behavior: 'smooth' });
 });
 
 // Toast
@@ -117,3 +160,24 @@ function showToast(msg, color) {
     setTimeout(function() { t.remove(); }, 300);
   }, 2800);
 }
+
+/* ── Boot ── */
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = await requireLogin(['instructor']);
+  if (user) {
+    const welcomeTitle = document.querySelector('.welcome-title');
+    if (welcomeTitle) welcomeTitle.textContent = `Welcome, ${user.full_name} 👋`;
+    
+    // Update sidebar info
+    const sidebarName = document.querySelector('.user-name');
+    const sidebarSub = document.querySelector('.user-sub');
+    if (sidebarName) sidebarName.textContent = user.full_name;
+    if (sidebarSub) sidebarSub.textContent = user.department || 'Instructor';
+    const avatar = document.getElementById('sidebar-avatar');
+    if (avatar) {
+      avatar.textContent = user.full_name.split(' ').filter(Boolean).slice(0, 2).map(n => n[0]).join('').toUpperCase() || 'IN';
+    }
+
+    loadDashboard();
+  }
+});

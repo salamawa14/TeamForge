@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                u.full_name AS posted_by,
                pc.name AS category_name, pc.category_id
         FROM announcements a
-        JOIN users u ON u.user_id = a.admin_id
+        LEFT JOIN users u ON u.user_id = a.admin_id
         LEFT JOIN project_categories pc ON pc.category_id = a.category_id
         ORDER BY a.published_at DESC
     ');

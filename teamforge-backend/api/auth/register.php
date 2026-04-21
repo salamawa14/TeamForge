@@ -7,6 +7,7 @@
 
 require_once __DIR__ . '/../../helpers/response.php';
 require_once __DIR__ . '/../../config/db.php';
+require_once __DIR__ . '/../../helpers/settings.php';
 
 requireMethod('POST');
 
@@ -33,6 +34,11 @@ if ($academic_year && !in_array($academic_year, $allowed_years, true)) {
 }
 
 $db = getDB();
+$systemSettings = getSystemSettings($db);
+
+if (empty($systemSettings['registrations_open'])) {
+    error('New user registrations are currently disabled.', 403);
+}
 
 // Check duplicate email
 $check = $db->prepare('SELECT user_id FROM users WHERE email = ?');
