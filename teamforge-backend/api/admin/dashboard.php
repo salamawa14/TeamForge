@@ -17,8 +17,10 @@ $students    = $db->query('SELECT COUNT(*) FROM users WHERE role = "student"')->
 $instructors = $db->query('SELECT COUNT(*) FROM users WHERE role = "instructor"')->fetchColumn();
 $projects    = $db->query('SELECT COUNT(*) FROM projects')->fetchColumn();
 $active_proj = $db->query('SELECT COUNT(*) FROM projects WHERE status = "Active"')->fetchColumn();
-$requests    = $db->query('SELECT COUNT(*) FROM join_requests WHERE status = "Pending"')->fetchColumn();
+$join_requests    = $db->query('SELECT COUNT(*) FROM join_requests WHERE status = "Pending"')->fetchColumn();
+$advisor_requests = $db->query('SELECT COUNT(*) FROM advisor_requests WHERE status = "Pending"')->fetchColumn();
 $ann_count   = $db->query('SELECT COUNT(*) FROM announcements')->fetchColumn();
+$cat_count   = $db->query('SELECT COUNT(*) FROM project_categories')->fetchColumn();
 
 // Projects by type
 $by_type = $db->query('
@@ -44,8 +46,9 @@ success([
         'total_students'    => (int)$students,
         'total_instructors' => (int)$instructors,
         'total_projects'    => (int)$projects,
+        'total_categories'  => (int)$cat_count,
         'active_projects'   => (int)$active_proj,
-        'pending_requests'  => (int)$requests,
+        'pending_requests'  => (int)$join_requests + (int)$advisor_requests,
         'announcements'     => (int)$ann_count,
     ],
     'projects_by_type' => $by_type,

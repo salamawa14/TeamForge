@@ -1,57 +1,115 @@
-// Live update profile card from form inputs
-var fields = {
-  'full-name':      '.profile-name',
-  'department':     null,
-  'academic-title': null,
-  'expertise':      null,
-};
+/* ══════════════════════════════════════════
+   INSTRUCTOR PROFILE — Connected to Backend
+   ══════════════════════════════════════════ */
 
+/* ── Data ── */
+let currentProfile = null;
+
+/* ── Fetch Profile ── */
+async function loadProfile() {
+  try {
+    currentProfile = await Instructor.getProfile();
+    updateUI();
+  } catch (err) {
+    showToast('Error loading profile: ' + err.message, 'red');
+  }
+}
+
+function updateUI() {
+  if (!currentProfile) return;
+
+  const p = currentProfile;
+  const initials = p.full_name.split(' ').filter(Boolean).slice(0, 2).map(n => n[0]).join('').toUpperCase();
+  
+  // Update Form
+  document.getElementById('full-name').value = p.full_name;
+  document.getElementById('department').value = p.department || '';
+  document.getElementById('academic-title').value = p.academic_title || '';
+  document.getElementById('expertise').value = (p.areas_of_expertise || []).join(', ');
+  document.getElementById('research').value = p.research_interests || '';
+  document.getElementById('supervised').value = (p.supervised_proj_types || []).join(', ');
+
+  // Update Profile Card
+  const profileAvatar = document.getElementById('profile-avatar');
+  if (profileAvatar) profileAvatar.textContent = initials || 'IN';
+  document.querySelector('.profile-name').textContent = p.full_name;
+  document.querySelector('.profile-role').textContent = `${p.academic_title || ''} · ${p.department || ''}`;
+  
+  const skillTags = document.querySelector('.skill-tags');
+  if (skillTags) {
+    skillTags.innerHTML = (p.areas_of_expertise || []).map(s => `<span class="skill-tag">${s}</span>`).join('');
+  }
+
+  const sidebarName = document.querySelector('.user-name');
+  if (sidebarName) sidebarName.textContent = p.full_name;
+  const sidebarSub = document.querySelector('.user-sub');
+  if (sidebarSub) sidebarSub.textContent = p.department || 'Instructor';
+  const sidebarAvatar = document.getElementById('sidebar-avatar');
+  if (sidebarAvatar) sidebarAvatar.textContent = initials || 'IN';
+}
+
+/* ── Save Profile ── */
+async function saveProfile() {
+  const btn = document.getElementById('btn-save');
+  const originalText = btn.textContent;
+  
+  const data = {
+    full_name: document.getElementById('full-name').value.trim(),
+    department: document.getElementById('department').value.trim(),
+    academic_title: document.getElementById('academic-title').value.trim(),
+    areas_of_expertise: document.getElementById('expertise').value.split(',').map(s => s.trim()).filter(s => s),
+    research_interests: document.getElementById('research').value.trim(),
+    supervised_proj_types: document.getElementById('supervised').value.split(',').map(s => s.trim()).filter(s => s),
+  };
+
+  try {
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+    
+    await Instructor.updateProfile(data);
+    
+    btn.textContent = '✓ Saved!';
+    btn.style.background = '#16a34a';
+    showToast('Profile updated successfully! ✅', 'green');
+    
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = originalText;
+      btn.style.background = '';
+      loadProfile(); // Refresh
+    }, 2000);
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = originalText;
+    showToast('Error saving: ' + err.message, 'red');
+  }
+}
+
+// Live update name on card
 document.getElementById('full-name').addEventListener('input', function() {
-  document.querySelector('.profile-name').textContent = this.value;
+  const cardName = document.querySelector('.profile-name');
+  if (cardName) cardName.textContent = this.value;
+  const initials = this.value.split(' ').filter(Boolean).slice(0, 2).map(n => n[0]).join('').toUpperCase();
+  const profileAvatar = document.getElementById('profile-avatar');
+  if (profileAvatar) profileAvatar.textContent = initials || 'IN';
 });
 
-// Toggle availability badges
-document.querySelectorAll('.avail-badge').forEach(function(badge) {
-  badge.addEventListener('click', function() {
-    var isTubitak = badge.classList.contains('tubitak');
-    var label     = isTubitak ? 'TÜBİTAK' : 'TEKNOFEST';
+// Save Changes listener
+document.getElementById('btn-save').addEventListener('click', saveProfile);
 
-    if (badge.textContent.includes('AVAILABLE')) {
-      badge.textContent = label + ': UNAVAILABLE';
-      badge.style.background = '#6b7280';
-    } else {
-      badge.textContent = label + ': AVAILABLE';
-      badge.style.background = isTubitak ? '#1a9e8f' : '#f59e0b';
-    }
-  });
-});
-
-
-// Save Changes
-document.getElementById('btn-save').addEventListener('click', function() {
-  var btn = this;
-  btn.textContent = '✓ Saved!';
-  btn.style.background = '#16a34a';
-  setTimeout(function() {
-    btn.textContent = 'Save Changes';
-    btn.style.background = '';
-  }, 2000);
-  showToast('Profile saved successfully');
-});
-
-// Toast
-
-document.getElementById("profileBtn").addEventListener("click", function () {
+document.getElementById("profileBtn")?.addEventListener("click", function () {
     window.location.href = "profile_instructor.html";
 });
-function showToast(msg) {
+
+function showToast(msg, color = 'green') {
   var t = document.createElement('div');
   t.textContent = msg;
   Object.assign(t.style, {
     position: 'fixed', bottom: '24px', right: '24px',
     padding: '11px 20px', borderRadius: '8px',
-    background: '#1a9e8f', color: '#fff',
-    fontFamily: "'DM Sans',sans-serif", fontSize: '13px', fontWeight: '600',
+    background: color === 'green' ? '#1a9e8f' : '#dc2626',
+    color: '#fff', fontFamily: "'DM Sans',sans-serif",
+    fontSize: '13px', fontWeight: '600',
     boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
     opacity: '0', transform: 'translateY(10px)',
     transition: 'all 0.25s', zIndex: '9999'
@@ -65,3 +123,19 @@ function showToast(msg) {
     setTimeout(function() { t.remove(); }, 300);
   }, 2500);
 }
+
+/* ── Boot ── */
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = await requireLogin(['instructor']);
+  if (user) {
+    const sidebarName = document.querySelector('.user-name');
+    const sidebarSub = document.querySelector('.user-sub');
+    const sidebarAvatar = document.getElementById('sidebar-avatar');
+    if (sidebarName) sidebarName.textContent = user.full_name;
+    if (sidebarSub) sidebarSub.textContent = user.department || 'Instructor';
+    if (sidebarAvatar) {
+      sidebarAvatar.textContent = user.full_name.split(' ').filter(Boolean).slice(0, 2).map(n => n[0]).join('').toUpperCase() || 'IN';
+    }
+    loadProfile();
+  }
+});

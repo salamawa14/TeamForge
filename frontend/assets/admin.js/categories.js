@@ -1,13 +1,9 @@
 /* ══════════════════════════════════════════
-   PROJECT CATEGORIES — fully self-contained script
+   PROJECT CATEGORIES — Connected to Backend API
    ══════════════════════════════════════════ */
 
 /* ── Data ── */
-let cats = [
-  { id:1, name:'Course Project',           size:'5–8', budget:'N/A',     adv:'No',  projects:22, locked:true,  enabled:true, desc:'Standard course capstone project.' },
-  { id:2, name:'TÜBİTAK Student Project',  size:'1–4', budget:'₺9,000', adv:'Yes', projects:11, locked:true,  enabled:true, desc:'Undergraduate research funded by TÜBİTAK 2209-A/B.' },
-  { id:3, name:'Teknofest Student Project', size:'2–6', budget:'Varies', adv:'Yes', projects:5,  locked:true,  enabled:true, desc:'Competition-based innovation projects.' },
-];
+let cats = [];
 
 let notifications = [
   { id:1, unread:true,  ico:'👤', bg:'rgba(0,168,181,.1)',  msg:'New user registered: Nisan Ay (Student)',             time:'2 min ago'   },
@@ -49,7 +45,7 @@ function gSearch(q) {
   if (cats.some(c => c.name.toLowerCase().includes(ql))) {
     toast(`Showing results for "${q}"`, 'tinf');
   } else {
-    window.location = 'announcements.html';
+    // window.location = 'announcements.html';
   }
 }
 
@@ -57,6 +53,12 @@ function gSearch(q) {
 function renderCats() {
   const tbody = document.getElementById('cats-tbody');
   if (!tbody) return;
+  
+  if (cats.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem">No categories found.</td></tr>';
+    return;
+  }
+
   tbody.innerHTML = cats.map(c => `
     <tr>
       <td>
@@ -64,22 +66,32 @@ function renderCats() {
           <strong>${c.name}</strong>
           ${c.locked ? '<span class="bdg bc bdg-def">Default</span>' : ''}
         </div>
-        ${c.desc ? `<div class="cat-desc-row">${c.desc}</div>` : ''}
+        ${c.description ? `<div class="cat-desc-row">${c.description}</div>` : ''}
       </td>
-      <td>${c.size}</td>
-      <td>${c.budget}</td>
-      <td><span class="bdg ${c.adv === 'Yes' ? 'bacc' : 'bc'}">${c.adv === 'Yes' ? 'Required' : 'Not Required'}</span></td>
-      <td>${c.projects}</td>
+      <td>Max ${c.max_members}</td>
+      <td>₺${Number(c.budget_tl).toLocaleString()}</td>
+      <td><span class="bdg ${c.advisor_required ? 'bacc' : 'bc'}">${c.advisor_required ? 'Required' : 'Not Required'}</span></td>
+      <td>${c.projects_count || 0}</td>
       <td>
         <div class="cat-act-row">
-          <button class="btn btn-o btn-sm" onclick="openCatModal(${c.id})">✏️ Edit</button>
-          <button class="btn btn-er btn-sm" onclick="deleteCat(${c.id})">🗑 Delete</button>
+          <button class="btn btn-o btn-sm" onclick="openCatModal('${c.category_id}')">✏️ Edit</button>
+          <button class="btn btn-er btn-sm" onclick="deleteCat('${c.category_id}')">🗑 Delete</button>
         </div>
       </td>
     </tr>`).join('');
 
   const badge = document.getElementById('cats-count-badge');
   if (badge) badge.textContent = cats.length + ' categor' + (cats.length === 1 ? 'y' : 'ies');
+}
+
+/* ── Fetch data from API ── */
+async function loadCats() {
+  try {
+    cats = await Admin.getCategories();
+    renderCats();
+  } catch (err) {
+    toast('Failed to load categories: ' + err.message, 'er');
+  }
 }
 
 /* ── Modal tabs ── */
@@ -93,23 +105,19 @@ function cmTab(id) {
 /* ── Open/edit category modal ── */
 function openCatModal(id = null) {
   editCatId = id;
-  const c = id ? cats.find(x => x.id === id) : null;
+  const c = id ? cats.find(x => x.category_id === id) : null;
   const titleEl = document.getElementById('cat-modal-title');
 
   if (c) {
-    titleEl.innerHTML = c.locked
-      ? `Edit Category <span class="bdg bc bdg-def">Default</span>`
-      : 'Edit Category';
+    titleEl.textContent = 'Edit Category';
     document.getElementById('cat-name').value   = c.name;
-    document.getElementById('cat-size').value   = c.size;
-    const bv = c.budget.replace(/[₺,\s]/g, '');
-    document.getElementById('cat-budget').value = isNaN(bv) ? '' : bv;
-    document.getElementById('cat-adv').value    = c.adv === 'Yes' ? 'yes' : 'no';
-    document.getElementById('cat-desc').value   = c.desc || '';
+    document.getElementById('cat-size').value   = c.max_members;
+    document.getElementById('cat-budget').value = c.budget_tl;
+    document.getElementById('cat-adv').value    = c.advisor_required ? 'yes' : 'no';
+    document.getElementById('cat-desc').value   = c.description || '';
   } else {
     titleEl.textContent = 'Add Project Category';
-    ['cat-name', 'cat-budget', 'cat-desc'].forEach(i => document.getElementById(i).value = '');
-    document.getElementById('cat-size').value = '';
+    ['cat-name', 'cat-budget', 'cat-desc', 'cat-size'].forEach(i => document.getElementById(i).value = '');
     document.getElementById('cat-adv').value  = 'yes';
   }
 
@@ -118,45 +126,51 @@ function openCatModal(id = null) {
 }
 
 /* ── Save category ── */
-function saveCat() {
+async function saveCat() {
   const name = document.getElementById('cat-name').value.trim();
   if (!name) { toast('Category name is required', 'er'); return; }
 
-  const size   = document.getElementById('cat-size').value || 'TBD';
-  const bRaw   = document.getElementById('cat-budget').value;
-  const budget = bRaw ? '₺' + Number(bRaw).toLocaleString() : 'N/A';
-  const adv    = document.getElementById('cat-adv').value === 'yes' ? 'Yes' : 'No';
-  const desc   = document.getElementById('cat-desc').value.trim();
+  const data = {
+    name,
+    max_members: document.getElementById('cat-size').value || 5,
+    budget_tl:   document.getElementById('cat-budget').value || 0,
+    advisor_required: document.getElementById('cat-adv').value === 'yes' ? 1 : 0,
+    description: document.getElementById('cat-desc').value.trim()
+  };
 
-  if (editCatId) {
-    Object.assign(cats.find(x => x.id === editCatId), { name, size, budget, adv, desc });
-    toast('Category updated ✅', 'ok');
-  } else {
-    cats.push({ id: Date.now(), name, size, budget, adv, desc, projects: 0, locked: false, enabled: true });
-    toast(`Category "${name}" added ✅`, 'ok');
+  try {
+    if (editCatId) {
+      await Admin.updateCategory(editCatId, data);
+      toast('Category updated ✅', 'ok');
+    } else {
+      await Admin.createCategory(data);
+      toast(`Category "${name}" added ✅`, 'ok');
+    }
+    closeMol('cat-modal');
+    loadCats(); // Refresh list
+  } catch (err) {
+    toast('Error saving category: ' + err.message, 'er');
   }
-
-  closeMol('cat-modal');
-  renderCats();
 }
 
 /* ── Delete category ── */
 function deleteCat(id) {
-  const c = cats.find(x => x.id === id);
+  const c = cats.find(x => x.category_id === id);
   if (!c) return;
-
-  const extra = c.locked
-    ? `<span style="color:var(--warn);font-weight:600">⚠️ Default category</span> — used by <strong>${c.projects}</strong> active project(s). Deleting it will remove it from all listings.<br><br>`
-    : '';
 
   document.getElementById('confirm-icon').textContent   = '🗂️';
   document.getElementById('confirm-title').textContent  = 'Delete Category';
   document.getElementById('confirm-sub').textContent    = 'This action cannot be undone.';
-  document.getElementById('confirm-body').innerHTML     = `${extra}Are you sure you want to delete <strong>"${c.name}"</strong>?`;
-  _confirmCallback = () => {
-    cats = cats.filter(x => x.id !== id);
-    renderCats();
-    toast(`Category "${c.name}" deleted.`, 'er');
+  document.getElementById('confirm-body').innerHTML     = `Are you sure you want to delete <strong>"${c.name}"</strong>?`;
+  
+  _confirmCallback = async () => {
+    try {
+      await Admin.deleteCategory(id);
+      loadCats();
+      toast(`Category "${c.name}" deleted.`, 'er');
+    } catch (err) {
+      toast('Error deleting: ' + err.message, 'er');
+    }
   };
   document.getElementById('confirm-modal').style.display = 'flex';
 }
@@ -210,5 +224,8 @@ document.addEventListener('click', e => {
 });
 
 /* ── Boot ── */
-renderCats();
-renderNotifs();
+document.addEventListener('DOMContentLoaded', async () => {
+  await requireLogin(['admin']);
+  loadCats();
+  renderNotifs();
+});

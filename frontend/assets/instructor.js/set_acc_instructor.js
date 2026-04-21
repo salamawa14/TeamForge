@@ -1,118 +1,99 @@
-// Settings nav panel switching
-document.querySelectorAll('.snav-item').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.snav-item').forEach(function(b) { b.classList.remove('active'); });
-    document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
-    btn.classList.add('active');
-    var panel = document.getElementById('panel-' + btn.getAttribute('data-panel'));
-    if (panel) panel.classList.add('active');
-  });
-});
+/* ══════════════════════════════════════════
+   INSTRUCTOR SETTINGS — Account
+   ══════════════════════════════════════════ */
 
-function toast(msg) {
-  var t = document.createElement('div');
-  t.textContent = msg;
-  Object.assign(t.style, { position:'fixed', bottom:'22px', right:'22px', padding:'10px 18px', borderRadius:'8px', background:'#1a9e8f', color:'#fff', fontFamily:"'DM Sans',sans-serif", fontSize:'13px', fontWeight:'600', boxShadow:'0 4px 14px rgba(0,0,0,.15)', opacity:'0', transform:'translateY(10px)', transition:'all .25s', zIndex:'9999' });
-  document.body.appendChild(t);
-  
-  requestAnimationFrame(function() { requestAnimationFrame(function() { t.style.opacity='1'; t.style.transform='translateY(0)'; }); });
-  setTimeout(function() { t.style.opacity='0'; setTimeout(function() { t.remove(); }, 300); }, 2500);
-}
-// Availability toggles
-document.querySelectorAll('.toggle-btn').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    var group = btn.getAttribute('data-group');
-    document.querySelectorAll('[data-group="' + group + '"]').forEach(function(b) { b.classList.remove('active'); });
-    btn.classList.add('active');
-  });
-});
-const saveBtn = document.getElementById("btn-save");
-const saveConfirmModal = document.getElementById("saveConfirmModal");
-const cancelSaveBtn = document.getElementById("cancelSaveBtn");
-const confirmSaveBtn = document.getElementById("confirmSaveBtn");
+let currentProfile = null;
 
-function openSaveModal() {
-  saveConfirmModal.classList.add("show");
-}
-
-function closeSaveModal() {
-  saveConfirmModal.classList.remove("show");
-}
-
-function saveChanges() {
-  setTimeout(function() { btn.textContent = '💾 Save Changes'; btn.style.background = ''; }, 2000);
-  toast('Settings saved');
-}
-
-saveBtn.addEventListener("click", function (e) {
-  e.preventDefault();
-  openSaveModal();
-});
-
-cancelSaveBtn.addEventListener("click", function () {
-  closeSaveModal();
-});
-
-confirmSaveBtn.addEventListener("click", function () {
-  closeSaveModal();
-  saveChanges();
-});
-
-// Optional: close when clicking outside the modal
-saveConfirmModal.addEventListener("click", function (e) {
-  if (e.target === saveConfirmModal) {
-    closeSaveModal();
+async function loadAccountData() {
+  try {
+    console.log("Fetching instructor profile...");
+    currentProfile = await Instructor.getProfile();
+    console.log("Profile data received:", currentProfile);
+    updateUI();
+  } catch (err) {
+    console.error("Failed to load profile:", err);
+    showToast('Error loading account data: ' + err.message, 'red');
   }
-});
-document.getElementById("profileBtn").addEventListener("click", function () {
-    window.location.href = "profile_instructor.html";
-});
+}
 
-document.getElementById("notBtn").addEventListener("click", function () {
-    window.location.href = "set_not_instructor.html";
-});
-document.getElementById("accBtn").addEventListener("click", function () {
-    window.location.href = "set_acc_instructor.html";
-});
-document.getElementById("availBtn").addEventListener("click", function () {
-    window.location.href = "set_avail_instructor.html";
-});
-document.getElementById("privacyBtn").addEventListener("click", function () {
-    window.location.href = "set_privacy_instructor.html";
-});
-document.getElementById("secBtn").addEventListener("click", function () {
-    window.location.href = "set_security_instructor.html";
-});
-document.getElementById("zoneBtn").addEventListener("click", function () {
-    window.location.href = "set_zone_instructor.html";
-});
-// Save Changes
-document.getElementById('btn-save').addEventListener('click', function() {
-  var btn = this;
-  btn.textContent = '✓ Saved!';
-  btn.style.background = '#16a34a';
-  setTimeout(function() { btn.textContent = '💾 Save Changes'; btn.style.background = ''; }, 2000);
-  showToast('Settings saved successfully');
-});
+function updateUI() {
+  if (!currentProfile) return;
+  const p = currentProfile;
 
-// Danger zone
-var dangerBtn = document.querySelector('.btn-danger');
-if (dangerBtn) {
-  dangerBtn.addEventListener('click', function() {
-    if (confirm('Are you sure you want to delete your account? This cannot be undone.')) {
-      showToast('Account deletion requested', 'red');
+  const fullName = p.full_name || 'Instructor';
+  const department = p.department || 'Department not set';
+  
+  // 1. Update Sidebar & Header (using specific IDs)
+  const initials = fullName.split(' ').filter(Boolean).slice(0, 2).map(n => n[0]).join('').toUpperCase();
+  
+  const sidebarName = document.getElementById('sidebar-name');
+  const sidebarSub = document.getElementById('sidebar-dept');
+  const sidebarAvatar = document.getElementById('sidebar-avatar');
+
+  if (sidebarName) sidebarName.textContent = fullName;
+  if (sidebarSub) sidebarSub.textContent = department;
+  if (sidebarAvatar) sidebarAvatar.textContent = initials || 'IN';
+
+  // 2. Update Form Fields
+  const nameParts = fullName.split(' ');
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || '';
+
+  const fields = {
+    'first-name': firstName,
+    'last-name': lastName,
+    'academic-title': p.academic_title || '',
+    'department': department,
+    'email': p.email || '',
+    'expertise': (p.areas_of_expertise || []).join(', '),
+    'research': p.research_interests || '',
+    'bio': p.bio || ''
+  };
+
+  Object.keys(fields).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.value = fields[id];
+      el.placeholder = ""; // Clear the "Loading..." placeholder
     }
   });
+
+  // 3. Update Profile Card in Content
+  const contentAvatar = document.getElementById('profile-avatar-initials');
+  const contentName = document.getElementById('profile-display-name');
+  if (contentAvatar) contentAvatar.textContent = initials || 'IN';
+  if (contentName) contentName.textContent = fullName;
 }
 
-// Toast
-function showToast(msg, color) {
-  var t = document.createElement('div');
+async function saveAccountChanges() {
+  try {
+    const firstName = document.getElementById('first-name').value.trim();
+    const lastName = document.getElementById('last-name').value.trim();
+    
+    const data = {
+      full_name: `${firstName} ${lastName}`.trim(),
+      academic_title: document.getElementById('academic-title').value.trim(),
+      department: document.getElementById('department').value.trim(),
+      areas_of_expertise: document.getElementById('expertise').value.split(',').map(s => s.trim()).filter(s => s),
+      research_interests: document.getElementById('research').value.trim(),
+      bio: document.getElementById('bio').value.trim()
+    };
+
+    await Instructor.updateProfile(data);
+    showToast('Account settings saved successfully! ✅');
+    await loadAccountData(); // Refresh everything
+  } catch (err) {
+    showToast('Error saving: ' + err.message, 'red');
+  }
+}
+
+function showToast(msg, color = 'green') {
+  const t = document.createElement('div');
   t.textContent = msg;
   Object.assign(t.style, {
     position: 'fixed', bottom: '24px', right: '24px',
     padding: '11px 20px', borderRadius: '8px',
-    background: color === 'red' ? '#dc2626' : '#1a9e8f',
+    background: color === 'green' ? '#1a9e8f' : '#dc2626',
     color: '#fff', fontFamily: "'DM Sans',sans-serif",
     fontSize: '13px', fontWeight: '600',
     boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
@@ -120,11 +101,61 @@ function showToast(msg, color) {
     transition: 'all 0.25s', zIndex: '9999'
   });
   document.body.appendChild(t);
-  requestAnimationFrame(function() {
-    requestAnimationFrame(function() { t.style.opacity = '1'; t.style.transform = 'translateY(0)'; });
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => { t.style.opacity = '1'; t.style.transform = 'translateY(0)'; });
   });
-  setTimeout(function() {
+  setTimeout(() => {
     t.style.opacity = '0';
-    setTimeout(function() { t.remove(); }, 300);
+    setTimeout(() => t.remove(), 300);
   }, 2500);
 }
+
+// Modal logic
+const saveBtn = document.getElementById("btn-save");
+const saveConfirmModal = document.getElementById("saveConfirmModal");
+const cancelSaveBtn = document.getElementById("cancelSaveBtn");
+const confirmSaveBtn = document.getElementById("confirmSaveBtn");
+
+function openSaveModal() { saveConfirmModal?.classList.add("show"); }
+function closeSaveModal() { saveConfirmModal?.classList.remove("show"); }
+
+/* ── Boot ── */
+document.addEventListener('DOMContentLoaded', async () => {
+  console.log("Settings page initializing...");
+  
+  // Guard and pre-fill sidebar from session
+  const user = await requireLogin(['instructor']);
+  if (user) {
+    console.log("User authenticated:", user.email);
+    
+    // Quick pre-fill of sidebar so it doesn't show "Loading..." for long
+    const initials = (user.full_name || 'IN').split(' ').filter(Boolean).slice(0, 2).map(n => n[0]).join('').toUpperCase();
+    if (document.getElementById('sidebar-name')) document.getElementById('sidebar-name').textContent = user.full_name || 'Instructor';
+    if (document.getElementById('sidebar-dept')) document.getElementById('sidebar-dept').textContent = user.department || 'Instructor';
+    if (document.getElementById('sidebar-avatar')) document.getElementById('sidebar-avatar').textContent = initials;
+
+    await loadAccountData();
+  }
+
+  // Event Listeners
+  saveBtn?.addEventListener("click", (e) => { e.preventDefault(); openSaveModal(); });
+  cancelSaveBtn?.addEventListener("click", closeSaveModal);
+  confirmSaveBtn?.addEventListener("click", async () => {
+    closeSaveModal();
+    await saveAccountChanges();
+  });
+
+  // Navigation
+  document.getElementById("profileBtn")?.addEventListener("click", () => window.location.href = "profile_instructor.html");
+  
+  document.querySelectorAll('.snav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const panelId = btn.id;
+      if (panelId === 'accBtn') window.location.href = 'set_acc_instructor.html';
+      if (panelId === 'notBtn') window.location.href = 'set_not_instructor.html';
+      if (panelId === 'availBtn') window.location.href = 'set_avail_instructor.html';
+      if (panelId === 'privacyBtn') window.location.href = 'set_privacy_instructor.html';
+      if (panelId === 'secBtn') window.location.href = 'set_security_instructor.html';
+    });
+  });
+});

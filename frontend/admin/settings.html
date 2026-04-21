@@ -41,6 +41,7 @@
     <div class="ni"     onclick="window.location='dashboard.html'">    <span class="ic">🏠</span>Dashboard</div>
     <div class="ni"     onclick="window.location='categories.html'">   <span class="ic">🗂️</span>Project Categories</div>
     <div class="ni"     onclick="window.location='announcements.html'"><span class="ic">📢</span>Announcements</div>
+    <div class="ni"     onclick="window.location='users.html'"><span class="ic">👥</span>User Management</div>
     <div class="nlbl">System</div>
     <div class="ni on"  onclick="window.location='settings.html'">     <span class="ic">⚙️</span>System Settings</div>
   </nav>
@@ -50,7 +51,7 @@
       <div class="un">Admin User</div>
       <div class="ud">System Admin</div>
     </div>
-    <button class="sobt" title="Sign Out" onclick="if(confirm('Sign out?')) toast('Signed out.','tinf')">⎋</button>
+    <button class="sobt" title="Sign Out" onclick="if(confirm('Sign out?')) Auth.logout().then(() => window.location.href='../auth/login.html')">⎋</button>
   </div>
 </aside>
 
@@ -147,7 +148,7 @@
               </div>
               <div class="as-row as-row-last">
                 <div><div class="as-lbl">New User Registrations</div><div class="as-desc">Allow new students and instructors to register</div></div>
-                <label class="tog"><input type="checkbox" checked onchange="tn(this,'New registrations')"><span class="tog-sl"></span></label>
+                <label class="tog"><input type="checkbox" checked id="tog-registrations" onchange="tn(this,'New registrations')"><span class="tog-sl"></span></label>
               </div>
             </div>
           </div>
@@ -168,32 +169,32 @@
             <div class="as-body">
               <div class="as-row">
                 <div><div class="as-lbl">Minimum Password Length</div></div>
-                <select class="as-sel" onchange="tn(this,'Min password length')">
-                  <option>6 chars</option><option selected>8 chars</option><option>12 chars</option>
+                <select class="as-sel" id="cfg-pass-min" onchange="tn(this,'Min password length')">
+                  <option value="6">6 chars</option><option value="8" selected>8 chars</option><option value="12">12 chars</option>
                 </select>
               </div>
               <div class="as-row">
                 <div><div class="as-lbl">Require Uppercase Letter</div></div>
-                <label class="tog"><input type="checkbox" checked onchange="tn(this,'Require uppercase')"><span class="tog-sl"></span></label>
+                <label class="tog"><input type="checkbox" checked id="cfg-require-uppercase" onchange="tn(this,'Require uppercase')"><span class="tog-sl"></span></label>
               </div>
               <div class="as-row">
                 <div><div class="as-lbl">Require Numbers</div></div>
-                <label class="tog"><input type="checkbox" checked onchange="tn(this,'Require numbers')"><span class="tog-sl"></span></label>
+                <label class="tog"><input type="checkbox" checked id="cfg-require-numbers" onchange="tn(this,'Require numbers')"><span class="tog-sl"></span></label>
               </div>
               <div class="as-row">
                 <div><div class="as-lbl">Require Special Characters</div></div>
-                <label class="tog"><input type="checkbox" onchange="tn(this,'Require special chars')"><span class="tog-sl"></span></label>
+                <label class="tog"><input type="checkbox" id="cfg-require-special" onchange="tn(this,'Require special chars')"><span class="tog-sl"></span></label>
               </div>
               <div class="as-row">
                 <div><div class="as-lbl">Max Login Attempts Before Lockout</div></div>
-                <select class="as-sel" onchange="tn(this,'Login attempt limit')">
-                  <option>3</option><option selected>5</option><option>10</option>
+                <select class="as-sel" id="cfg-max-login-attempts" onchange="tn(this,'Login attempt limit')">
+                  <option value="3">3</option><option value="5" selected>5</option><option value="10">10</option>
                 </select>
               </div>
               <div class="as-row as-row-last">
                 <div><div class="as-lbl">Lockout Duration</div></div>
-                <select class="as-sel" onchange="tn(this,'Lockout duration')">
-                  <option>5 min</option><option selected>15 min</option><option>1 hour</option>
+                <select class="as-sel" id="cfg-lockout-duration" onchange="tn(this,'Lockout duration')">
+                  <option value="5">5 min</option><option value="15" selected>15 min</option><option value="60">1 hour</option>
                 </select>
               </div>
             </div>
@@ -206,6 +207,7 @@
   </div><!-- /pb -->
 </div><!-- /main -->
 
-<script src="..\assets\admin.js\settings.js"></script>
+<script src="../../teamforge-backend/assets/js/api.js"></script>
+<script src="../assets/admin.js/settings.js"></script>
 </body>
 </html>

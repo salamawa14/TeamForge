@@ -33,10 +33,10 @@
       <a href="set_acc_instructor.html"   class="nav-item active">⚙️ Settings</a>
     </nav>
     <div class="sidebar-user">
-      <div class="avatar">AK</div>
+      <div class="avatar" id="sidebar-avatar">AK</div>
       <div>
-        <div class="user-name">Dr. Ahmet Kaplan</div>
-        <div class="user-sub">Computer Eng.</div>
+        <div class="user-name" id="sidebar-name">Dr. Ahmet Kaplan</div>
+        <div class="user-sub" id="sidebar-dept">Computer Engineering</div>
       </div>
     </div>
   </aside>
@@ -118,9 +118,9 @@
               </div>
 
               <div class="avatar-row">
-                <div class="profile-avatar">AK</div>
+                <div class="profile-avatar" id="profile-avatar-initials">AK</div>
                 <div>
-                  <div class="avatar-name">Dr. Ahmet Kaplan</div>
+                  <div class="avatar-name" id="profile-display-name">Dr. Ahmet Kaplan</div>
                   <div class="avatar-hint">Click your avatar to upload a new photo.</div>
                   <div class="avatar-hint">JPG or PNG, max 2 MB.</div>
                 </div>
@@ -129,43 +129,43 @@
               <div class="form-row">
                 <div class="form-group">
                   <label class="form-label">First Name</label>
-                  <input class="form-input" type="text" value="Ahmet" />
+                  <input class="form-input" type="text" id="first-name" placeholder="e.g. Ahmet" />
                 </div>
                 <div class="form-group">
                   <label class="form-label">Last Name</label>
-                  <input class="form-input" type="text" value="Kaplan" />
+                  <input class="form-input" type="text" id="last-name" placeholder="e.g. Kaplan" />
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group">
                   <label class="form-label">Academic Title</label>
-                  <input class="form-input" type="text" value="Associate Professor" />
+                  <input class="form-input" type="text" id="academic-title" placeholder="e.g. Associate Professor" />
                 </div>
                 <div class="form-group">
                   <label class="form-label">Department</label>
-                  <input class="form-input" type="text" value="Computer Engineering" />
+                  <input class="form-input" type="text" id="department" placeholder="e.g. Computer Engineering" />
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="form-label">University Email</label>
-                <input class="form-input" type="email" value="ahmet.kaplan@university.edu" />
+                <input class="form-input" type="email" id="email" readonly style="background:#f9fafb; cursor:not-allowed;" />
               </div>
 
               <div class="form-group">
                 <label class="form-label">Areas of Expertise <span class="label-hint">(comma-separated)</span></label>
-                <input class="form-input" type="text" value="Machine Learning, Computer Vision, IoT" />
+                <input class="form-input" type="text" id="expertise" placeholder="e.g. AI, Robotics" />
               </div>
 
               <div class="form-group">
                 <label class="form-label">Research Interests</label>
-                <input class="form-input" type="text" value="Deep Learning, Embedded AI, Smart Systems" />
+                <input class="form-input" type="text" id="research" placeholder="e.g. Deep Learning" />
               </div>
 
               <div class="form-group">
                 <label class="form-label">Bio <span class="label-hint">(shown on your advisor card)</span></label>
-                <textarea class="form-input form-textarea">Associate Professor at Computer Engineering. Specializing in ML and IoT systems. Open to advising TÜBİTAK and Teknofest projects.</textarea>
+                <textarea class="form-input form-textarea" id="bio" placeholder="Tell students about yourself..."></textarea>
               </div>
             </div>
 
@@ -254,6 +254,7 @@
   </div><!-- /main -->
 </div><!-- /page -->
 
+<script src="../../teamforge-backend/assets/js/api.js"></script>
 <script src="../assets/instructor.js/set_acc_instructor.js"></script>
 <script src="../assets/instructor.js/notification.js"></script>
 </body>

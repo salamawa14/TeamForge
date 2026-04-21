@@ -37,7 +37,7 @@ $requests = $db->prepare('
            u.full_name AS student_name, u.department
     FROM advisor_requests ar
     JOIN users u ON u.user_id = ar.student_id
-    WHERE ar.advisor_id = ?
+    WHERE ar.advisor_id = ? AND ar.status = "Pending"
     ORDER BY ar.requested_at DESC
     LIMIT 5
 ');

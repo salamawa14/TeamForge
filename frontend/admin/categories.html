@@ -179,6 +179,7 @@
     <div class="ni"     onclick="window.location='dashboard.html'">    <span class="ic">🏠</span>Dashboard</div>
     <div class="ni on"  onclick="window.location='categories.html'">   <span class="ic">🗂️</span>Project Categories</div>
     <div class="ni"     onclick="window.location='announcements.html'"><span class="ic">📢</span>Announcements</div>
+    <div class="ni"     onclick="window.location='users.html'"><span class="ic">👥</span>User Management</div>
     <div class="nlbl">System</div>
     <div class="ni"     onclick="window.location='settings.html'">     <span class="ic">⚙️</span>System Settings</div>
   </nav>
@@ -188,7 +189,7 @@
       <div class="un">Admin User</div>
       <div class="ud">System Admin</div>
     </div>
-    <button class="sobt" title="Sign Out" onclick="if(confirm('Sign out?')) toast('Signed out.','tinf')">⎋</button>
+    <button class="sobt" title="Sign Out" onclick="if(confirm('Sign out?')) Auth.logout().then(() => window.location.href='../auth/login.html')">⎋</button>
   </div>
 </aside>
 
@@ -234,6 +235,7 @@
   </div>
 </div>
 
-<script src="..\assets\admin.js\categories.js"></script>
+<script src="../../teamforge-backend/assets/js/api.js?v=1"></script>
+<script src="../assets/admin.js/categories.js?v=1"></script>
 </body>
 </html>

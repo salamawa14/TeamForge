@@ -99,8 +99,12 @@ const Instructor = {
 
     // Availability
     getAvailability:  () => apiRequest('/instructors/availability.php'),
-    setAvailability:  (advising_status, timezone = null) =>
-        apiRequest('/instructors/availability.php', 'PUT', { advising_status, timezone }),
+    setAvailability:  (dataOrStatus, timezone = null) => {
+        const payload = typeof dataOrStatus === 'object' && dataOrStatus !== null
+            ? dataOrStatus
+            : { advising_status: dataOrStatus, timezone };
+        return apiRequest('/instructors/availability.php', 'PUT', payload);
+    },
 };
 
 // ── Admin ─────────────────────────────────────────────────────
@@ -130,6 +134,10 @@ const Admin = {
         apiRequest(`/admin/announcements.php?announcement_id=${announcement_id}`, 'PUT', data),
     deleteAnnouncement: (announcement_id) =>
         apiRequest(`/admin/announcements.php?announcement_id=${announcement_id}`, 'DELETE'),
+
+    // System settings
+    getSettings:      () => apiRequest('/admin/settings.php'),
+    updateSettings:   (data) => apiRequest('/admin/settings.php', 'PUT', data),
 };
 
 // ── Notifications ─────────────────────────────────────────────
@@ -142,20 +150,62 @@ const Notifications = {
 
 // ── Announcements (public read) ───────────────────────────────
 const Announcements = {
-    getAll: () => apiRequest('/announcements/index.php'),
+    getAll: () => apiRequest('/admin/announcements.php'),
 };
+
+// ── Global User Info Loader ───────────────────────────────────
+async function loadGlobalUserInfo() {
+    try {
+        // Fetch full profile info (works for instructors/students)
+        const role = localStorage.getItem('user_role');
+        let profile = null;
+        
+        if (role === 'instructor') {
+            profile = await Instructor.getProfile();
+        } else if (role === 'student') {
+            profile = await Student.getProfile();
+        }
+
+        if (profile) {
+            // Target all possible sidebar variations
+            const nameEls = document.querySelectorAll('.sidebar-user .user-name, .sidebar-user .u-name, #sidebar-name, #profile-display-name');
+            const subEls  = document.querySelectorAll('.sidebar-user .user-sub, .sidebar-user .u-sub, #sidebar-dept, .profile-role');
+            const avEls   = document.querySelectorAll('.sidebar-user .avatar, #sidebar-avatar, #profile-avatar-initials');
+
+            const fullName = profile.full_name || 'User';
+            const subText  = profile.academic_title ? `${profile.academic_title} · ${profile.department}` : (profile.department || '');
+            const initials = fullName.split(' ').filter(Boolean).slice(0, 2).map(n => n[0]).join('').toUpperCase();
+
+            nameEls.forEach(el => el.textContent = fullName);
+            subEls.forEach(el => el.textContent  = subText || profile.role || '');
+            avEls.forEach(el => el.textContent   = initials || '??');
+        }
+    } catch (err) {
+        console.error("Global UI Sync Error:", err);
+    }
+}
 
 // ── Guard: call on every protected page ──────────────────────
 async function requireLogin(allowedRoles = []) {
     try {
         const user = await Auth.me();
         if (!user) return;   // me() already redirects on 401
+        
+        // Store role for global info loader
+        localStorage.setItem('user_role', user.role);
+
         if (allowedRoles.length && !allowedRoles.includes(user.role)) {
             alert('Access denied.');
             window.location.href = PROJECT_ROOT + '/frontend/auth/login.html';
+            return null;
         }
+
+        // Run sync in background so page load isn't blocked
+        loadGlobalUserInfo();
+
         return user;
-    } catch {
+    } catch (err) {
+        console.error("Auth Guard Error:", err);
         window.location.href = PROJECT_ROOT + '/frontend/auth/login.html';
     }
 }
