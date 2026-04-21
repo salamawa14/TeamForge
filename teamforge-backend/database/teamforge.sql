@@ -116,7 +116,7 @@ CREATE TABLE join_requests (
     applicant_id  CHAR(36)    NOT NULL,
     status        ENUM('Pending','Accepted','Rejected') NOT NULL DEFAULT 'Pending',
     requested_at  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    reviewed_at   TIMESTAMP,
+   reviewed_at   TIMESTAMP NULL DEFAULT NULL,
     UNIQUE KEY unique_request (project_id, applicant_id),
     FOREIGN KEY (project_id)   REFERENCES projects(project_id) ON DELETE CASCADE,
     FOREIGN KEY (applicant_id) REFERENCES users(user_id)       ON DELETE CASCADE
@@ -135,7 +135,7 @@ CREATE TABLE advisor_requests (
     project_type    ENUM('Course','Tubitak','Teknofest') NOT NULL,
     status          ENUM('Pending','Accepted','Rejected') NOT NULL DEFAULT 'Pending',
     requested_at    TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    reviewed_at     TIMESTAMP,
+    reviewed_at      TIMESTAMP NULL DEFAULT NULL,
     FOREIGN KEY (project_id)  REFERENCES projects(project_id) ON DELETE CASCADE,
     FOREIGN KEY (student_id)  REFERENCES users(user_id)       ON DELETE CASCADE,
     FOREIGN KEY (advisor_id)  REFERENCES users(user_id)       ON DELETE CASCADE
@@ -178,6 +178,6 @@ VALUES (
     UUID(),
     'Admin',
     'admin@teamforge.com',
-    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+    '$2y$12$7u9wLfP76evTd/iVE5OaWeKfSx2nOIw3XNuNrj9svFeQLDr6htMJ6',
     'admin'
 );

@@ -50,20 +50,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     ')->execute([$full_name, $department, $uid]);
 
     $db->prepare('
-        UPDATE instructor_profiles SET
-            academic_title        = ?,
-            areas_of_expertise    = ?,
-            research_interests    = ?,
-            supervised_proj_types = ?,
-            timezone              = ?
-        WHERE user_id = ?
+        INSERT INTO instructor_profiles (
+            user_id, academic_title, areas_of_expertise, research_interests, supervised_proj_types, timezone
+        ) VALUES (?, ?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+            academic_title        = VALUES(academic_title),
+            areas_of_expertise    = VALUES(areas_of_expertise),
+            research_interests    = VALUES(research_interests),
+            supervised_proj_types = VALUES(supervised_proj_types),
+            timezone              = VALUES(timezone)
     ')->execute([
+        $uid,
         $academic_title,
         json_encode($body['areas_of_expertise']    ?? []),
         $body['research_interests']                ?? null,
         json_encode($body['supervised_proj_types'] ?? []),
         $body['timezone']                          ?? null,
-        $uid,
     ]);
 
     success([], 'Profile updated successfully.');

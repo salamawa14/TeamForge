@@ -136,12 +136,12 @@
     emailInput.value  = savedEmail;
     remember.checked  = true;
   }
-
-  /* ─────────────────────────────
+/* ─────────────────────────────
      Form Submit
   ───────────────────────────── */
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+     console.log('submit fired', emailInput.value);
 
     const emailVal = emailInput.value.trim();
     const pwdVal   = pwdInput.value;
@@ -154,7 +154,6 @@
 
     if (eErr || pErr) return;
 
-    /* Remember Me */
     if (remember.checked) {
       localStorage.setItem('tf_remembered_email', emailVal);
     } else {
@@ -163,24 +162,15 @@
 
     setLoading(true);
 
-    /* ── Simulate API call (replace with real fetch) ── */
     try {
-      await fakeAuthRequest(emailVal, pwdVal, activeRole);
+      const user = await Auth.login(emailVal, pwdVal);
 
       showToast('✓ Signed in successfully! Redirecting…');
 
-      // Redirect based on role
-      // If first time user (no profile complete flag) → complete-profile.html
-      // Otherwise → dashboard for their role
       setTimeout(() => {
-        const destinations = {
-          student:    '../student/Home.html',
-          instructor: '../instructor/instructor_home.html',
-          admin:      '../admin/dashboard.html',
-        };
-
-        // التوجيه المباشر بناءً على الرتبة، وإذا لم تكن موجودة يذهب لـ Home.html كاحتياط
-        window.location.href = destinations[activeRole] || 'Home.html';
+        // Use the redirect path from the server, but prepend the PROJECT_ROOT
+        // (PROJECT_ROOT is defined in api.js)
+        window.location.href = PROJECT_ROOT + user.redirect;
       }, 1400);
 
     } catch (err) {
@@ -188,7 +178,7 @@
       showToast(err.message || 'Sign in failed. Please try again.', 'error');
     }
   });
-
+  
   /* ─────────────────────────────
      Fake Auth (demo only)
      Replace with real API call

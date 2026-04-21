@@ -1,584 +1,174 @@
-/* ── Project data store ── */
-const PD = {
-  1:{title:'Autonomous Drone Navigation',type:'TEKNOFEST',
-     desc:'Full autonomous drone for Teknofest 2026 UAV category — ROS2, sensor fusion, obstacle avoidance.',
-     members:3,max:6,age:'2d',deadline:'April 15, 2026',budget:null,cap:'3/6 (3 open)',pct:50,
-     team:[{i:'NC',n:'Nurem Can',r:'Project Lead / Hardware',c:'#00b8b8'},{i:'JS',n:'Jeren Student',r:'Computer Vision',c:'#6366f1'},{open:true,r:'ROS2 Engineer'},{open:true,r:'Computer Vision Dev'}],
-     adv:{n:'Prof. Ömer Şahin',s:'ok'},roles:['Computer Vision Developer','ROS2 Engineer'],
-     skills:['C++','ROS2','Python','Computer Vision','Sensor Fusion'],
-     full:'30+ autonomous navigation sensors with obstacle detection. Targets Teknofest 2026 UAV Advanced category.'},
-  2:{title:'Smart Water IoT',type:'TÜBİTAK',
-     desc:'IoT sensor network for real-time water usage monitoring and leak detection on campus.',
-     members:1,max:3,age:'5d',deadline:'April 15, 2026',budget:'₺9,000',cap:'1/3 (2 open)',pct:33,
-     team:[{i:'NC',n:'Nurem Can',r:'Project Lead / Hardware',c:'#00b8b8'},{open:true,r:'IoT Hardware Developer'},{open:true,r:'Cloud Backend Dev'}],
-     adv:{n:null,s:'seek'},roles:['IoT Hardware Developer','Cloud Backend Dev'],
-     skills:['Arduino','MQTT','Raspberry Pi','Python','InfluxDB','Grafana'],
-     full:'30+ low-power sensors stream data via MQTT. Anomaly detection flags leaks. Targets 20% reduction in campus water waste. Fully funded by TÜBİTAK if approved.'},
-  3:{title:'E-Commerce Platform',type:'COURSE',
-     desc:'SE405 course project. JWT auth, Stripe mock payment, real-time order tracking, seller analytics.',
-     members:3,max:4,age:'7d',deadline:null,budget:null,cap:'3/4 (1 open)',pct:75,
-     team:[{i:'BS',n:'Beza Sara',r:'Project Lead / Frontend',c:'#ef4444'},{i:'RH',n:'Rami Hassan',r:'Backend / Database',c:'#22c55e'},{i:'JS',n:'Jeren Student',r:'Frontend',c:'#6366f1'},{open:true,r:'Backend Developer'}],
-     adv:{n:null,s:'none'},roles:['Frontend Developer','Backend Developer'],
-     skills:['React','Node.js','MySQL','Tailwind CSS','REST API'],
-     full:'SE405 course project. Features: JWT auth, Stripe mock payment, real-time order tracking, seller analytics. No advisor needed.'},
-  4:{title:'AR Campus Navigation App',type:'TEKNOFEST',
-     desc:'Augmented reality campus map using ARCore, real-time indoor positioning via BLE beacons.',
-     members:2,max:4,age:'3d',deadline:null,budget:null,cap:'2/4 (2 open)',pct:50,
-     team:[{i:'DK',n:'Deniz Kara',r:'Project Lead',c:'#f97316'},{i:'AL',n:'Alp Lale',r:'AR Developer',c:'#a855f7'},{open:true,r:'Backend / Firebase'},{open:true,r:'UI Designer'}],
-     adv:{n:'Dr. Ayşe Kaya',s:'ok'},roles:['Backend / Firebase Developer','UI Designer'],
-     skills:['Unity','ARCore','Firebase','Kotlin','BLE'],
-     full:'AR-powered indoor navigation using BLE beacon positioning. Targets Teknofest Smart Campus category.'},
-  5:{title:'Smart Campus Energy Monitor',type:'TEKNOFEST',
-     desc:'Real-time energy usage tracking for campus buildings using embedded sensors and dashboards.',
-     members:1,max:5,age:'1d',deadline:null,budget:null,cap:'1/5 (4 open)',pct:20,
-     team:[{i:'MK',n:'Mert Koç',r:'Project Lead',c:'#00b8b8'},{open:true,r:'Embedded Systems'},{open:true,r:'Data Engineer'},{open:true,r:'Frontend Dev'},{open:true,r:'ML Engineer'}],
-     adv:{n:null,s:'seek'},roles:['Embedded Systems Dev','Data Engineer','Frontend Developer','ML Engineer'],
-     skills:['Raspberry Pi','Python','Grafana','InfluxDB','MQTT'],
-     full:'Monitor real-time energy consumption across campus buildings. Targets 25% energy reduction via smart analytics.'},
-  6:{title:'NLP News Summarizer',type:'TÜBİTAK',
-     desc:'Turkish-language news summarization model using transformer fine-tuning on large corpus.',
-     members:1,max:4,age:'6d',deadline:'May 30, 2026',budget:'₺12,000',cap:'1/4 (3 open)',pct:25,
-     team:[{i:'ED',n:'Emre Doğan',r:'Project Lead / ML',c:'#6366f1'},{open:true,r:'NLP Researcher'},{open:true,r:'Data Engineer'},{open:true,r:'Backend Developer'}],
-     adv:{n:'Prof. Emre Demir',s:'ok'},roles:['NLP Researcher','Data Engineer','Backend Developer'],
-     skills:['Python','PyTorch','HuggingFace','NLP','FastAPI'],
-     full:'Fine-tuning multilingual transformer models for Turkish news. Dataset 500k+ articles. TÜBİTAK 2209-A grant applied.'},
-  7:{title:'Blockchain Supply Chain',type:'COURSE',
-     desc:'CS480 course project. Smart contracts on Ethereum for supply chain transparency.',
-     members:4,max:4,age:'9d',deadline:null,budget:null,cap:'4/4 (Full)',pct:100,
-     team:[{i:'AK',n:'Ali Kaya',r:'Lead / Smart Contracts',c:'#f97316'},{i:'SÖ',n:'Selin Öz',r:'Frontend / Web3',c:'#a855f7'},{i:'CY',n:'Can Yıl',r:'Backend',c:'#22c55e'},{i:'NK',n:'Nur Kol',r:'Testing / DevOps',c:'#ef4444'}],
-     adv:{n:null,s:'none'},roles:[],skills:['Solidity','Web3.js','React','Hardhat','IPFS'],
-     full:'Ethereum smart contracts for transparent supply chain tracking. CS480 semester project. Team is full.'},
-};
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = await requireLogin(['student']);
+  if (!user) return;
+loadNotifications();
+  // Avatar initials
+  const avatar = document.querySelector('.avatar');
+  if (avatar) {
+    const parts = user.full_name.trim().split(' ');
+    avatar.textContent = parts.length >= 2 ? parts[0][0] + parts[parts.length-1][0] : parts[0].slice(0,2);
+  }
 
-/* ── Modal open ── */
-function openModal(id) {
-  const p = PD[id]; if (!p) return;
-  const tc = p.type==='TEKNOFEST'?'b-teknofest':p.type==='TÜBİTAK'?'b-tubitak':'b-course';
-  const infoHTML = (p.deadline||p.budget)?`<div class="m-infobox">${p.deadline?`📅 <strong style="color:var(--teal)">Deadline</strong> — ${p.deadline}<br>`:''}${p.budget?`💰 <strong style="color:var(--amber)">Budget</strong> — ${p.budget}`:''}</div>`:'';
-  const teamHTML = p.team.map(m=>m.open
-    ?`<div class="m-member"><div class="m-av open">+</div><div class="m-mbody"><b style="color:var(--t3)">Open Spot</b><span>${m.r}</span></div></div>`
-    :`<div class="m-member"><div class="m-av" style="background:${m.c}">${m.i}</div><div class="m-mbody"><b>${m.n}</b><span>${m.r}</span></div></div>`
-  ).join('');
-  const advHTML = p.adv.s==='none'
-    ?`<p style="font-size:.77rem;color:var(--t3);font-style:italic">No advisor required for this project type.</p>`
-    :p.adv.s==='seek'
-    ?`<div class="m-seeking">⚠ Seeking Advisor — Required for TÜBİTAK project</div>`
-    :`<p class="m-advisor-name">🎓 ${p.adv.n}</p>`;
-  const rolesHTML = p.roles.length
-    ?p.roles.map(r=>`<div class="m-role">🔍 ${r}</div>`).join('')
-    :`<p style="font-size:.77rem;color:var(--t3)">No specific roles listed.</p>`;
-  const full = p.pct>=100;
-  document.body.insertAdjacentHTML('beforeend',`
-    <div class="overlay" id="mOverlay">
-      <div class="modal-panel">
-        <button class="modal-x" id="mClose">✕</button>
-        <div class="m-badge"><span class="badge ${tc}">${p.type}</span></div>
-        <h2 class="m-title">${p.title}</h2>
-        <p class="m-desc">${p.desc}</p>
-        <div class="m-stats">
-          <div class="m-stat"><b>${p.members}</b><small>Members</small></div>
-          <div class="m-stat"><b>${p.max}</b><small>Max Team</small></div>
-          <div class="m-stat"><b>${p.age}</b><small>Age</small></div>
-        </div>
-        ${infoHTML}
-        <div class="m-cap-row"><span>Team Capacity</span><span class="m-cap-val">${p.cap}</span></div>
-        <div class="prog" style="margin-bottom:16px"><div class="prog-fill" style="width:${p.pct}%"></div></div>
-        <div class="m-sec">👥 Team Members</div>${teamHTML}
-        <div class="m-sec">🎓 Academic Advisor</div>${advHTML}
-        <div class="m-sec">🔍 Roles Needed</div>${rolesHTML}
-        <div class="m-sec">⚡ Required Skills</div>
-        <div class="m-skills">${p.skills.map(s=>`<span class="chip">${s}</span>`).join('')}</div>
-        <div class="m-sec">📄 Full Description</div>
-        <div class="m-fulldesc">${p.full}</div>
-        <div class="m-foot">
-          <button class="btn btn-teal" id="mApply" ${full?'disabled':''}>
-            ${full?'🔒 Team Full':'✅ Apply to Join'}
-          </button>
-          <button class="btn-notint" id="mNot">🤚 Not Interested</button>
-        </div>
-      </div>
-    </div>`);
-  document.body.style.overflow='hidden';
-  const close=()=>{document.getElementById('mOverlay')?.remove();document.body.style.overflow=''};
-  document.getElementById('mClose').onclick=close;
-  document.getElementById('mOverlay').onclick=e=>{if(e.target.id==='mOverlay')close()};
-  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',esc)}});
-  document.getElementById('mApply')?.addEventListener('click',()=>{close();showToast(`✓ Applied to "${p.title}"!`,'ok')});
-  document.getElementById('mNot')?.addEventListener('click',()=>{close();showToast('Marked as not interested.')});
-}
+  const grid = document.getElementById('advGrid');
+  let myProjects = [];   // student's own projects for the request modal
 
-/* ── Toast ── */
-function showToast(msg, type='') {
-  let t = document.getElementById('_toast');
-  if (!t) { t=document.createElement('div'); t.id='_toast'; t.className='toast'; document.body.appendChild(t); }
-  t.textContent=msg; t.className='toast show'+(type?' '+type:'');
-  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),3400);
-}
-
-/* ── Sidebar & header init ── */
-document.addEventListener('DOMContentLoaded', () => {
-  // active nav
-  const page = location.pathname.split('/').pop()||'';
-  document.querySelectorAll('.sb-link').forEach(a=>{
-    if (a.getAttribute('href')===page) a.classList.add('active');
-  });
-  // burger
-  const sb=document.getElementById('sb'), burg=document.getElementById('burg');
-  burg?.addEventListener('click',()=>sb.classList.toggle('open'));
-  document.addEventListener('click',e=>{
-    if(sb?.classList.contains('open')&&!sb.contains(e.target)&&e.target!==burg) sb.classList.remove('open');
-  });
-  // notif
-  const nBtn=document.getElementById('nBtn'), nPanel=document.getElementById('nPanel');
-  nBtn?.addEventListener('click',e=>{e.stopPropagation();nPanel.classList.toggle('open')});
-  document.addEventListener('click',e=>{if(nPanel&&!nPanel.contains(e.target)&&e.target!==nBtn)nPanel.classList.remove('open')});
-  // global search
-  const gs=document.getElementById('gs');
-  gs?.addEventListener('keydown',e=>{
-    if(e.key==='Enter'&&gs.value.trim()){
-      sessionStorage.setItem('bq',gs.value.trim());
-      window.location.href='Browse-Projects.html';
+  // ── Load student's own projects (needed for the send-request modal) ──
+  async function loadMyProjects() {
+    try {
+      const data = await Student.myProjects();
+      myProjects = data.owned || [];
+    } catch(e) {
+      myProjects = [];
     }
-  });
-});
+  }
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('advSearch')?.addEventListener('input', function() {
-    const q = this.value.toLowerCase();
-    document.querySelectorAll('.adv-card').forEach(c => {
-      c.style.display = !q || c.textContent.toLowerCase().includes(q) ? '' : 'none';
-    });
-  });
-});
+  // ── Load & render advisors ────────────────────────────────────
+  async function loadAdvisors(search = '') {
+    grid.innerHTML = `<div style="padding:40px;text-align:center;color:var(--t3)">Loading advisors…</div>`;
+    try {
+      const advisors = await Student.findAdvisors(search);
 
-/* ════════════════ ADVISOR REQUEST MODAL ════════════════ */
+      if (!advisors.length) {
+        grid.innerHTML = `
+          <div style="grid-column:1/-1;padding:60px;text-align:center;color:var(--t3)">
+            <div style="font-size:2.5rem;margin-bottom:10px">🎓</div>
+            <h3>No advisors found</h3>
+            <p>Try a different search term.</p>
+          </div>`;
+        return;
+      }
 
-// Student's pre-filled data (in real app this comes from session/DB)
-const STUDENT_PROFILE = {
-  name:   'Jeren Student',
-  skills: ['Python', 'React', 'Node.js', 'TensorFlow', 'IoT'],
-  projects: [
-    { id: 1, title: 'Autonomous Drone Navigation', type: 'TEKNOFEST' },
-    { id: 2, title: 'Smart Water IoT',             type: 'TÜBİTAK'  },
-    { id: 3, title: 'E-Commerce Platform',         type: 'COURSE'    }
-  ]
-};
+      const COLORS = ['#00b8b8','#6366f1','#f97316','#a855f7','#22c55e','#ef4444','#eab308'];
 
-// Advisor meta — matches the cards
-const ADVISOR_META = {
-  'Dr. Ahmet Kaplan':  { initials: 'AK', color: '#00b8b8', dept: 'Computer Engineering' },
-  'Dr. Ayşe Kaya':     { initials: 'AK', color: '#f97316', dept: 'Computer Engineering' },
-  'Prof. Emre Demir':  { initials: 'ED', color: '#a855f7', dept: 'Artificial Intelligence' },
-  'Dr. Zeynep Arslan': { initials: 'ZA', color: '#22c55e', dept: 'Electrical Engineering' }
-};
+      grid.innerHTML = advisors.map((a, i) => {
+        const color   = COLORS[i % COLORS.length];
+        const initials = a.full_name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+        const skills  = Array.isArray(a.areas_of_expertise) ? a.areas_of_expertise : [];
+        const types   = Array.isArray(a.supervised_proj_types) ? a.supervised_proj_types : [];
+        const isActive = a.advising_status === 'Active';
+        const allTags = [...skills, ...types].slice(0, 4);
 
-function openRequestModal(advisorName, triggerBtn) {
-  const meta = ADVISOR_META[advisorName] || { initials: '??', color: '#8a96ae', dept: '' };
+        return `
+          <div class="adv-card au">
+            <div class="adv-top">
+              <div class="adv-av" style="background:${color}">${initials}</div>
+              <div>
+                <div class="adv-name">${a.full_name}</div>
+                <div class="adv-dept-txt">${a.department || 'Instructor'}</div>
+              </div>
+            </div>
+            ${a.academic_title ? `<div class="adv-univ">${a.academic_title}</div>` : ''}
+            <div class="adv-specs">
+              ${allTags.map(t => `<span class="chip">${t}</span>`).join('') || '<span style="color:var(--t3);font-size:.75rem">No specializations listed</span>'}
+            </div>
+            <div class="adv-avail-row">
+              <span class="avail ${isActive ? '' : 'busy'}">${isActive ? 'Available' : 'Busy'}</span>
+            </div>
+            ${isActive
+              ? `<button class="btn btn-teal" style="width:100%;justify-content:center"
+                   data-id="${a.user_id}" data-name="${a.full_name}">
+                   📨 Send Request
+                 </button>`
+              : `<button class="btn btn-outline" style="width:100%;justify-content:center;opacity:.6;cursor:not-allowed" disabled>
+                   Unavailable
+                 </button>`
+            }
+          </div>`;
+      }).join('');
 
-  // Build project options
-  const projectOpts = STUDENT_PROFILE.projects.map(p =>
-    `<option value="${p.id}">${p.title} (${p.type})</option>`
-  ).join('');
+      // Wire Send Request buttons
+      grid.querySelectorAll('[data-id]').forEach(btn => {
+        btn.addEventListener('click', () => openRequestModal(btn.dataset.id, btn.dataset.name));
+      });
 
-  // Build pre-filled skill chips HTML
-  const chipsHTML = STUDENT_PROFILE.skills.map(s =>
-    `<span class="req-chip">${s} <button type="button" onclick="this.parentElement.remove()">✕</button></span>`
-  ).join('');
+    } catch(err) {
+      grid.innerHTML = `<div style="padding:20px;color:var(--red)">Error: ${err.message}</div>`;
+    }
+  }
 
-  const overlay = document.createElement('div');
-  overlay.className = 'req-overlay';
-  overlay.id = 'reqOverlay';
-  overlay.innerHTML = `
-    <div class="req-modal" role="dialog" aria-modal="true" aria-label="Send Advisor Request">
+  // ── Send Request Modal ────────────────────────────────────────
+  function openRequestModal(advisorId, advisorName) {
+    if (!myProjects.length) {
+      showToast('You need to create a project first before requesting an advisor.', 'error');
+      return;
+    }
 
-      <!-- Header -->
-      <div class="req-head">
-        <div class="req-head-l">
-          <div class="req-head-av" style="background:${meta.color}">${meta.initials}</div>
-          <div>
-            <div class="req-head-name">📨 Request — ${advisorName}</div>
-            <div class="req-head-dept">${meta.dept}</div>
-          </div>
+    const ov = document.createElement('div');
+    ov.className = 'apc-overlay';
+    ov.innerHTML = `
+      <div class="apc-modal" style="border-top:4px solid var(--teal)">
+        <div class="apc-icon-wrap" style="background:rgba(0,184,184,.1);color:var(--teal)">
+          <span class="apc-icon">🎓</span>
         </div>
-        <button class="req-close" id="reqClose" aria-label="Close">✕</button>
-      </div>
-
-      <!-- Body -->
-      <div class="req-body">
-
-        <!-- Project -->
-        <label class="req-label" for="reqProject">
-          Project <span>*</span>
-        </label>
-        <select class="req-select" id="reqProject">
-          <option value="">Select a project…</option>
-          ${projectOpts}
+        <h3 class="apc-title">Request Advisor</h3>
+        <p class="apc-project-name">${advisorName}</p>
+        <p class="apc-desc">Select which of your projects you'd like this advisor for:</p>
+        <select id="projectSelect" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--t1);margin-bottom:16px;font-size:.9rem">
+          ${myProjects.map(p => `<option value="${p.project_id}">${p.title} (${p.project_type})</option>`).join('')}
         </select>
-        <span class="req-err" id="reqProjectErr">Please select a project.</span>
-
-        <!-- Skills -->
-        <label class="req-label">
-          Your Skills <span>(shown to advisor — edit if needed)</span>
-        </label>
-        <div class="req-chips-wrap" id="reqChipsWrap" onclick="document.getElementById('reqChipInp').focus()">
-          ${chipsHTML}
-          <input class="req-chip-inp" id="reqChipInp" type="text" placeholder="+ Add skill"/>
+        <div class="apc-acts">
+          <button class="apc-cancel" id="apcCancel">Cancel</button>
+          <button class="apc-confirm" id="apcConfirm" style="background:var(--teal);color:#1a2540">
+            <span id="apcTxt">📨 Send Request</span>
+          </button>
         </div>
-        <div class="req-chips-hint">Press Enter or comma to add a skill</div>
-        <span class="req-err" id="reqSkillsErr">Add at least one skill.</span>
-
-        <!-- Message -->
-        <label class="req-label" for="reqMsg">
-          Message to Advisor <span>(optional)</span>
-        </label>
-        <textarea class="req-textarea" id="reqMsg"
-          placeholder="Briefly describe your project and why you'd like this advisor's guidance…"
-          maxlength="400"></textarea>
-        <div class="req-char"><span id="reqCharCount">0</span> / 400</div>
-
-      </div>
-
-      <!-- Footer -->
-      <div class="req-foot">
-        <button class="req-cancel" id="reqCancel">Cancel</button>
-        <button class="req-send" id="reqSend">
-          <span id="reqSendTxt">📨 Send Request</span>
-          <span class="req-spin" id="reqSpin"></span>
-        </button>
-      </div>
-
-    </div>`;
-
-  document.body.appendChild(overlay);
-  document.body.style.overflow = 'hidden';
-
-  // Focus first field
-  setTimeout(() => document.getElementById('reqProject')?.focus(), 100);
-
-  /* ── Close handlers ── */
-  function closeModal() {
-    overlay.remove();
-    document.body.style.overflow = '';
-  }
-  document.getElementById('reqClose').addEventListener('click', closeModal);
-  document.getElementById('reqCancel').addEventListener('click', closeModal);
-  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-  document.addEventListener('keydown', function escHandler(e) {
-    if (e.key === 'Escape') { closeModal(); document.removeEventListener('keydown', escHandler); }
-  });
-
-  /* ── Char counter ── */
-  document.getElementById('reqMsg').addEventListener('input', function() {
-    document.getElementById('reqCharCount').textContent = this.value.length;
-  });
-
-  /* ── Skill chip input ── */
-  const chipInp  = document.getElementById('reqChipInp');
-  const chipsWrap = document.getElementById('reqChipsWrap');
-
-  function addReqChip(val) {
-    val = val.replace(/,/g, '').trim();
-    if (!val) return;
-    const existing = [...chipsWrap.querySelectorAll('.req-chip')].map(c => c.textContent.replace('✕','').trim().toLowerCase());
-    if (existing.includes(val.toLowerCase())) return;
-    const chip = document.createElement('span');
-    chip.className = 'req-chip';
-    chip.innerHTML = `${val} <button type="button">✕</button>`;
-    chip.querySelector('button').addEventListener('click', e => { e.stopPropagation(); chip.remove(); });
-    chipsWrap.insertBefore(chip, chipInp);
-    document.getElementById('reqSkillsErr').style.display = 'none';
-  }
-
-  chipInp.addEventListener('keydown', e => {
-    if ((e.key === 'Enter' || e.key === ',') && chipInp.value.trim()) {
-      e.preventDefault();
-      addReqChip(chipInp.value);
-      chipInp.value = '';
-    }
-    if (e.key === 'Backspace' && !chipInp.value) {
-      const chips = chipsWrap.querySelectorAll('.req-chip');
-      if (chips.length) chips[chips.length - 1].remove();
-    }
-  });
-  chipInp.addEventListener('blur', () => {
-    if (chipInp.value.trim()) { addReqChip(chipInp.value); chipInp.value = ''; }
-  });
-
-  /* ── Send ── */
-  document.getElementById('reqSend').addEventListener('click', () => {
-    let valid = true;
-
-    // Validate project
-    const projErr = document.getElementById('reqProjectErr');
-    const projVal = document.getElementById('reqProject').value;
-    if (!projVal) {
-      projErr.style.display = 'block';
-      document.getElementById('reqProject').classList.add('err');
-      valid = false;
-    } else {
-      projErr.style.display = 'none';
-      document.getElementById('reqProject').classList.remove('err');
-    }
-
-    // Validate skills
-    const skillsErr = document.getElementById('reqSkillsErr');
-    const chips     = chipsWrap.querySelectorAll('.req-chip');
-    if (chips.length === 0) {
-      skillsErr.style.display = 'block';
-      valid = false;
-    } else {
-      skillsErr.style.display = 'none';
-    }
-
-    if (!valid) return;
-
-    // Simulate sending
-    const sendBtn = document.getElementById('reqSend');
-    sendBtn.disabled = true;
-    document.getElementById('reqSendTxt').textContent = 'Sending…';
-    document.getElementById('reqSpin').style.display  = 'inline-block';
-
-    setTimeout(() => {
-      closeModal();
-      // Update the trigger button to show sent state
-      triggerBtn.disabled = true;
-      triggerBtn.textContent = '✓ Request Sent';
-      triggerBtn.style.background  = 'var(--green)';
-      triggerBtn.style.cursor      = 'not-allowed';
-      triggerBtn.style.opacity     = '0.85';
-      showToast(`✓ Request sent to ${advisorName}!`, 'ok');
-    }, 1200);
-  });
-
-  // Clear err on change
-  document.getElementById('reqProject').addEventListener('change', () => {
-    document.getElementById('reqProjectErr').style.display = 'none';
-    document.getElementById('reqProject').classList.remove('err');
-  });
-}
-
-/* ════════════════ ADVISOR PROFILE MODAL ════════════════ */
-
-const ADVISORS = {
-  'Dr. Ahmet Kaplan': {
-    initials:   'AK',
-    color:      '#00b8b8',
-    title:      'Associate Professor',
-    dept:       'Computer Engineering',
-    univ:       'Middle East Technical University',
-    bio:        'Experienced in IoT and embedded systems research. Actively supervising TÜBİTAK and Teknofest projects with a focus on smart campus applications.',
-    expertise:  ['IoT', 'Embedded Systems', 'MQTT', 'Raspberry Pi'],
-    types:      ['TÜBİTAK'],
-    slots:      2,
-    supervised: 4,
-    groups:     3,
-    available:  true,
-    projects: [
-      { type: 'TÜBİTAK', title: 'Smart Water Monitoring System' },
-      { type: 'TÜBİTAK', title: 'Campus Energy Dashboard' },
-      { type: 'TEKNOFEST', title: 'Autonomous Sensor Network' },
-    ]
-  },
-  'Prof. Ömer Şahin': {
-    initials:   'ÖŞ',
-    color:      '#6366f1',
-    title:      'Professor',
-    dept:       'Aerospace Engineering',
-    univ:       'ODTÜ – Ankara',
-    bio:        'Leading expert in UAV systems and ROS2 development. Currently at full capacity for student advising.',
-    expertise:  ['ROS2', 'Computer Vision', 'UAV', 'Sensor Fusion'],
-    types:      ['TEKNOFEST'],
-    slots:      0,
-    supervised: 7,
-    groups:     5,
-    available:  false,
-    projects: [
-      { type: 'TEKNOFEST', title: 'Autonomous Drone Navigation' },
-      { type: 'TEKNOFEST', title: 'UAV Swarm Intelligence' },
-    ]
-  },
-  'Dr. Ayşe Kaya': {
-    initials:   'AK',
-    color:      '#f97316',
-    title:      'Assistant Professor',
-    dept:       'Computer Engineering',
-    univ:       'Boğaziçi University',
-    bio:        'Specializes in AR/VR applications and human-computer interaction. Open to supervising mobile and AR-based Teknofest projects.',
-    expertise:  ['ARCore', 'Mobile Dev', 'HCI', 'Unity'],
-    types:      ['TEKNOFEST'],
-    slots:      1,
-    supervised: 3,
-    groups:     2,
-    available:  true,
-    projects: [
-      { type: 'TEKNOFEST', title: 'AR Campus Navigation App' },
-      { type: 'TEKNOFEST', title: 'VR Lab Simulation' },
-    ]
-  },
-  'Prof. Emre Demir': {
-    initials:   'ED',
-    color:      '#a855f7',
-    title:      'Professor',
-    dept:       'Artificial Intelligence',
-    univ:       'Bilkent University',
-    bio:        'NLP and transformer model researcher with 10+ years in Turkish language processing. Prefers TÜBİTAK research projects.',
-    expertise:  ['NLP', 'PyTorch', 'HuggingFace', 'Transformers', 'FastAPI'],
-    types:      ['TÜBİTAK'],
-    slots:      3,
-    supervised: 6,
-    groups:     4,
-    available:  true,
-    projects: [
-      { type: 'TÜBİTAK', title: 'NLP News Summarizer' },
-      { type: 'TÜBİTAK', title: 'Turkish Sentiment Analysis' },
-      { type: 'TÜBİTAK', title: 'Multilingual QA System' },
-    ]
-  },
-  'Dr. Zeynep Arslan': {
-    initials:   'ZA',
-    color:      '#22c55e',
-    title:      'Assistant Professor',
-    dept:       'Electrical Engineering',
-    univ:       'İstanbul Technical University',
-    bio:        'Focuses on energy monitoring and smart grid systems. Available to advise TÜBİTAK projects in IoT and energy domains.',
-    expertise:  ['Energy Systems', 'IoT', 'Grafana', 'InfluxDB', 'MQTT'],
-    types:      ['TÜBİTAK'],
-    slots:      2,
-    supervised: 3,
-    groups:     2,
-    available:  true,
-    projects: [
-      { type: 'TÜBİTAK', title: 'Smart Campus Energy Monitor' },
-      { type: 'TÜBİTAK', title: 'Solar Panel Efficiency Tracker' },
-    ]
-  },
-  'Prof. Mehmet Yıldız': {
-    initials:   'MY',
-    color:      '#ef4444',
-    title:      'Professor',
-    dept:       'Software Engineering',
-    univ:       'Hacettepe University',
-    bio:        'Blockchain and Web3 researcher. Currently busy with existing projects and not taking new advisees.',
-    expertise:  ['Blockchain', 'Solidity', 'Web3', 'Smart Contracts'],
-    types:      ['COURSE'],
-    slots:      0,
-    supervised: 5,
-    groups:     3,
-    available:  false,
-    projects: [
-      { type: 'COURSE', title: 'Blockchain Supply Chain' },
-      { type: 'COURSE', title: 'Decentralized Voting System' },
-    ]
-  }
-};
-
-function openAdvisorProfile(name, triggerBtn) {
-  const a = ADVISORS[name];
-  if (!a) return;
-
-  // type badge colors
-  const typeColor = { 'TÜBİTAK': '#6366f1', 'TEKNOFEST': '#f97316', 'COURSE': '#00b8b8' };
-  const typeBg    = { 'TÜBİTAK': 'rgba(99,102,241,.10)', 'TEKNOFEST': 'rgba(249,115,22,.10)', 'COURSE': 'rgba(0,184,184,.10)' };
-
-  const typeBadges = a.types.map(t =>
-    `<span style="background:${typeBg[t]};color:${typeColor[t]};border:1px solid ${typeColor[t]}30;border-radius:20px;padding:3px 10px;font-size:.71rem;font-weight:700">${t} ✓</span>`
-  ).join(' ');
-
-  const expertiseChips = a.expertise.map(e =>
-    `<span class="ap-chip">${e}</span>`
-  ).join('');
-
-  const slotsText = a.slots > 0
-    ? `<span class="ap-slot-badge">${a.slots} Slot(s) Open</span>`
-    : `<span class="ap-slot-badge busy">Full</span>`;
-
-  const projectList = a.projects.map(p => {
-    const c = typeColor[p.type] || '#8a96ae';
-    const bg = typeBg[p.type] || 'rgba(138,150,174,.10)';
-    return `
-      <div class="ap-proj-item">
-        <span style="background:${bg};color:${c};border:1px solid ${c}30;border-radius:20px;padding:2px 9px;font-size:.67rem;font-weight:800;display:inline-block;margin-bottom:5px">${p.type}</span>
-        <div class="ap-proj-title">${p.title}</div>
       </div>`;
-  }).join('');
 
-  const overlay = document.createElement('div');
-  overlay.className = 'ap-overlay';
-  overlay.id = 'apOverlay';
-  overlay.innerHTML = `
-    <div class="ap-modal">
+    document.body.appendChild(ov);
+    setTimeout(() => ov.classList.add('visible'), 10);
 
-      <!-- Header with gradient -->
-      <div class="ap-header" style="background: linear-gradient(135deg, #3d2d7a, #5b3fa8)">
-        <button class="ap-close" id="apClose">✕</button>
-        <div class="ap-header-av" style="background:${a.color}">${a.initials}</div>
-      </div>
+    const close = () => { ov.classList.remove('visible'); setTimeout(() => ov.remove(), 250); };
+    document.getElementById('apcCancel').onclick = close;
+    ov.addEventListener('click', e => { if (e.target === ov) close(); });
 
-      <!-- Scrollable body -->
-      <div class="ap-body">
-
-        <!-- Name / title / dept -->
-        <h2 class="ap-name">${name}</h2>
-        <div class="ap-title-txt">${a.title}</div>
-        <div class="ap-dept">📍 ${a.dept}</div>
-
-        <!-- Bio -->
-        <div class="ap-bio">${a.bio}</div>
-
-        <!-- Expertise -->
-        <div class="ap-sec-label">🎓 EXPERTISE</div>
-        <div class="ap-chips">${expertiseChips}</div>
-
-        <!-- Availability -->
-        <div class="ap-sec-label">✅ AVAILABILITY</div>
-        <div class="ap-avail-row">
-          ${typeBadges}
-          ${slotsText}
-        </div>
-
-        <!-- Statistics -->
-        <div class="ap-sec-label">📊 STATISTICS</div>
-        <div class="ap-stats">
-          <div class="ap-stat"><span class="ap-stat-n">${a.supervised}</span><span class="ap-stat-l">Supervised</span></div>
-          <div class="ap-stat"><span class="ap-stat-n">${a.groups}</span><span class="ap-stat-l">Active Groups</span></div>
-          <div class="ap-stat"><span class="ap-stat-n" style="color:${a.slots > 0 ? '#22c55e' : '#ef4444'}">${a.slots}</span><span class="ap-stat-l">Open Slots</span></div>
-        </div>
-
-        <!-- Supervised Projects -->
-        <div class="ap-sec-label">📋 SUPERVISED PROJECTS</div>
-        <div class="ap-projects">${projectList}</div>
-
-      </div>
-
-      <!-- Footer -->
-      <div class="ap-foot">
-        ${a.available
-          ? `<button class="ap-send-btn" id="apSendBtn">📨 Send Advisor Request</button>`
-          : `<button class="ap-send-btn" disabled style="opacity:.5;cursor:not-allowed">Unavailable</button>`
-        }
-        <button class="ap-close-btn" id="apCloseBtn">Close</button>
-      </div>
-
-    </div>`;
-
-  document.body.appendChild(overlay);
-  document.body.style.overflow = 'hidden';
-
-  // close handlers
-  function closeProfile() {
-    overlay.remove();
-    document.body.style.overflow = '';
+    document.getElementById('apcConfirm').onclick = async () => {
+      const btn = document.getElementById('apcConfirm');
+      const txt = document.getElementById('apcTxt');
+      const projectId = document.getElementById('projectSelect').value;
+      btn.disabled = true;
+      txt.textContent = 'Sending…';
+      try {
+        await Student.requestAdvisor(projectId, advisorId);
+        showToast(`✓ Advisor request sent to ${advisorName}!`, 'ok');
+        close();
+      } catch(err) {
+        btn.disabled = false;
+        txt.textContent = '📨 Send Request';
+        showToast(err.message, 'error');
+      }
+    };
   }
-  document.getElementById('apClose').addEventListener('click', closeProfile);
-  document.getElementById('apCloseBtn').addEventListener('click', closeProfile);
-  overlay.addEventListener('click', e => { if (e.target === overlay) closeProfile(); });
-  document.addEventListener('keydown', function esc(e) {
-    if (e.key === 'Escape') { closeProfile(); document.removeEventListener('keydown', esc); }
+
+  // ── Toast ─────────────────────────────────────────────────────
+  function showToast(msg, type = '') {
+    let t = document.getElementById('_toast');
+    if (!t) { t = document.createElement('div'); t.id = '_toast'; t.className = 'toast'; document.body.appendChild(t); }
+    t.textContent = msg; t.className = 'toast show' + (type ? ' ' + type : '');
+    clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 3400);
+  }
+
+  // ── Search wiring ─────────────────────────────────────────────
+  const searchBtn = document.querySelector('.adv-search-row .btn');
+  const searchInp = document.getElementById('advSearch');
+  searchBtn?.addEventListener('click', () => loadAdvisors(searchInp?.value.trim()));
+  searchInp?.addEventListener('keydown', e => { if (e.key === 'Enter') loadAdvisors(searchInp.value.trim()); });
+
+  // ── Sidebar & notifications ───────────────────────────────────
+  const burg = document.getElementById('burg'), sb = document.getElementById('sb');
+  burg?.addEventListener('click', () => sb?.classList.toggle('open'));
+  // ---> ADD LOGOUT HERE <---
+  document.getElementById('logoutBtn')?.addEventListener('click', async () => {  
+      await Auth.logout();  
+      window.location.href = 'http://teamforge.local/frontend/auth/login.html';
+  });
+  const nBtn = document.getElementById('nBtn'), nPanel = document.getElementById('nPanel');
+  nBtn?.addEventListener('click', e => { e.stopPropagation(); nPanel?.classList.toggle('open'); });
+  document.addEventListener('click', e => {
+    if (sb?.classList.contains('open') && !sb.contains(e.target) && e.target !== burg) sb.classList.remove('open');
+    if (nPanel && !nPanel.contains(e.target) && e.target !== nBtn) nPanel.classList.remove('open');
   });
 
-  // Send Request from profile — reuse existing modal
-  document.getElementById('apSendBtn')?.addEventListener('click', () => {
-    closeProfile();
-    setTimeout(() => openRequestModal(name, triggerBtn), 100);
-  });
-}
+  // ── Initial load ──────────────────────────────────────────────
+  await loadMyProjects();
+  loadAdvisors();
+});

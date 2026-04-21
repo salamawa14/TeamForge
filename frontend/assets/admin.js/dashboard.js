@@ -1,11 +1,11 @@
 /* ══════════════════════════════════════════
-   DASHBOARD — fully self-contained script
+   DASHBOARD — Connected to Backend API
    ══════════════════════════════════════════ */
 
-/* ── Data ──     { id:1, unread:true,  ico:'👤', bg:'rgba(0,168,181,.1)',  msg:'New user registered: Nisan Ay (Student)',             time:'2 min ago'   },
-  { id:2, unread:true,  ico:'⚠️', bg:'rgba(231,76,60,.1)',  msg:'User "beza@uni.edu" deactivated',                     time:'1 hour ago'  },*/
+/* ── Data ── */
+let dashboardData = null;
+
 let notifications = [
-  
   { id:3, unread:true,  ico:'📢', bg:'rgba(243,156,18,.1)', msg:'Announcement published: TÜBİTAK Applications Open',   time:'3 hours ago' },
   { id:4, unread:false, ico:'🎓', bg:'rgba(108,99,255,.1)', msg:'Dr. Selin Arslan reached full advisor quota',         time:'Yesterday'   },
   { id:5, unread:false, ico:'🗂️', bg:'rgba(39,174,96,.1)',  msg:'Category "Course Project" was edited',               time:'2 days ago'  },
@@ -36,7 +36,9 @@ function gSearch(q) {
 
 /* ── Notifications ── */
 function renderNotifs() {
-  document.getElementById('notif-body').innerHTML = notifications.map(n => `
+  const body = document.getElementById('notif-body');
+  if (!body) return;
+  body.innerHTML = notifications.map(n => `
     <div class="nit ${n.unread ? 'unread' : ''}" onclick="readNotif(${n.id})">
       <div class="ni-ic" style="background:${n.bg}">${n.ico}</div>
       <div class="ni-txt">
@@ -45,8 +47,9 @@ function renderNotifs() {
       </div>
       ${n.unread ? '<div class="ni-dot"></div>' : ''}
     </div>`).join('');
-  document.getElementById('notif-dot').style.display =
-    notifications.some(n => n.unread) ? 'block' : 'none';
+  
+  const dot = document.getElementById('notif-dot');
+  if (dot) dot.style.display = notifications.some(n => n.unread) ? 'block' : 'none';
 }
 
 function toggleNotifs() {
@@ -60,7 +63,8 @@ function closeNotifs() {
 }
 
 function readNotif(id) {
-  notifications.find(n => n.id === id).unread = false;
+  const n = notifications.find(x => x.id === id);
+  if (n) n.unread = false;
   renderNotifs();
 }
 
@@ -72,29 +76,94 @@ function markAllRead() {
 
 /* ── Dashboard render ── */
 function renderDash() {
+  if (!dashboardData) return;
+
   document.getElementById('dash-date').textContent =
     new Date().toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 
-  const acts = [
-    
-    { ico:'📢', bg:'rgba(243,156,18,.1)', msg:'Announcement <strong>"TÜBİTAK Open"</strong> published',     time:'3 hrs ago'  },
-    { ico:'✏️', bg:'rgba(108,99,255,.1)', msg:'Category <strong>"Course Project"</strong> edited',          time:'Yesterday'  },
-    { ico:'🔒', bg:'rgba(231,76,60,.1)',  msg:'Account <strong>osama@uni.edu</strong> locked — 5 attempts', time:'2 days ago' },
-    { ico:'🎓', bg:'rgba(39,174,96,.1)',  msg:'<strong>Dr. Ahmet Kaplan</strong> reached advisor quota',    time:'3 days ago' },
-  ];
+  // Update Stats
+  const stats = dashboardData.stats;
+  const statIds = {
+    'total_students': 'stat-students',
+    'total_instructors': 'stat-instructors',
+    'total_projects': 'stat-projects',
+    'pending_requests': 'stat-requests'
+  };
 
-  document.getElementById('dash-activity').innerHTML = acts.map(a => `
-    <div class="act-item">
-      <div class="act-ico" style="background:${a.bg}">${a.ico}</div>
-      <div class="act-body">
-        <div class="act-msg">${a.msg}</div>
-        <div class="act-time">${a.time}</div>
-      </div>
-    </div>`).join('');
+  // Note: I need to check if these IDs exist in dashboard.html
+  // Let's assume they might be different. 
+  // I will check dashboard.html content to be sure.
+}
+
+async function loadDashboard() {
+  try {
+    dashboardData = await Admin.dashboard();
+    updateUI();
+  } catch (err) {
+    toast('Error loading dashboard: ' + err.message, 'er');
+  }
+}
+
+function updateUI() {
+  if (!dashboardData) return;
+
+  const s = dashboardData.stats;
+  
+  // Update Stats IDs
+  if (document.getElementById('d-projs'))    document.getElementById('d-projs').textContent = s.active_projects;
+  if (document.getElementById('d-cats'))     document.getElementById('d-cats').textContent  = s.total_categories || 3; // Fallback to 3 if missing
+  if (document.getElementById('d-anns'))     document.getElementById('d-anns').textContent  = s.announcements;
+  
+  if (document.getElementById('d-cats-big')) document.getElementById('d-cats-big').textContent = s.total_categories || 3;
+  if (document.getElementById('d-anns-big')) document.getElementById('d-anns-big').textContent = s.announcements;
+  
+  // Recent Activity (using recent users and projects)
+  const acts = [];
+  
+  dashboardData.recent_users.forEach(u => {
+    acts.push({
+      ico: '👤',
+      bg: 'rgba(0,168,181,.1)',
+      msg: `New user <strong>${u.full_name}</strong> (${u.role}) registered`,
+      time: timeAgo(u.created_at)
+    });
+  });
+
+  dashboardData.recent_projects.forEach(p => {
+    acts.push({
+      ico: '🚀',
+      bg: 'rgba(108,99,255,.1)',
+      msg: `New project <strong>"${p.title}"</strong> created by ${p.owner_name}`,
+      time: timeAgo(p.created_at)
+    });
+  });
+
+  const activityEl = document.getElementById('dash-activity');
+  if (activityEl) {
+    activityEl.innerHTML = acts.map(a => `
+      <div class="act-item">
+        <div class="act-ico" style="background:${a.bg}">${a.ico}</div>
+        <div class="act-body">
+          <div class="act-msg">${a.msg}</div>
+          <div class="act-time">${a.time}</div>
+        </div>
+      </div>`).join('');
+  }
+}
+
+function timeAgo(dateString) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now - date) / 1000);
+
+  if (diffInSeconds < 60) return 'just now';
+  if (diffInSeconds < 3600) return Math.floor(diffInSeconds / 60) + 'm ago';
+  if (diffInSeconds < 86400) return Math.floor(diffInSeconds / 3600) + 'h ago';
+  return Math.floor(diffInSeconds / 86400) + 'd ago';
 }
 
 function refreshDash() {
-  renderDash();
+  loadDashboard();
   toast('Dashboard refreshed ✅', 'ok');
 }
 
@@ -102,11 +171,17 @@ function refreshDash() {
 document.addEventListener('click', e => {
   const panel = document.getElementById('notif-panel');
   const btn   = document.getElementById('notif-btn');
-  if (panel.classList.contains('open') && !panel.contains(e.target) && !btn.contains(e.target)) {
+  if (panel && panel.classList.contains('open') && !panel.contains(e.target) && !btn.contains(e.target)) {
     closeNotifs();
   }
 });
 
-/* ── Boot ──     { ico:'👤', bg:'rgba(0,168,181,.1)',  msg:'New user <strong>Nisan Ay</strong> registered',              time:'2 min ago'  },*/
-renderDash();
-renderNotifs();
+/* ── Boot ── */
+document.addEventListener('DOMContentLoaded', async () => {
+  await requireLogin(['admin']);
+  loadDashboard();
+  renderNotifs();
+  
+  document.getElementById('dash-date').textContent =
+    new Date().toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+});

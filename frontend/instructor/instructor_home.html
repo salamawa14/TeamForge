@@ -24,17 +24,18 @@
       <p class="nav-label">MAIN</p>
       <a href="#" class="nav-item active">🏠 Home</a>
       <a href="dashboard_insructor.html" class="nav-item">📊 Dashboard</a>
-      <a href="advisor_req_insrtoctor.html" class="nav-item">👤 Advisor Requests <span class="badge">3</span></a>
+      <a href="advisor_req_insrtoctor.html" class="nav-item">👤 Advisor Requests <span class="badge" id="sidebar-pending-badge" style="display:none;">0</span></a>
       <a href="advisees_instructor.html" class="nav-item">👥 My Advisees</a>
       <p class="nav-label">ACCOUNT</p>
       <a href="profile_instructor.html" class="nav-item">👤 My Profile</a>
       <a href="set_acc_instructor.html" class="nav-item">⚙️ Settings</a>
+      <button class="nav-item" style="width:100%; background:none; border:none; cursor:pointer; text-align:left; color:#ef4444; margin-top:10px;" onclick="if(confirm('Sign out?')) Auth.logout().then(() => window.location.href='../auth/login.html')">⎋ Logout</button>
     </nav>
     <div class="sidebar-user">
-      <div class="avatar">AK</div>
+      <div class="avatar" id="sidebar-avatar">--</div>
       <div>
-        <div class="u-name">Dr. Ahmet Kaplan</div>
-        <div class="u-sub">Computer Eng.</div>
+        <div class="user-name">Loading...</div>
+        <div class="user-sub">Instructor</div>
       </div>
     </div>
   </aside>
@@ -69,17 +70,17 @@
 
       <div class="hero">
         <div class="hero-text">
-          <h1>Welcome back, <span class="teal">Dr. Kaplan</span> 🧑‍🏫</h1>
-          <h2>You have 3 pending requests.</h2>
+          <h1 id="hero-welcome">Welcome back, <span class="teal">Instructor</span> 🧑‍🏫</h1>
+          <h2 id="hero-subtitle">You have 0 pending requests.</h2>
           <p>Browse student profiles, manage advisor requests, and track the platform's activity. Your expertise shapes the next generation of researchers.</p>
           <div class="hero-btns">
-            <button id="heroReviewBtn" type="button" class="btn-primary" >✓ Review Requests ( 3 )</button> 
+            <button id="heroReviewBtn" type="button" class="btn-primary" >✓ Review Requests ( 0 )</button> 
           </div>
         </div>
         <div class="hero-stats">
-          <div class="hstat"><span class="hnum teal">4</span><span class="hlabel">ACTIVE ADVISEES</span></div>
-          <div class="hstat"><span class="hnum purple">3</span><span class="hlabel">PENDING REQUESTS</span></div>
-          <div class="hstat"><span class="hnum orange">1</span><span class="hlabel">OPEN SLOT</span></div>
+          <div class="hstat"><span class="hnum teal" id="hero-active-advisees">0</span><span class="hlabel">ACTIVE ADVISEES</span></div>
+          <div class="hstat"><span class="hnum purple" id="hero-pending-requests">0</span><span class="hlabel">PENDING REQUESTS</span></div>
+          <div class="hstat"><span class="hnum orange" id="hero-open-slots">0</span><span class="hlabel">OPEN SLOT</span></div>
         </div>
       </div>
 
@@ -89,12 +90,12 @@
         <span class="avail-tag on active" data-project="tubitak" data-status="available">✓ Available</span><!--<span class="avail-tag off inactive" data-project="tubitak" data-status="unavailable">✗ Unavailable</span>-->
         <span class="avail-comp">Teknofest</span>
         <!--<span class="avail-tag on active" data-project="teknofest" data-status="available">✓ Available</span>--><span class="avail-tag off inactive" data-project="teknofest" data-status="unavailable">✗ Unavailable</span>
-        <span class="avail-quota">Quota: <strong>4/5</strong> slots used</span>
+        <span class="avail-quota">Quota: <strong id="quota-used">0/5</strong> slots used</span>
       </div>
 
       <div class="stat-cards">
         <div class="stat-card"><div class="sicon orange-bg">📋</div><div><div class="snum" id="pending-count">3</div><div class="slabel">Pending Requests</div></div><span class="stag orange-tag">Action needed</span></div>
-        <div class="stat-card"><div class="sicon teal-bg">✅</div><div><div class="snum">4</div><div class="slabel">Active Advisees</div></div></div>
+        <div class="stat-card"><div class="sicon teal-bg">✅</div><div><div class="snum" id="active-advisees-count">0</div><div class="slabel">Active Advisees</div></div></div>
       </div>
 
       <div class="grid">
@@ -305,8 +306,8 @@
   </div>
 </div>
 
+<script src="../../teamforge-backend/assets/js/api.js"></script>
 <script src="../assets/instructor.js/instructor_home.js"></script>
 <script src="../assets/instructor.js/notification.js"></script>
 </body>
 </html>
-

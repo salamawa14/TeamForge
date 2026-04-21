@@ -31,6 +31,10 @@
       <a class="sb-link" href="My-Profile.html"><span class="sb-icon">👤</span>My Profile</a>
       <p class="sb-group">SETTINGS</p>
       <a class="sb-link active" href="Settings.html"><span class="sb-icon">⚙</span>Settings</a>
+      <p class="sb-group">SESSION</p>
+      <button class="sb-link sb-logout" id="logoutBtn" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;color:var(--red)">
+        <span class="sb-icon">🚪</span>Log Out
+      </button>
     </nav>
     <div class="sb-user">
     </div>
@@ -55,13 +59,10 @@
         <a href="My-Profile.html">
        <div class="avatar">JS</div>
         </a>
-        <div class="notif-panel" id="nPanel">
-          <div class="np-head">Notifications</div>
-          <div class="np-item unread"><span class="np-ico">✅</span><div class="np-body"><strong>Application Accepted</strong><span>Autonomous Drone Navigation · 3 days ago</span></div></div>
-          <div class="np-item unread"><span class="np-ico">📨</span><div class="np-body"><strong>New Team Invite</strong><span>AR Campus Navigation · 5 days ago</span></div></div>
-          <div class="np-item"><span class="np-ico">📅</span><div class="np-body"><strong>Deadline Reminder</strong><span>Teknofest closes Apr 15</span></div></div>
-        </div>
-      </div>
+       <div class="notif-panel" id="nPanel">
+  <div class="np-head">Notifications <span id="notif-unread-count"></span></div>
+  <!-- loaded by JS -->
+</div>
     </header>
 
     <!-- Page content -->
@@ -400,7 +401,7 @@
     </main>
   </div><!-- /main -->
 </div><!-- /shell -->
-
+<script src="../../teamforge-backend/assets/js/api.js"></script>
 <script src="../assets/js/Student-Settings.js"></script>
 </body>
 </html>

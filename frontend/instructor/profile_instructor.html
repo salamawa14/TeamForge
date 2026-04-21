@@ -28,7 +28,7 @@
       <p class="nav-label">MAIN</p>
       <a href="instructor_home.html"  class="nav-item">🏠 Home</a>
       <a href="dashboard_insructor.html"        class="nav-item">📊 Dashboard</a>
-      <a href="advisor_req_insrtoctor.html" class="nav-item ">👤 Advisor Requests <span class="nav-badge">3</span></a>
+      <a href="advisor_req_insrtoctor.html" class="nav-item ">👤 Advisor Requests <span class="nav-badge" style="display:none;">0</span></a>
       <a href="advisees_instructor.html"      class="nav-item ">👥 My Advisees</a>
       <p class="nav-label">ACCOUNT</p>
       <a href="profile_instructor.html" class="nav-item active">👤 My Profile</a>
@@ -36,10 +36,10 @@
     </nav>
 
     <div class="sidebar-user">
-      <div class="avatar">AK</div>
+      <div class="avatar" id="sidebar-avatar">--</div>
       <div>
-        <div class="user-name">Dr. Ahmet Kaplan</div>
-        <div class="user-sub">Computer Eng.</div>
+        <div class="user-name">Loading...</div>
+        <div class="user-sub">Instructor</div>
       </div>
     </div>
   </aside>
@@ -82,9 +82,9 @@
 
         <!-- Left: Profile Card -->
         <div class="profile-card">
-          <div class="profile-avatar">AK</div>
-          <div class="profile-name">Dr. Ahmet Kaplan</div>
-          <div class="profile-role">Associate Professor · Computer Engineering</div>
+          <div class="profile-avatar" id="profile-avatar">--</div>
+          <div class="profile-name">Loading...</div>
+          <div class="profile-role">Instructor</div>
           <div class="skill-tags">
             <span class="skill-tag">Machine Learning</span>
             <span class="skill-tag">Computer Vision</span>
@@ -102,36 +102,36 @@
 
           <div class="form-group">
             <label class="form-label">Full Name</label>
-            <input class="form-input" type="text" id="full-name" value="Dr. Ahmet Kaplan" />
+            <input class="form-input" type="text" id="full-name" value="" />
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">Department</label>
-              <input class="form-input" type="text" id="department" value="Computer Engineering" />
+              <input class="form-input" type="text" id="department" value="" />
             </div>
             <div class="form-group">
               <label class="form-label">Academic Title</label>
-              <input class="form-input" type="text" id="academic-title" value="Associate Professor" />
+              <input class="form-input" type="text" id="academic-title" value="" />
             </div>
           </div>
 
           <div class="form-group">
             <label class="form-label">Areas of Expertise</label>
-            <input class="form-input" type="text" id="expertise" value="Machine Learning, Computer Vision, IoT" />
+            <input class="form-input" type="text" id="expertise" value="" />
           </div>
 
           <div class="form-group">
             <label class="form-label">Research Interests</label>
-            <input class="form-input" type="text" id="research" value="Deep Learning, Embedded AI, Smart Systems" />
+            <input class="form-input" type="text" id="research" value="" />
           </div>
 
           <div class="form-group">
             <label class="form-label">Previously Supervised</label>
-            <input class="form-input" type="text" id="supervised" value="TÜBİTAK 2209-A, Teknofest UAV, Teknofest AI" />
+            <input class="form-input" type="text" id="supervised" value="" />
           </div>
 
-          <!--<div class="form-group">
+          <div class="form-group">
             <label class="form-label">Advising Availability</label>
             <div class="avail-row">
               <span class="avail-badge tubitak" id="badge-tubitak">TÜBİTAK: AVAILABLE</span>
@@ -145,8 +145,9 @@
       </div>
     </div>
   </div>
-</div>-->
+</div>
 
+<script src="../../teamforge-backend/assets/js/api.js"></script>
 <script src="../assets/instructor.js/profile_instructor.js"></script>
 <script src="../assets/instructor.js/notification.js"></script>
 </body>

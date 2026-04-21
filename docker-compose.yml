@@ -1,0 +1,41 @@
+services:
+  app:
+    build: .
+    container_name: teamforge_app
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html:Z
+    environment:
+      - DB_HOST=db
+      - DB_NAME=teamforge
+      - DB_USER=root
+      - DB_PASS=root
+    restart: always
+
+  db:
+    image: mysql:8.0
+    container_name: teamforge_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: teamforge
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./teamforge-backend/database:/docker-entrypoint-initdb.d
+      - teamforge_db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: teamforge_pma
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    restart: always
+
+volumes:
+  teamforge_db_data:

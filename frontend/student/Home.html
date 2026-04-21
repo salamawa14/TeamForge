@@ -31,6 +31,10 @@
       <a class="sb-link" href="My-Profile.html"><span class="sb-icon">👤</span>My Profile</a>
       <p class="sb-group">SETTINGS</p>
       <a class="sb-link" href="Settings.html"><span class="sb-icon">⚙</span>Settings</a>
+      <p class="sb-group">SESSION</p>
+      <button class="sb-link sb-logout" id="logoutBtn" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;color:var(--red)">
+        <span class="sb-icon">🚪</span>Log Out
+      </button>
     </nav>
   </aside>
 
@@ -54,21 +58,9 @@
        <div class="avatar">JS</div>
         </a>
         <div class="notif-panel" id="nPanel">
-          <div class="np-head">Notifications</div>
-          <div class="np-item unread">
-            <span class="np-ico">✅</span>
-            <div class="np-body"><strong>Application Accepted</strong><span>Autonomous Drone Navigation · 3 days ago</span></div>
-          </div>
-          <div class="np-item unread">
-            <span class="np-ico">📨</span>
-            <div class="np-body"><strong>New Team Invite</strong><span>AR Campus Navigation App · 5 days ago</span></div>
-          </div>
-          <div class="np-item">
-            <span class="np-ico">📅</span>
-            <div class="np-body"><strong>Deadline Reminder</strong><span>Teknofest closes Apr 15</span></div>
-          </div>
-        </div>
-      </div>
+  <div class="np-head">Notifications <span id="notif-unread-count"></span></div>
+  <!-- loaded by JS -->
+</div>
     </header>
 
     <!-- Page -->

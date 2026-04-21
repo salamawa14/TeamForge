@@ -1,21 +1,87 @@
-// ════════════════════════════════════════
-// AUTO-DISAPPEARING TOAST NOTIFICATION
-// ════════════════════════════════════════
+/* ══════════════════════════════════════════
+   INSTRUCTOR HOME — Connected to Backend
+   ══════════════════════════════════════════ */
+
+async function loadHome() {
+  try {
+    const data = await Instructor.dashboard();
+    renderRequests(data.recent_requests);
+    
+    const pendCount = document.getElementById('pending-count');
+    if (pendCount) pendCount.textContent = data.stats.pending_requests;
+    const heroPending = document.getElementById('hero-pending-requests');
+    if (heroPending) heroPending.textContent = data.stats.pending_requests;
+    const heroActive = document.getElementById('hero-active-advisees');
+    if (heroActive) heroActive.textContent = data.stats.total_advisees || 0;
+    const activeAdvisees = document.getElementById('active-advisees-count');
+    if (activeAdvisees) activeAdvisees.textContent = data.stats.total_advisees || 0;
+    const heroOpenSlots = document.getElementById('hero-open-slots');
+    if (heroOpenSlots) heroOpenSlots.textContent = Math.max(0, 5 - (data.stats.active_projects || 0));
+    const quotaUsed = document.getElementById('quota-used');
+    if (quotaUsed) quotaUsed.textContent = `${data.stats.active_projects || 0}/5`;
+    const heroSubtitle = document.getElementById('hero-subtitle');
+    if (heroSubtitle) {
+      const pending = data.stats.pending_requests || 0;
+      heroSubtitle.textContent = pending === 1 ? 'You have 1 pending request.' : `You have ${pending} pending requests.`;
+    }
+    const reviewBtn = document.getElementById('heroReviewBtn');
+    if (reviewBtn) reviewBtn.textContent = `✓ Review Requests ( ${data.stats.pending_requests || 0} )`;
+    const sidebarBadge = document.getElementById('sidebar-pending-badge');
+    if (sidebarBadge) {
+      sidebarBadge.textContent = data.stats.pending_requests || 0;
+      sidebarBadge.style.display = (data.stats.pending_requests || 0) > 0 ? 'inline-block' : 'none';
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function renderRequests(requests) {
+  const container = document.querySelector('.pending-list');
+  if (!container) return;
+  const pendingRequests = (requests || []).filter(r => r.status === 'Pending');
+
+  if (pendingRequests.length === 0) {
+    container.innerHTML = '<p style="padding:1rem; opacity:0.6">No pending requests.</p>';
+    return;
+  }
+
+  container.innerHTML = pendingRequests.map(r => `
+    <div class="request-item" id="req-${r.adv_request_id}">
+      <div class="request-av" style="background:#3b82f6">${r.student_name.split(' ').map(n => n[0]).join('')}</div>
+      <div class="request-info">
+        <div class="request-student">${r.student_name}</div>
+        <div class="request-project">Project: ${r.project_title}</div>
+      </div>
+      <div class="request-actions">
+        <button class="rbtn-accept" onclick="respondHome('${r.adv_request_id}', 'accept', '${r.student_name}', '${r.project_title}')">Accept</button>
+        <button class="rbtn-reject" onclick="respondHome('${r.adv_request_id}', 'reject', '${r.student_name}', '${r.project_title}')">Reject</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function respondHome(id, action, name, project) {
+    const title = action === 'accept' ? 'Confirm Application' : 'Confirm Rejection';
+    const message = action === 'accept'
+        ? `The project leader will review ${name}'s profile and skills before accepting or declining your request.`
+        : `Are you sure you want to REJECT ${name}'s request for ${project}?`;
+
+    showConfirmModal(title, message, async () => {
+        try {
+            await Instructor.reviewRequest(id, action);
+            showSuccessToast(action, name, project);
+            loadHome(); // Refresh
+        } catch (err) {
+            alert('Error: ' + err.message);
+        }
+    });
+}
+
 function showSuccessToast(type, studentName, projectName) {
   const isAvailability = type === 'avail';
   const isSuccess = type === 'accept' || type === 'avail';
-  
-  let title, student, project;
-  
-  if (isAvailability) {
-    title = 'AVAILABILITY UPDATED!';
-    student = studentName; // This will be project name like "TÜBİTAK"
-    project = projectName; // This will be status like "✓ Available"
-  } else {
-    title = type === 'accept' ? 'REQUEST ACCEPTED!' : 'REQUEST REJECTED!';
-    student = studentName;
-    project = projectName;
-  }
+  let title = type === 'accept' ? 'REQUEST ACCEPTED!' : 'REQUEST REJECTED!';
   
   const toast = document.createElement('div');
   toast.className = 'success-toast';
@@ -26,153 +92,19 @@ function showSuccessToast(type, studentName, projectName) {
       </div>
       <div class="toast-text">
         <div class="toast-title">${title}</div>
-        <div class="toast-student">📌 ${student}</div>
-        <div class="toast-project">${project}</div>
+        <div class="toast-student">📌 ${studentName}</div>
+        <div class="toast-project">${projectName}</div>
       </div>
     </div>
   `;
-  
   document.body.appendChild(toast);
-  
   setTimeout(() => {
     toast.style.animation = 'toastSlideDown 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
     setTimeout(() => toast.remove(), 300);
   }, 3000);
 }
 
-// ════════════════════════════════════════
-document.addEventListener("DOMContentLoaded", () => {
-  const tabs = document.querySelectorAll(".tab");
-  const panels = document.querySelectorAll(".tab-panel");
-
-  function activateTab(target) {
-    const panel = document.getElementById(`tab-${target}`);
-    if (!panel) return;
-
-    tabs.forEach(tab => {
-      tab.classList.toggle("active", tab.dataset.tab === target);
-    });
-
-    panels.forEach(p => {
-      p.classList.toggle("active", p.id === `tab-${target}`);
-    });
-  }
- 
-
-document.addEventListener('click', function() {
-  document.getElementById('notif-dropdown').classList.remove('open');
-});
-const profileBtn = document.getElementById("profileBtn");
-const editProfile = document.getElementById("editprofile");
-const revReq = document.getElementById("revReq");
-const heroReviewBtn = document.getElementById("heroReviewBtn");
-
-if (profileBtn) {
-  profileBtn.addEventListener("click", function () {
-    window.location.href = "profile_instructor.html";
-  });
-}
-
-if (editProfile) {
-  editProfile.addEventListener("click", function () {
-    window.location.href = "profile_instructor.html";
-  });
-}
-
-if (revReq) {
-  revReq.addEventListener("click", function () {
-    window.location.href = "advisor_req_insrtoctor.html";
-  });
-}
-
-if (heroReviewBtn) {
-  heroReviewBtn.addEventListener("click", function () {
-    window.location.href = "advisor_req_insrtoctor.html";
-  });
-}
-
-
-  tabs.forEach(tab => {
-    tab.addEventListener("click", (e) => {
-      e.preventDefault();
-      activateTab(tab.dataset.tab);
-    });
-  });
-  
-  const heroBrowseBtn = document.getElementById("heroBrowseBtn");
- 
-  const browseBtn = document.getElementById("browseBtn");
-  const reqBtn = document.getElementById("reqBtn");
-  const projectBtn = document.getElementById("projectBtn");
-  
- 
-  if (heroReviewBtn) {
-    heroReviewBtn.addEventListener("click", () => activateTab("overview"));
-  }
-
-  if (browseBtn) {
-    browseBtn.addEventListener("click", () => activateTab("students"));
-  }
-
-  if (reqBtn) {
-    reqBtn.addEventListener("click", () => activateTab("overview"));
-  }
-
-  if (projectBtn) {
-    projectBtn.addEventListener("click", () => activateTab("projects"));
-  }
-
-  const searchInput = document.getElementById("student-search");
-  const clearBtn = document.getElementById("btn-clear");
-  const studentCards = document.querySelectorAll(".student-card");
-
-  function filterStudents() {
-    const q = (searchInput?.value || "").trim().toLowerCase();
-
-    studentCards.forEach(card => {
-      const fullText = [
-        card.dataset.name || "",
-        card.dataset.dept || "",
-        card.dataset.year || "",
-        card.dataset.status || "",
-        card.textContent || ""
-      ].join(" ").toLowerCase();
-
-      card.style.display = !q || fullText.includes(q) ? "" : "none";
-    });
-  }
-
-  if (searchInput) {
-    searchInput.addEventListener("input", filterStudents);
-  }
-
-  if (clearBtn) {
-    clearBtn.addEventListener("click", () => {
-      if (searchInput) searchInput.value = "";
-      filterStudents();
-    });
-  }
-  
-  const projectSearch = document.getElementById("proj-search");
-  const projectCards = document.querySelectorAll(".proj-card");
-  
-  function filterProjects() {
-    const q = (projectSearch?.value || "").trim().toLowerCase();
-
-    projectCards.forEach(card => {
-      const text = card.textContent.toLowerCase();
-      card.style.display = !q || text.includes(q) ? "" : "none";
-    });
-  }
-
-  if (projectSearch) {
-    projectSearch.addEventListener("input", filterProjects);
-  }
-  filterStudents();
-  filterProjects();
-  
-  // ===== CUSTOM CONFIRMATION MODAL =====
-  function showConfirmModal(title, message, onConfirm) {
+function showConfirmModal(title, message, onConfirm) {
     const modal = document.createElement('div');
     modal.className = 'confirm-modal-overlay';
     modal.innerHTML = `
@@ -186,166 +118,30 @@ if (heroReviewBtn) {
         </div>
       </div>
     `;
-    
     document.body.appendChild(modal);
-    
-    const btnConfirm = modal.querySelector('.btn-confirm');
-    const btnCancel = modal.querySelector('.btn-cancel');
-    
-    btnConfirm.addEventListener('click', function() {
-      modal.remove();
-      onConfirm();
-    });
-    
-    btnCancel.addEventListener('click', function() {
-      modal.remove();
-    });
-    
-    modal.addEventListener('click', function(e) {
-      if (e.target === modal) {
-        modal.remove();
-      }
-    });
+    modal.querySelector('.btn-confirm').onclick = () => { modal.remove(); onConfirm(); };
+    modal.querySelector('.btn-cancel').onclick = () => modal.remove();
+}
+
+/* ── Init ── */
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = await requireLogin(['instructor']);
+  if (user) {
+    const sidebarName = document.querySelector('.user-name, .u-name');
+    const sidebarSub = document.querySelector('.user-sub, .u-sub');
+    const welcome = document.getElementById('hero-welcome');
+    const initials = user.full_name.split(' ').filter(Boolean).slice(0, 2).map(n => n[0]).join('').toUpperCase();
+    if (sidebarName) sidebarName.textContent = user.full_name;
+    if (sidebarSub) sidebarSub.textContent = user.department || 'Instructor';
+    if (welcome) welcome.innerHTML = `Welcome back, <span class="teal">${user.full_name}</span> 🧑‍🏫`;
+    const avatar = document.getElementById('sidebar-avatar');
+    if (avatar) avatar.textContent = initials || 'IN';
+    loadHome();
   }
-  
-  // ===== FIXES FOR: Availability, Teknofest Tags, Pending Requests =====
-  
-  // FIX 1: AVAILABILITY TOGGLE
-   // ===== const availTags = document.querySelectorAll('.avail-tag');
-  
-  // availTags.forEach(tag => {
-   //  tag.addEventListener('click', function(e) {
-    //   e.preventDefault();
-    //   e.stopPropagation();
-      
-     //  const project = this.dataset.project;
-     //  const status = this.dataset.status;
-      // const statusText = status === 'available' ? '✓ Available' : '✗ Unavailable';
-      // const projectName = project === 'teknofest' ? 'TEKNOFEST' : 'TÜBİTAK';
-      
-      // showConfirmModal(
-       //  'Confirm Availability',
-       //  `Are you sure you want to set ${projectName} to ${statusText}?`,
-        // () => {
-        //   const projectTags = document.querySelectorAll(`[data-project="${project}"]`);
-          
-        //   projectTags.forEach(tag => {
-        //     tag.classList.remove('active');
-        //     tag.classList.add('inactive');
-      //     });
-          
-       //    this.classList.remove('inactive');
-        //   this.classList.add('active');
-          
-       //    showSuccessToast('avail', projectName, statusText);
-       //  }
-     //  );
-    // });
-   //});
 
-  // FIX 2: TEKNOFEST & TUBITAK TAGS
-  const teknofestTags = document.querySelectorAll('.teknofest-tag');
-  
-  teknofestTags.forEach(tag => {
-    tag.style.cursor = 'pointer';
-    
-    tag.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      alert('TEKNOFEST PROJECT - Interactive tag working!');
-    });
-    
-    tag.addEventListener('mouseenter', function() {
-      this.style.transform = 'scale(1.1)';
-      this.style.boxShadow = '0 0 12px rgba(249, 158, 11, 0.4)';
-    });
-    
-    tag.addEventListener('mouseleave', function() {
-      this.style.transform = 'scale(1)';
-      this.style.boxShadow = 'none';
-    });
-  });
-
-  const tubitakTags = document.querySelectorAll('.tubitak-tag');
-  
-  tubitakTags.forEach(tag => {
-    tag.style.cursor = 'pointer';
-    
-    tag.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      alert('TÜBİTAK PROJECT - Interactive tag working!');
-    });
-    
-    tag.addEventListener('mouseenter', function() {
-      this.style.transform = 'scale(1.1)';
-      this.style.boxShadow = '0 0 12px rgba(59, 130, 246, 0.4)';
-    });
-    
-    tag.addEventListener('mouseleave', function() {
-      this.style.transform = 'scale(1)';
-      this.style.boxShadow = 'none';
-    });
-  });
-
-  // FIX 3: PENDING ADVISOR REQUESTS
-  const accButtons = document.querySelectorAll('.rbtn-accept');
-  const rejButtons = document.querySelectorAll('.rbtn-reject');
-  let pendingCount = 3;
-
-  accButtons.forEach(btn => {
-    btn.addEventListener('click', function() {
-      const itemId = this.dataset.id;
-      const requestItem = document.getElementById(itemId);
-      const studentName = this.dataset.student;
-      const projectName = this.dataset.project;
-      
-      showConfirmModal(
-        'Confirm Application',
-        `The project leader will review ${studentName}'s profile and skills before accepting or declining your request.`,
-        () => {
-          requestItem.classList.add('accepted');
-          requestItem.classList.remove('rejected');
-          requestItem.style.opacity = '0.6';
-          
-          requestItem.querySelectorAll('button').forEach(b => {
-            b.disabled = true;
-          });
-          
-          pendingCount--;
-          document.getElementById('pending-count').textContent = pendingCount;
-          
-          showSuccessToast('accept', studentName, projectName);
-        }
-      );
-    });
-  });
-
-  rejButtons.forEach(btn => {
-    btn.addEventListener('click', function() {
-      const itemId = this.dataset.id;
-      const requestItem = document.getElementById(itemId);
-      const studentName = this.dataset.student;
-      const projectName = this.dataset.project;
-      
-      showConfirmModal(
-        'Confirm Rejection',
-        `Are you sure you want to REJECT ${studentName}'s request for ${projectName}?`,
-        () => {
-          requestItem.classList.add('rejected');
-          requestItem.classList.remove('accepted');
-          requestItem.style.opacity = '0.6';
-          
-          requestItem.querySelectorAll('button').forEach(b => {
-            b.disabled = true;
-          });
-          
-          pendingCount--;
-          document.getElementById('pending-count').textContent = pendingCount;
-          
-          showSuccessToast('reject', studentName, projectName);
-        }
-      );
-    });
-  });
+  // Sidebar navigation
+  document.getElementById("profileBtn")?.addEventListener("click", () => window.location.href = "profile_instructor.html");
+  document.getElementById("editprofile")?.addEventListener("click", () => window.location.href = "profile_instructor.html");
+  document.getElementById("revReq")?.addEventListener("click", () => window.location.href = "advisor_req_insrtoctor.html");
+  document.getElementById("heroReviewBtn")?.addEventListener("click", () => window.location.href = "advisor_req_insrtoctor.html");
 });

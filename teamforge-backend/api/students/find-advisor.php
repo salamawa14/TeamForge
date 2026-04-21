@@ -15,20 +15,36 @@ $uid  = $user['user_id'];
 
 // ── GET: list advisors ───────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $search = $_GET['search'] ?? null;
+    // My sent advisor requests
+    if (isset($_GET['my_requests'])) {
+        $stmt = $db->prepare('
+            SELECT ar.adv_request_id, ar.status, ar.requested_at,
+                   ar.project_title, ar.project_type,
+                   u.full_name AS advisor_name
+            FROM advisor_requests ar
+            JOIN users u ON u.user_id = ar.advisor_id
+            WHERE ar.student_id = ?
+            ORDER BY ar.requested_at DESC
+        ');
+        $stmt->execute([$uid]);
+        success($stmt->fetchAll());
+    }
 
+    // List all advisors (with search)
+    $search = $_GET['search'] ?? '';
+    
     $sql = '
-        SELECT u.user_id, u.full_name, u.department,
-               ip.academic_title, ip.areas_of_expertise,
-               ip.research_interests, ip.supervised_proj_types, ip.advising_status
-        FROM users u
-        JOIN instructor_profiles ip ON ip.user_id = u.user_id
-        WHERE u.role = "instructor" AND ip.advising_status = "Active"
+        SELECT u.user_id, u.full_name, u.department, 
+               ip.academic_title, ip.areas_of_expertise, ip.supervised_proj_types, ip.advising_status 
+        FROM users u 
+        JOIN instructor_profiles ip ON u.user_id = ip.user_id 
+        WHERE u.role = "instructor"
     ';
+    
     $params = [];
 
     if ($search) {
-        $sql .= ' AND (u.full_name LIKE ? OR u.department LIKE ? OR ip.research_interests LIKE ?)';
+        $sql .= ' AND (u.full_name LIKE ? OR u.department LIKE ? OR ip.areas_of_expertise LIKE ?)';
         $params = ["%$search%", "%$search%", "%$search%"];
     }
 

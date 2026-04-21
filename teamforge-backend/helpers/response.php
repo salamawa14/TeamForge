@@ -4,9 +4,13 @@
 //  Sets headers and provides JSON response helpers
 // ============================================================
 
-// Allow your frontend origin (update port if needed)
-header('Access-Control-Allow-Origin: http://localhost');
-header('Access-Control-Allow-Origin: *');          // Use during development
+// Allow origin for development (works for both Docker and XAMPP)
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+    header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+} else {
+    header('Access-Control-Allow-Origin: *');
+}
+header('Access-Control-Allow-Credentials: true');         // Use during development
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json; charset=utf-8');

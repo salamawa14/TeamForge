@@ -57,31 +57,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $req = $stmt->fetch();
 
     if (!$req) error('Request not found.', 404);
-    if ($req['status'] !== 'Pending') error('This request has already been reviewed.');
+    if ($req['status'] !== 'Pending') {
+        if (
+            ($action === 'accept' && $req['status'] === 'Accepted') ||
+            ($action === 'reject' && $req['status'] === 'Rejected')
+        ) {
+            success([], 'Request already ' . strtolower($req['status']) . '.');
+        }
+        error('This request has already been reviewed.');
+    }
 
     $new_status = $action === 'accept' ? 'Accepted' : 'Rejected';
 
-    $db->prepare('
-        UPDATE advisor_requests SET status = ?, reviewed_at = NOW()
-        WHERE adv_request_id = ?
-    ')->execute([$new_status, $req_id]);
+    try {
+        $db->beginTransaction();
 
-    if ($action === 'accept') {
-        // Assign advisor to project
+        if ($action === 'accept') {
+            $projectStmt = $db->prepare('
+                SELECT advisor_id FROM projects WHERE project_id = ? FOR UPDATE
+            ');
+            $projectStmt->execute([$req['project_id']]);
+            $project = $projectStmt->fetch();
+
+            if (!$project) {
+                throw new RuntimeException('Project not found.');
+            }
+
+            if (!empty($project['advisor_id']) && $project['advisor_id'] !== $uid) {
+                throw new RuntimeException('This project already has an advisor.');
+            }
+        }
+
         $db->prepare('
-            UPDATE projects SET advisor_id = ? WHERE project_id = ?
-        ')->execute([$uid, $req['project_id']]);
+            UPDATE advisor_requests SET status = ?, reviewed_at = NOW()
+            WHERE adv_request_id = ?
+        ')->execute([$new_status, $req_id]);
+
+        if ($action === 'accept') {
+            $db->prepare('
+                UPDATE projects SET advisor_id = ? WHERE project_id = ?
+            ')->execute([$uid, $req['project_id']]);
+
+            $db->prepare('
+                UPDATE advisor_requests
+                SET status = "Rejected", reviewed_at = NOW()
+                WHERE project_id = ? AND adv_request_id <> ? AND status = "Pending"
+            ')->execute([$req['project_id'], $req_id]);
+        }
+
+        $db->commit();
+    } catch (RuntimeException $e) {
+        if ($db->inTransaction()) {
+            $db->rollBack();
+        }
+
+        $code = $e->getMessage() === 'Project not found.' ? 404 : 409;
+        error($e->getMessage(), $code);
+    } catch (Throwable $e) {
+        if ($db->inTransaction()) {
+            $db->rollBack();
+        }
+
+        error('Could not update advisor request.', 500);
     }
 
-    // Notify student
-    $msg = $action === 'accept'
-        ? $user['full_name'] . ' accepted your advisor request for "' . $req['project_title'] . '".'
-        : $user['full_name'] . ' declined your advisor request for "' . $req['project_title'] . '".';
+    try {
+        $msg = $action === 'accept'
+            ? $user['full_name'] . ' accepted your advisor request for "' . $req['project_title'] . '".'
+            : $user['full_name'] . ' declined your advisor request for "' . $req['project_title'] . '".';
 
-    $db->prepare('
-        INSERT INTO notifications (notification_id, user_id, type, message)
-        VALUES (?, ?, "advisor_response", ?)
-    ')->execute([bin2hex(random_bytes(16)), $req['student_id'], $msg]);
+        $db->prepare('
+            INSERT INTO notifications (notification_id, user_id, type, message)
+            VALUES (?, ?, "advisor_response", ?)
+        ')->execute([bin2hex(random_bytes(16)), $req['student_id'], $msg]);
+    } catch (Throwable $e) {
+        // A notification failure should not undo a valid accept/reject action.
+    }
 
     success([], ucfirst($action) . 'ed successfully.');
 }

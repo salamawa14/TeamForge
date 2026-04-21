@@ -117,10 +117,10 @@
           <!-- Quota bar -->
           <div class="quota-label-row">
             <span class="form-label" style="margin:0;">Advisor Quota</span>
-            <span class="quota-value">4 / 5 slots used</span>
+            <span class="quota-value" id="quota-value">0 / 5 slots used</span>
           </div>
-          <div class="quota-bar"><div class="quota-fill"></div></div>
-          <p class="quota-hint">You have <strong>1 slot remaining</strong></p>
+          <div class="quota-bar"><div class="quota-fill" id="quota-fill"></div></div>
+          <p class="quota-hint" id="quota-hint">You have <strong>5 slots remaining</strong></p>
 
           <!-- Toggles -->
           <div class="toggle-row-item">
@@ -128,7 +128,7 @@
               <div class="toggle-item-title">TÜBİTAK Projects</div>
               <div class="toggle-item-sub">Appear in searches for TÜBİTAK advisor requests</div>
             </div>
-            <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+            <label class="switch"><input type="checkbox" id="avail-tubitak" /><span class="slider"></span></label>
           </div>
 
           <div class="toggle-row-item">
@@ -136,7 +136,7 @@
               <div class="toggle-item-title">Teknofest Projects</div>
               <div class="toggle-item-sub">Appear in searches for Teknofest advisor requests</div>
             </div>
-            <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+            <label class="switch"><input type="checkbox" id="avail-teknofest" /><span class="slider"></span></label>
           </div>
 
           <div class="toggle-row-item">
@@ -144,11 +144,11 @@
               <div class="toggle-item-title">Maximum Concurrent Advisees</div>
               <div class="toggle-item-sub">How many students you can advise simultaneously</div>
             </div>
-            <select class="form-select">
-              <option>5 students</option>
-              <option>3 students</option>
-              <option>7 students</option>
-              <option>10 students</option>
+            <select class="form-select" id="max-advisees">
+              <option value="3">3 students</option>
+              <option value="5">5 students</option>
+              <option value="7">7 students</option>
+              <option value="10">10 students</option>
             </select>
           </div>
 
@@ -157,7 +157,7 @@
               <div class="toggle-item-title">Auto-hide when full</div>
               <div class="toggle-item-sub">Automatically hide from searches when quota is reached</div>
             </div>
-            <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+            <label class="switch"><input type="checkbox" id="auto-hide-full" /><span class="slider"></span></label>
           </div>
 
           <div class="toggle-row-item" style="flex-direction:column; align-items:flex-start; gap:10px; border-bottom:none;">
@@ -165,7 +165,7 @@
               <div class="toggle-item-title">Office Hours Note</div>
               <div class="toggle-item-sub">A short note shown to students requesting advising.</div>
             </div>
-            <textarea class="form-input" placeholder="e.g. Available Tue/Thu 14:00–16:00. Contact by email first."></textarea>
+            <textarea class="form-input" id="office-hours-note" placeholder="e.g. Available Tue/Thu 14:00–16:00. Contact by email first."></textarea>
           </div>
 
         </div>
@@ -174,6 +174,7 @@
   </div>
 </div>
 
+<script src="../../teamforge-backend/assets/js/api.js"></script>
 <script src="../assets/instructor.js/set_avail_instructor.js"></script>
 <script src="../assets/instructor.js/notification.js"></script>
 </body>

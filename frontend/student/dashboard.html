@@ -26,8 +26,17 @@
       <p class="sb-group">ACCOUNT</p>
       <a class="sb-link" href="My-Profile.html"><span class="sb-icon">👤</span>My Profile</a>
       <p class="sb-group">SETTINGS</p>
-      <a class="sb-link" href="Settings.html"><span class="sb-icon">⚙</span>Settings</a>
+    <a class="sb-link" href="Settings.html"><span class="sb-icon">⚙</span>Settings</a>
+    <p class="sb-group">SESSION</p>
+      <button class="sb-link sb-logout" id="logoutBtn" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;color:var(--red)">
+        <span class="sb-icon">🚪</span>Log Out
+      </button>
     </nav>
+    <div class="sb-footer">
+      <button class="sb-link" id="logout-btn" style="width:100%;background:none;border:none;cursor:pointer;text-align:left">
+        <span class="sb-icon">🚪</span>Logout
+      </button>
+    </div>
   </aside>
 
   <div class="main">
@@ -44,11 +53,9 @@
        <div class="avatar">JS</div>
         </a>
         <div class="notif-panel" id="nPanel">
-          <div class="np-head">Notifications</div>
-          <div class="np-item unread"><span class="np-ico">✅</span><div class="np-body"><strong>Application Accepted</strong><span>Autonomous Drone Navigation · 3 days ago</span></div></div>
-          <div class="np-item"><span class="np-ico">📅</span><div class="np-body"><strong>Deadline Reminder</strong><span>Teknofest closes Apr 15</span></div></div>
-        </div>
-      </div>
+  <div class="np-head">Notifications <span id="notif-unread-count"></span></div>
+  <!-- loaded by JS -->
+</div>
     </header>
 
     <main class="page">
@@ -60,24 +67,24 @@
       </div>
 
       <!-- Summary cards -->
-      <div class="ds-grid au">
-        <div class="ds-card">
-          <div class="ds-ico" style="background:var(--teal-10);color:var(--teal)">📁</div>
-          <div><div class="ds-val">2</div><div class="ds-lbl">Active Projects</div></div>
-        </div>
-        <div class="ds-card">
-          <div class="ds-ico" style="background:var(--green-10);color:var(--green)">✅</div>
-          <div><div class="ds-val">1</div><div class="ds-lbl">Accepted Apps</div></div>
-        </div>
-        <div class="ds-card">
-          <div class="ds-ico" style="background:var(--amber-10);color:var(--amber)">⏳</div>
-          <div><div class="ds-val">1</div><div class="ds-lbl">Pending Apps</div></div>
-        </div>
-        <div class="ds-card">
-          <div class="ds-ico" style="background:var(--indigo-10);color:var(--indigo)">🎓</div>
-          <div><div class="ds-val">1</div><div class="ds-lbl">Advisor Req.</div></div>
-        </div>
-      </div>
+<div class="ds-grid au">
+  <div class="ds-card">
+    <div class="ds-ico" style="background:var(--teal-10);color:var(--teal)">📁</div>
+    <div><div class="ds-val" id="stat-projects">2</div><div class="ds-lbl">Active Projects</div></div>
+  </div>
+  <div class="ds-card">
+    <div class="ds-ico" style="background:var(--green-10);color:var(--green)">✅</div>
+    <div><div class="ds-val" id="stat-accepted">1</div><div class="ds-lbl">Accepted Apps</div></div>
+  </div>
+  <div class="ds-card">
+    <div class="ds-ico" style="background:var(--amber-10);color:var(--amber)">⏳</div>
+    <div><div class="ds-val" id="stat-pending">1</div><div class="ds-lbl">Pending Apps</div></div>
+  </div>
+  <div class="ds-card">
+    <div class="ds-ico" style="background:var(--indigo-10);color:var(--indigo)">🎓</div>
+    <div><div class="ds-val" id="stat-advisor">1</div><div class="ds-lbl">Advisor Req.</div></div>
+  </div>
+</div>
 
       <!-- Progress + Deadlines -->
       <div class="mid-grid au d1">
@@ -130,6 +137,7 @@
     </main>
   </div>
 </div>
+<script src="../../teamforge-backend/assets/js/api.js"></script>
 <script src="../assets/js/Student-Dashboard.js"></script>
 </body>
 </html>

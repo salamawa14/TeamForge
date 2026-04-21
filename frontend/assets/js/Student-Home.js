@@ -164,6 +164,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // burger
   const sb=document.getElementById('sb'), burg=document.getElementById('burg');
   burg?.addEventListener('click',()=>sb.classList.toggle('open'));
+  // ---> ADD LOGOUT HERE <---
+  document.getElementById('logoutBtn')?.addEventListener('click', async () => {  
+      await Auth.logout();  
+      window.location.href = 'http://teamforge.local/frontend/auth/login.html';
+  });
   document.addEventListener('click',e=>{
     if(sb?.classList.contains('open')&&!sb.contains(e.target)&&e.target!==burg) sb.classList.remove('open');
   });
