@@ -10,16 +10,16 @@ error_log
 access_log
 
 
-config.local.php
+
 .env
-connection_settings.php
+
 
 
 /tmp/
 /temp/
 
 
-*.sql
+
 *.zip
 *.rar
 *.7z
