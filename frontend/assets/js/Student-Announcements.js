@@ -110,7 +110,7 @@ loadNotifications();
   // ---> ADD LOGOUT HERE <---
   document.getElementById('logoutBtn')?.addEventListener('click', async () => {  
       await Auth.logout();  
-      window.location.href = 'http://teamforge.local/frontend/auth/login.html';
+      window.location.href = '../auth/login.html';
   });
   const nBtn = document.getElementById('nBtn'), nPanel = document.getElementById('nPanel');
   nBtn?.addEventListener('click', e => { e.stopPropagation(); nPanel?.classList.toggle('open'); });

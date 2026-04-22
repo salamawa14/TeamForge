@@ -71,21 +71,12 @@
         <div class="pb-glow"></div>
         <div class="pb-hex">⬡</div>
         <div class="pb-inner">
-          <div class="pb-av">JS</div>
+          <div class="pb-av">…</div>
           <div class="pb-info">
-            <h2>Jeren Student</h2>
-            <div class="sub">Computer Engineering · 3rd Year · GPA 3.4</div>
-            <div class="pb-chips">
-              <span class="tag-dark">Python</span>
-              <span class="tag-dark">React</span>
-              <span class="tag-dark">Node.js</span>
-              <span class="tag-dark">TensorFlow</span>
-              <span class="tag-dark">IoT</span>
-            </div>
-            <div class="pb-links">
-              <a href="#" class="pb-lnk">🔗 GitHub</a>
-              <a href="#" class="pb-lnk">💼 LinkedIn</a>
-            </div>
+            <h2>Loading...</h2>
+            <div class="sub">Loading...</div>
+            <div class="pb-chips"></div>
+            <div class="pb-links"></div>
           </div>
         </div>
       </div>
@@ -108,44 +99,10 @@
               <h3 class="card-title" style="margin-bottom:0">📁 My Projects</h3>
               <a href="My-Projects.html" class="see-all">View All →</a>
             </div>
-
-            <div class="pc" onclick="openModal(1)">
-              <div class="pc-top">
-                <span class="badge b-teknofest">TEKNOFEST</span>
-                <span class="spot-open">3 spots open</span>
-              </div>
-              <div class="pc-name">Autonomous Drone Navigation</div>
-              <div class="pc-desc">Full autonomous drone for Teknofest 2026 UAV category — ROS2, sensor fusion, obstacle avoidance.</div>
-              <div class="pc-chips">
-                <span class="chip">C++</span><span class="chip">ROS2</span>
-                <span class="chip">Python</span><span class="chip">Computer Vision</span>
-              </div>
-              <div class="pc-row"><span>👥 3/6 members</span><span class="pc-pct">50%</span></div>
-              <div class="prog" style="margin-bottom:9px"><div class="prog-fill" style="width:50%"></div></div>
-              <div class="pc-adv ok">🎓 Prof. Ömer Şahin</div>
-              <button class="btn-vd" onclick="event.stopPropagation();openModal(1)">👁 View Details</button>
-            </div>
-
-            <div class="pc" onclick="openModal(2)">
-              <div class="pc-top">
-                <span class="badge b-tubitak">TÜBİTAK</span>
-                <span class="spot-open">2 spots open</span>
-              </div>
-              <div class="pc-name">Smart Water IoT</div>
-              <div class="pc-desc">IoT sensor network for real-time water usage monitoring and leak detection on campus.</div>
-              <div class="pc-chips">
-                <span class="chip">Arduino</span><span class="chip">MQTT</span>
-                <span class="chip">Python</span><span class="chip">InfluxDB</span>
-              </div>
-              <div class="pc-row"><span>👥 1/3 members</span><span class="pc-pct">33%</span></div>
-              <div class="prog" style="margin-bottom:9px"><div class="prog-fill" style="width:33%"></div></div>
-              <div class="pc-adv seek">⚠ Seeking Advisor — Required for TÜBİTAK project</div>
-              <button class="btn-vd" onclick="event.stopPropagation();openModal(2)">👁 View Details</button>
+            <div id="myProjectsContainer" class="card-content">
+              <!-- Projects will be loaded here by JS -->
             </div>
           </div>
-
-          
-
         </div>
         <div class="col">
 
@@ -155,32 +112,8 @@
               <h3 class="card-title" style="margin-bottom:0">📨 Recent Applications</h3>
               <a href="Applications.html" class="see-all">View All →</a>
             </div>
-            <div class="app-row">
-              <div class="app-ico" style="background:var(--orange-10)">🚀</div>
-              <div class="app-info">
-                <strong>Autonomous Drone Navigation</strong>
-                <span>Computer Vision developer · Teknofest</span>
-                <span class="ts">📅 3 days ago</span>
-              </div>
-              <span class="status s-accepted">ACCEPTED ✓</span>
-            </div>
-            <div class="app-row">
-              <div class="app-ico" style="background:rgba(234,179,8,.1)">💡</div>
-              <div class="app-info">
-                <strong>AR Campus Navigation App</strong>
-                <span>Backend / Firebase developer · Teknofest</span>
-                <span class="ts">📅 5 days ago</span>
-              </div>
-              <span class="status s-pending">PENDING ⏳</span>
-            </div>
-            <div class="app-row">
-              <div class="app-ico" style="background:var(--indigo-10)">🔬</div>
-              <div class="app-info">
-                <strong>Smart Water IoT</strong>
-                <span>Cloud Backend developer · TÜBİTAK</span>
-                <span class="ts">📅 1 week ago</span>
-              </div>
-              <span class="status s-rejected">REJECTED</span>
+            <div id="recentAppsContainer" class="card-content">
+              <!-- Applications will be loaded here by JS -->
             </div>
           </div>
           <!-- Upcoming Deadlines -->
@@ -207,6 +140,7 @@
     </main>
   </div>
 </div>
+<script src="../../teamforge-backend/assets/js/api.js"></script>
 <script src="../assets/js/Student-Home.js"></script>
 </body>
 </html>

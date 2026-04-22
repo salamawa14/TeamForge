@@ -100,7 +100,7 @@ async function doUpdatePw(curId, newId, confId, barId, lblId) {
 document.addEventListener('DOMContentLoaded', async () => {
 document.getElementById('logoutBtn')?.addEventListener('click', async () => {
   await Auth.logout();
-  window.location.href = 'http://teamforge.local/frontend/auth/login.html';
+  window.location.href = '../auth/login.html';
 });
   // Guard — redirect to login if not logged in
   const user = await requireLogin(['student']);
@@ -117,6 +117,12 @@ loadNotifications();
   nBtn?.addEventListener('click', e => {
     e.stopPropagation();
     nPanel.classList.toggle('open');
+  });
+
+  /* ── Logout ── */
+  document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+    await Auth.logout();
+    window.location.href = '../auth/login.html';
   });
 
   /* ── Settings inner nav ── */
