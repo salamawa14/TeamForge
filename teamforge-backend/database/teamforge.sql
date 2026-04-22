@@ -170,7 +170,20 @@ CREATE TABLE notifications (
 );
 
 -- ============================================================
--- 11. DEFAULT ADMIN USER  (change password after first login!)
+-- 11. PASSWORD RESETS
+-- ============================================================
+CREATE TABLE password_resets (
+    email       VARCHAR(150)   NOT NULL,
+    reset_token CHAR(64)       NOT NULL UNIQUE,
+    expires_at  TIMESTAMP      NOT NULL,
+    created_at  TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (email),
+    INDEX idx_token (reset_token),
+    INDEX idx_expires (expires_at)
+);
+
+-- ============================================================
+-- 12. DEFAULT ADMIN USER  (change password after first login!)
 -- password = "admin123" hashed with bcrypt
 -- ============================================================
 INSERT INTO users (user_id, full_name, email, password_hash, role)
@@ -181,3 +194,46 @@ VALUES (
     '$2y$12$7u9wLfP76evTd/iVE5OaWeKfSx2nOIw3XNuNrj9svFeQLDr6htMJ6',
     'admin'
 );
+
+-- ============================================================
+-- SEED USERS (password = 'Password123' for students/instructors)
+-- ============================================================
+
+-- Student 1: Jeren Yilmaz
+INSERT IGNORE INTO users (user_id, full_name, email, password_hash, role, department) VALUES
+(UUID(), 'Jeren Yilmaz', 'jeren@university.edu', '$2y$10$TKh8H1.PfbuSeX7Alt.RpODt3nwF7VpMCi1t3lQWnIqrDiXAp1Uuy', 'student', 'Computer Engineering');
+
+-- Student 2: Beza Tesfaye
+INSERT IGNORE INTO users (user_id, full_name, email, password_hash, role, department) VALUES
+(UUID(), 'Beza Tesfaye', 'beza@university.edu', '$2y$10$TKh8H1.PfbuSeX7Alt.RpODt3nwF7VpMCi1t3lQWnIqrDiXAp1Uuy', 'student', 'Software Engineering');
+
+-- Instructor 1: Dr. Ayse Kaya
+INSERT IGNORE INTO users (user_id, full_name, email, password_hash, role, department) VALUES
+(UUID(), 'Dr. Ayse Kaya', 'ayse@university.edu', '$2y$10$TKh8H1.PfbuSeX7Alt.RpODt3nwF7VpMCi1t3lQWnIqrDiXAp1Uuy', 'instructor', 'Computer Engineering');
+
+-- Instructor 2: Prof. Omer Sahin
+INSERT IGNORE INTO users (user_id, full_name, email, password_hash, role, department) VALUES
+(UUID(), 'Prof. Omer Sahin', 'omer@university.edu', '$2y$10$TKh8H1.PfbuSeX7Alt.RpODt3nwF7VpMCi1t3lQWnIqrDiXAp1Uuy', 'instructor', 'Electrical Engineering');
+
+-- Instructor profiles (required for Find Advisor to show them)
+INSERT IGNORE INTO instructor_profiles (user_id, academic_title, areas_of_expertise, research_interests, supervised_proj_types, advising_status)
+SELECT user_id,
+  'Assistant Professor',
+  '["ARCore","Mobile Development","HCI","Computer Vision"]',
+  'Augmented reality, human-computer interaction, mobile computing, and computer vision applications in education.',
+  '["Teknofest","Course"]',
+  'Active'
+FROM users WHERE email = 'ayse@university.edu';
+
+INSERT IGNORE INTO instructor_profiles (user_id, academic_title, areas_of_expertise, research_interests, supervised_proj_types, advising_status)
+SELECT user_id,
+  'Professor',
+  '["ROS2","UAV Systems","Sensor Fusion","Autonomous Navigation","C++"]',
+  'Unmanned aerial vehicles, autonomous navigation systems, ROS2-based robotics, and sensor fusion for Teknofest competitions.',
+  '["Teknofest","Tubitak"]',
+  'Active'
+FROM users WHERE email = 'omer@university.edu';
+
+-- Student 3: Nurem Can (password = 'Password123')
+INSERT IGNORE INTO users (user_id, full_name, email, password_hash, role, department) VALUES
+(UUID(), 'Nurem Can', 'nurem@university.edu', '$2y$10$TKh8H1.PfbuSeX7Alt.RpODt3nwF7VpMCi1t3lQWnIqrDiXAp1Uuy', 'student', 'Computer Engineering');

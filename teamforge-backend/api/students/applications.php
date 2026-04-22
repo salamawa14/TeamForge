@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     } else {
         // outgoing: requests I sent
         $stmt = $db->prepare('
-            SELECT jr.request_id, jr.status, jr.requested_at, jr.reviewed_at,
+            SELECT jr.request_id, jr.status, jr.requested_at, jr.reviewed_at, p.project_type,
                    p.title AS project_title, p.project_id,
                    u.full_name AS owner_name
             FROM join_requests jr

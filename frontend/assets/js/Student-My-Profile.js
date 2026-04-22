@@ -51,14 +51,16 @@ loadNotifications();
 
   // ── Edit / Save — Personal Info ──────────────────────────────
   const infoFields = ['pfFirstName', 'pfLastName', 'pfDept'];
-  document.getElementById('editInfoBtn')?.addEventListener('click', () => {
+  document.getElementById('editInfoBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
     infoFields.forEach(id => document.getElementById(id).removeAttribute('readonly'));
     document.getElementById('pfYear').removeAttribute('disabled');
     document.getElementById('editInfoBtn').style.display = 'none';
     document.getElementById('saveInfoBtn').style.display = '';
   });
 
-  document.getElementById('saveInfoBtn')?.addEventListener('click', async () => {
+  document.getElementById('saveInfoBtn')?.addEventListener('click', async (e) => {
+    e.preventDefault();
     const btn = document.getElementById('saveInfoBtn');
     btn.textContent = 'Saving…'; btn.disabled = true;
     try {
@@ -88,13 +90,15 @@ loadNotifications();
 
   // ── Edit / Save — Skills & Links ─────────────────────────────
   const skillFields = ['pfSkills', 'pfGithub', 'pfLinkedin', 'pfBio'];
-  document.getElementById('editSkillsBtn')?.addEventListener('click', () => {
+  document.getElementById('editSkillsBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
     skillFields.forEach(id => document.getElementById(id).removeAttribute('readonly'));
     document.getElementById('editSkillsBtn').style.display = 'none';
     document.getElementById('saveSkillsBtn').style.display = '';
   });
 
-  document.getElementById('saveSkillsBtn')?.addEventListener('click', async () => {
+  document.getElementById('saveSkillsBtn')?.addEventListener('click', async (e) => {
+    e.preventDefault();
     const btn = document.getElementById('saveSkillsBtn');
     btn.textContent = 'Saving…'; btn.disabled = true;
     try {
@@ -134,7 +138,7 @@ loadNotifications();
   burg?.addEventListener('click', () => sb?.classList.toggle('open'));
   document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     await Auth.logout();
-    window.location.href = 'http://teamforge.local/frontend/auth/login.html';
+    window.location.href = '../auth/login.html';
   });
   const nBtn = document.getElementById('nBtn'), nPanel = document.getElementById('nPanel');
   nBtn?.addEventListener('click', e => { e.stopPropagation(); nPanel?.classList.toggle('open'); });
