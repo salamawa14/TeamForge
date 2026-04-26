@@ -49,15 +49,26 @@
   </div>
 </div>
 
-<!-- USER MODAL (ADD INSTRUCTOR) -->
+<!-- USER MODAL (CREATE USER — supports student / instructor / admin) -->
 <div id="user-modal" class="mol" style="display:none" onclick="if(event.target===this) closeMol('user-modal')">
   <div class="mod">
     <div class="moh">
-      <h3 id="user-modal-title">Create Instructor Account</h3>
+      <h3 id="user-modal-title">Create User Account</h3>
       <button class="moc" onclick="closeMol('user-modal')">✕</button>
     </div>
     <form id="user-form" onsubmit="event.preventDefault(); saveUser();">
       <div class="mob">
+
+        <!-- Role selector (drives which fields are visible/required below) -->
+        <div class="fg">
+          <label>Role *</label>
+          <select class="fi" id="u-role" required onchange="onRoleChange()">
+            <option value="student">Student</option>
+            <option value="instructor" selected>Instructor</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+
         <div class="fg">
           <label>Full Name *</label>
           <input class="fi" id="u-name" required placeholder="e.g. Dr. Jane Doe"/>
@@ -70,12 +81,15 @@
           <label>Password *</label>
           <input class="fi" id="u-pass" type="password" required minlength="8" placeholder="At least 8 characters"/>
         </div>
+
+        <!-- Department: required for student/instructor, hidden for admin -->
         <div class="g2f">
-          <div class="fg">
-            <label>Department *</label>
-            <input class="fi" id="u-dept" required placeholder="e.g. Computer Science"/>
+          <div class="fg" id="u-dept-wrap" data-role-field="department">
+            <label>Department <span id="u-dept-req">*</span></label>
+            <input class="fi" id="u-dept" placeholder="e.g. Computer Science"/>
           </div>
-          <div class="fg">
+          <!-- Academic Title: only for instructor -->
+          <div class="fg" id="u-title-wrap" data-role-field="academic_title">
             <label>Academic Title</label>
             <input class="fi" id="u-title" placeholder="e.g. Assoc. Prof."/>
           </div>
@@ -135,7 +149,7 @@
         <h2>User Management</h2>
         <p>View and manage all registered students and instructors.</p>
       </div>
-      <button class="btn btn-t" onclick="openUserModal()">➕ Create Instructor</button>
+      <button class="btn btn-t" onclick="openUserModal()">➕ Create User</button>
     </div>
 
     <!-- FILTERS -->

@@ -137,8 +137,93 @@
     remember.checked  = true;
   }
 /* ─────────────────────────────
-     Form Submit
+     Forgot Password
   ───────────────────────────── */
+  const forgotLink = document.querySelector('.link-muted');
+  forgotLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    showForgotPasswordModal();
+  });
+
+  function showForgotPasswordModal() {
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Reset Password</h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Enter your email address and we'll send you a link to reset your password.</p>
+          <form id="forgotForm">
+            <div class="field-group">
+              <label for="resetEmail">Email Address</label>
+              <input
+                type="email"
+                id="resetEmail"
+                name="resetEmail"
+                placeholder="you@university.edu"
+                required
+              />
+              <span class="field-error" id="resetEmailError"></span>
+            </div>
+            <button type="submit" class="btn-signin" id="resetBtn">
+              <span class="btn-text">Send Reset Link</span>
+              <span class="btn-spinner" id="resetSpinner" hidden></span>
+            </button>
+          </form>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Modal functionality
+    const closeBtn = modal.querySelector('.modal-close');
+    const forgotForm = modal.querySelector('#forgotForm');
+    const resetEmail = modal.querySelector('#resetEmail');
+    const resetEmailError = modal.querySelector('#resetEmailError');
+    const resetBtn = modal.querySelector('#resetBtn');
+    const resetBtnText = resetBtn.querySelector('.btn-text');
+    const resetSpinner = modal.querySelector('#resetSpinner');
+
+    function closeModal() {
+      modal.remove();
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    forgotForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = resetEmail.value.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        resetEmailError.textContent = 'Please enter a valid email address.';
+        resetEmail.classList.add('error');
+        return;
+      }
+      resetEmailError.textContent = '';
+      resetEmail.classList.remove('error');
+
+      resetBtn.disabled = true;
+      resetBtnText.textContent = 'Sending…';
+      resetSpinner.hidden = false;
+
+      try {
+        await Auth.forgotPassword(email);
+        showToast('✓ If an account with that email exists, a password reset link has been sent.');
+        closeModal();
+      } catch (err) {
+        resetBtn.disabled = false;
+        resetBtnText.textContent = 'Send Reset Link';
+        resetSpinner.hidden = true;
+        showToast(err.message || 'Failed to send reset link. Please try again.', 'error');
+      }
+    });
+  }
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
      console.log('submit fired', emailInput.value);

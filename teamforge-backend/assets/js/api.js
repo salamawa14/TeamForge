@@ -46,6 +46,12 @@ const Auth = {
 
     changePassword: (current_password, new_password) =>
         apiRequest('/auth/change-password.php', 'PUT', { current_password, new_password }),
+
+    forgotPassword: (email) =>
+        apiRequest('/auth/forgot-password.php', 'POST', { email }),
+
+    resetPassword: (token, new_password) =>
+        apiRequest('/auth/reset-password.php', 'POST', { token, new_password }),
 };
 
 // ── Students ──────────────────────────────────────────────────

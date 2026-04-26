@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---> ADD LOGOUT HERE <---
   document.getElementById('logoutBtn')?.addEventListener('click', async () => {  
       await Auth.logout();  
-      window.location.href = 'http://teamforge.local/frontend/auth/login.html';
+      window.location.href = '../auth/login.html';
   });
   document.addEventListener('click',e=>{
     if(sb?.classList.contains('open')&&!sb.contains(e.target)&&e.target!==burg) sb.classList.remove('open');

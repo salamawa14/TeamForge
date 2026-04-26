@@ -34,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $search = $_GET['search'] ?? '';
     
     $sql = '
-        SELECT u.user_id, u.full_name, u.department, 
-               ip.academic_title, ip.areas_of_expertise, ip.supervised_proj_types, ip.advising_status 
+        SELECT u.user_id, u.full_name, u.department, u.email,
+               ip.academic_title, ip.areas_of_expertise, ip.supervised_proj_types, ip.advising_status, ip.research_interests
         FROM users u 
         JOIN instructor_profiles ip ON u.user_id = ip.user_id 
         WHERE u.role = "instructor"
