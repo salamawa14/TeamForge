@@ -151,14 +151,14 @@ async function saveUser() {
   }
 
   try {
-    // Prefer a single unified endpoint. Fall back to createInstructor
-    // for backwards-compat if backend hasn't shipped createUser yet.
     if (typeof Admin.createUser === 'function') {
       await Admin.createUser(data);
+    } else if (typeof apiRequest === 'function') {
+      await apiRequest('/admin/users.php', 'POST', data);
     } else if (role === 'instructor' && typeof Admin.createInstructor === 'function') {
       await Admin.createInstructor(data);
     } else {
-      throw new Error('Backend endpoint Admin.createUser is not available yet.');
+      throw new Error('Create user API is unavailable. Please refresh the page and try again.');
     }
 
     toast(`${role.charAt(0).toUpperCase() + role.slice(1)} account created successfully! ✅`, 'ok');

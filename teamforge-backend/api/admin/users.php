@@ -2,7 +2,7 @@
 // ============================================================
 //  api/admin/users.php
 //  GET    — list all users (with optional role filter)
-//  POST   — create an instructor account
+//  POST   — create a user account (student / instructor / admin)
 //  DELETE ?user_id=xxx — delete a user
 // ============================================================
 
@@ -34,17 +34,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     success($stmt->fetchAll());
 }
 
-// ── POST: create instructor ───────────────────────────────────
+// ── POST: create user ────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $body          = getBody();
-    $full_name     = trim($body['full_name']     ?? '');
-    $email         = trim($body['email']         ?? '');
-    $password      = trim($body['password']      ?? '');
-    $department    = trim($body['department']    ?? '');
+    $body           = getBody();
+    $role           = trim($body['role']          ?? '');
+    $full_name      = trim($body['full_name']     ?? '');
+    $email          = trim($body['email']         ?? '');
+    $password       = trim($body['password']      ?? '');
+    $department     = trim($body['department']    ?? '');
     $academic_title = trim($body['academic_title'] ?? '');
 
-    if (!$full_name || !$email || !$password || !$department) {
-        error('full_name, email, password and department are required.');
+    $allowed_roles = ['student', 'instructor', 'admin'];
+    if (!in_array($role, $allowed_roles, true)) error('role must be one of: student, instructor, admin.');
+    if (!$full_name || !$email || !$password) error('full_name, email and password are required.');
+    if (in_array($role, ['student', 'instructor'], true) && !$department) {
+        error('department is required for student and instructor accounts.');
     }
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) error('Invalid email format.');
     if (strlen($password) < 8) error('Password must be at least 8 characters.');
@@ -60,21 +64,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $db->prepare('
             INSERT INTO users (user_id, full_name, email, password_hash, role, department)
-            VALUES (?, ?, ?, ?, "instructor", ?)
-        ')->execute([$uid, $full_name, $email, $hash, $department]);
+            VALUES (?, ?, ?, ?, ?, ?)
+        ')->execute([
+            $uid,
+            $full_name,
+            $email,
+            $hash,
+            $role,
+            in_array($role, ['student', 'instructor'], true) ? $department : null
+        ]);
 
-        $db->prepare('
-            INSERT INTO instructor_profiles (user_id, academic_title)
-            VALUES (?, ?)
-        ')->execute([$uid, $academic_title ?: null]);
+        if ($role === 'student') {
+            $db->prepare('
+                INSERT INTO student_profiles (user_id, academic_year)
+                VALUES (?, ?)
+            ')->execute([$uid, null]);
+        }
+
+        if ($role === 'instructor') {
+            $db->prepare('
+                INSERT INTO instructor_profiles (user_id, academic_title)
+                VALUES (?, ?)
+            ')->execute([$uid, $academic_title ?: null]);
+        }
 
         $db->commit();
     } catch (Exception $e) {
         $db->rollBack();
-        error('Could not create instructor account.', 500);
+        error('Could not create user account.', 500);
     }
 
-    success(['user_id' => $uid], 'Instructor account created.', 201);
+    success(['user_id' => $uid], ucfirst($role) . ' account created.', 201);
 }
 
 // ── DELETE ───────────────────────────────────────────────────

@@ -364,16 +364,6 @@ body {
   transform: none;
 }
 
-/* Spinner */
-.btn-spinner {
-  width: 16px; height: 16px;
-  border: 2px solid rgba(26,37,64,.3);
-  border-top-color: var(--navy);
-  border-radius: 50%;
-  animation: spin .7s linear infinite;
-  display: inline-block;
-}
-
 /* ── Divider ── */
 .divider {
   display: flex;

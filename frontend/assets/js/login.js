@@ -14,11 +14,14 @@
   const toggleBtn  = document.getElementById('togglePwd');
   const eyeIcon    = document.getElementById('eyeIcon');
   const signInBtn  = document.getElementById('signInBtn');
-  const btnText    = signInBtn.querySelector('.btn-text');
-  const spinner    = document.getElementById('btnSpinner');
+  const btnText    = signInBtn ? signInBtn.querySelector('.btn-text') : null;
   const toast      = document.getElementById('toast');
   const roleTabs   = document.querySelectorAll('.role-tab');
   const remember   = document.getElementById('remember');
+
+  if (!form || !emailInput || !pwdInput || !emailErr || !pwdErr || !toggleBtn || !eyeIcon || !signInBtn || !btnText || !toast || !remember) {
+    return;
+  }
 
   /* ── State ── */
   let activeRole = 'student';
@@ -124,8 +127,7 @@
   ───────────────────────────── */
   function setLoading(on) {
     signInBtn.disabled = on;
-    btnText.hidden     = on;
-    spinner.hidden     = !on;
+    btnText.textContent = on ? 'Signing In...' : 'Sign In';
   }
 
   /* ─────────────────────────────
@@ -140,10 +142,12 @@
      Forgot Password
   ───────────────────────────── */
   const forgotLink = document.querySelector('.link-muted');
-  forgotLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    showForgotPasswordModal();
-  });
+  if (forgotLink) {
+    forgotLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showForgotPasswordModal();
+    });
+  }
 
   function showForgotPasswordModal() {
     // Create modal
@@ -171,7 +175,6 @@
             </div>
             <button type="submit" class="btn-signin" id="resetBtn">
               <span class="btn-text">Send Reset Link</span>
-              <span class="btn-spinner" id="resetSpinner" hidden></span>
             </button>
           </form>
         </div>
@@ -186,7 +189,6 @@
     const resetEmailError = modal.querySelector('#resetEmailError');
     const resetBtn = modal.querySelector('#resetBtn');
     const resetBtnText = resetBtn.querySelector('.btn-text');
-    const resetSpinner = modal.querySelector('#resetSpinner');
 
     function closeModal() {
       modal.remove();
@@ -209,8 +211,7 @@
       resetEmail.classList.remove('error');
 
       resetBtn.disabled = true;
-      resetBtnText.textContent = 'Sending…';
-      resetSpinner.hidden = false;
+      resetBtnText.textContent = 'Sending...';
 
       try {
         await Auth.forgotPassword(email);
@@ -219,14 +220,12 @@
       } catch (err) {
         resetBtn.disabled = false;
         resetBtnText.textContent = 'Send Reset Link';
-        resetSpinner.hidden = true;
         showToast(err.message || 'Failed to send reset link. Please try again.', 'error');
       }
     });
   }
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-     console.log('submit fired', emailInput.value);
 
     const emailVal = emailInput.value.trim();
     const pwdVal   = pwdInput.value;
@@ -263,32 +262,5 @@
       showToast(err.message || 'Sign in failed. Please try again.', 'error');
     }
   });
-  
-  /* ─────────────────────────────
-     Fake Auth (demo only)
-     Replace with real API call
-  ───────────────────────────── */
-  function fakeAuthRequest(email, password, role) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        // Demo credentials provided by system (like STIX)
-        // In production: replace with real fetch() to PHP backend
-        const validCredentials = {
-          student:    { email: 'student@university.edu',    password: '123456' },
-          instructor: { email: 'instructor@university.edu', password: '123456' },
-          admin:      { email: 'admin@teamforge.io',        password: 'admin123' },
-        };
-        const valid = validCredentials[role];
-        if (valid && email === valid.email && password === valid.password) {
-          resolve({ token: 'demo-token-' + role, role });
-        } else if (email.includes('@') && password.length >= 6) {
-          // Accept any valid-looking email for demo purposes
-          resolve({ token: 'demo-token-' + role, role });
-        } else {
-          reject(new Error('Invalid email or password.'));
-        }
-      }, 1200);
-    });
-  }
 
 })();

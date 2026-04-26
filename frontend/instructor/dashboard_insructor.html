@@ -33,6 +33,7 @@
       <p class="nav-label">ACCOUNT</p>
       <a href="profile_instructor.html" class="nav-item">👤 My Profile</a>
       <a href="set_acc_instructor.html"   class="nav-item">⚙️ Settings</a>
+      <button class="nav-item" style="width:100%; background:none; border:none; cursor:pointer; text-align:left; color:#ef4444; margin-top:10px;" onclick="if(confirm('Sign out?')) Auth.logout().then(() => window.location.href='../auth/login.html')">⎋ Logout</button>
     </nav>
 
     <div class="sidebar-user">
@@ -147,7 +148,7 @@
         <!-- My Availability -->
         <div class="card">
           <div class="card-title" style="margin-bottom:12px;">My Availability</div>
-          <p class="avail-note">You have <strong>4/5</strong> advisor slots filled.</p>
+          <p class="avail-note" id="avail-note">Loading availability...</p>
 
           <div class="avail-section">
             <div class="avail-label">TÜBİTAK Advising</div>
@@ -165,7 +166,7 @@
             </div>
           </div>
 
-          <div class="avail-hint">💡 Set unavailable when quota is full to hide from student searches.</div>
+          <div class="avail-hint" id="avail-hint">💡 Set unavailable when quota is full to hide from student searches.</div>
         </div>
 
       </div>
@@ -286,7 +287,7 @@
 }
 </style>
 
-<script src="../../teamforge-backend/assets/js/api.js"></script>
+<script src="../../teamforge-backend/assets/js/api.js?v=20260426"></script>
 <script src="../assets/instructor.js/dashboard_insructor.js"></script>
 <script src="../assets/instructor.js/notification.js"></script>
 </body>

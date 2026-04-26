@@ -4,6 +4,23 @@
 
 let projectsData = [];
 
+async function updateAdvisorRequestsBadge() {
+  try {
+    const requests = await Instructor.getRequests();
+    const pendingCount = requests.filter(request =>
+      String(request.status || '').trim().toLowerCase() === 'pending'
+    ).length;
+
+    const badge = document.getElementById('advisorRequestsBadge');
+    if (!badge) return;
+
+    badge.textContent = pendingCount;
+    badge.style.display = pendingCount > 0 ? 'inline-block' : 'none';
+  } catch (err) {
+    console.error('Error loading advisor request badge:', err);
+  }
+}
+
 /* ── Fetch Advisees ── */
 async function loadAdvisees() {
   try {
@@ -125,6 +142,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const sidebarSub = document.querySelector('.user-sub');
     if (sidebarName) sidebarName.textContent = user.full_name;
     if (sidebarSub) sidebarSub.textContent = user.department || 'Instructor';
+    updateAdvisorRequestsBadge();
     loadAdvisees();
   }
 });

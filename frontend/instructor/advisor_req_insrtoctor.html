@@ -6,7 +6,7 @@
   <title>TeamForge · Advisor Requests</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="../assets/instructor.css/advisor_req_instructor.css"/>
+  <link rel="stylesheet" href="../assets/instructor.css/advisor_req_instructor.css?v=20260426"/>
 </head>
 <body>
 <div class="shell">
@@ -24,11 +24,12 @@
       <p class="nav-label">MAIN</p>
       <a href="instructor_home.html"        class="nav-item">🏠 Home</a>
       <a href="dashboard_insructor.html"    class="nav-item">📊 Dashboard</a>
-      <a href="advisor_req_insrtoctor.html" class="nav-item active">👤 Advisor Requests <span class="nav-badge" style="display:none;">0</span></a>
+      <a href="advisor_req_insrtoctor.html" class="nav-item active">👤 Advisor Requests <span class="nav-badge" id="advisorRequestsBadge" style="display:none;">0</span></a>
       <a href="advisees_instructor.html"    class="nav-item">👥 My Advisees</a>
       <p class="nav-label">ACCOUNT</p>
       <a href="profile_instructor.html"     class="nav-item">👤 My Profile</a>
       <a href="set_acc_instructor.html"     class="nav-item">⚙️ Settings</a>
+      <button class="nav-item" style="width:100%; background:none; border:none; cursor:pointer; text-align:left; color:#ef4444; margin-top:10px;" onclick="if(confirm('Sign out?')) Auth.logout().then(() => window.location.href='../auth/login.html')">⎋ Logout</button>
     </nav>
     <div class="sidebar-user">
       <div class="sidebar-avatar">AK</div>
@@ -95,7 +96,7 @@
   </div>
 </div>
 
-<script src="../../teamforge-backend/assets/js/api.js"></script>
-<script src="../assets/instructor.js/advisor_req_instructor.js"></script>
+<script src="../../teamforge-backend/assets/js/api.js?v=20260426"></script>
+<script src="../assets/instructor.js/advisor_req_instructor.js?v=20260426"></script>
 </body>
 </html>

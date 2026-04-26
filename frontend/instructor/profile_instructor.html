@@ -33,6 +33,7 @@
       <p class="nav-label">ACCOUNT</p>
       <a href="profile_instructor.html" class="nav-item active">👤 My Profile</a>
       <a href="set_acc_instructor.html"   class="nav-item">⚙️ Settings</a>
+      <button class="nav-item" style="width:100%; background:none; border:none; cursor:pointer; text-align:left; color:#ef4444; margin-top:10px;" onclick="if(confirm('Sign out?')) Auth.logout().then(() => window.location.href='../auth/login.html')">⎋ Logout</button>
     </nav>
 
     <div class="sidebar-user">
@@ -147,7 +148,7 @@
   </div>
 </div>
 
-<script src="../../teamforge-backend/assets/js/api.js"></script>
+<script src="../../teamforge-backend/assets/js/api.js?v=20260426"></script>
 <script src="../assets/instructor.js/profile_instructor.js"></script>
 <script src="../assets/instructor.js/notification.js"></script>
 </body>

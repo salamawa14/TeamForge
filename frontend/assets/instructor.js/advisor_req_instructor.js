@@ -4,11 +4,26 @@
 
 let currentRequests = [];
 
+function normalizeStatus(status) {
+  return String(status || '').trim().toLowerCase();
+}
+
+function toApiStatus(status) {
+  const normalized = normalizeStatus(status);
+  const statusMap = {
+    pending: 'Pending',
+    accepted: 'Accepted',
+    rejected: 'Rejected'
+  };
+  return statusMap[normalized] || '';
+}
+
 /* ── Fetch Requests ── */
 async function loadRequests(statusFilter = '') {
   try {
-    currentRequests = await Instructor.getRequests(statusFilter);
-    renderRequests(statusFilter || 'pending');
+    const apiStatus = toApiStatus(statusFilter);
+    currentRequests = await Instructor.getRequests(apiStatus);
+    renderRequests(normalizeStatus(statusFilter) || 'pending');
     updateCounts();
   } catch (err) {
     showToast('Error loading requests: ' + err.message, 'err');
@@ -17,24 +32,31 @@ async function loadRequests(statusFilter = '') {
 
 async function updateCounts() {
   try {
-     const all = await Instructor.getRequests();
-     const counts = {
-       pending: all.filter(r => r.status === 'Pending').length,
-       accepted: all.filter(r => r.status === 'Accepted').length,
-       rejected: all.filter(r => r.status === 'Rejected').length
-     };
-     
-     document.querySelectorAll('.tab-btn').forEach(btn => {
-       const tab = btn.dataset.tab;
-       const countSpan = btn.querySelector('.tab-count');
-       if (countSpan) countSpan.textContent = counts[tab] || 0;
-     });
-     
-     const navBadge = document.querySelector('.nav-badge');
-     if (navBadge) {
-       navBadge.textContent = counts.pending;
-       navBadge.style.display = counts.pending > 0 ? 'inline-block' : 'none';
-     }
+    const all = await Instructor.getRequests();
+    const counts = {
+      pending: 0,
+      accepted: 0,
+      rejected: 0
+    };
+
+    all.forEach(request => {
+      const status = normalizeStatus(request.status);
+      if (Object.prototype.hasOwnProperty.call(counts, status)) {
+        counts[status] += 1;
+      }
+    });
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      const tab = normalizeStatus(btn.dataset.tab);
+      const countSpan = btn.querySelector('.tab-count');
+      if (countSpan) countSpan.textContent = counts[tab] || 0;
+    });
+
+    const navBadge = document.getElementById('advisorRequestsBadge');
+    if (navBadge) {
+      navBadge.textContent = counts.pending;
+      navBadge.style.display = counts.pending > 0 ? 'inline-block' : 'none';
+    }
   } catch (err) {}
 }
 
@@ -43,7 +65,7 @@ function renderRequests(targetTab) {
   const pane = document.getElementById(paneId);
   if (!pane) return;
 
-  const filtered = currentRequests.filter(r => r.status.toLowerCase() === targetTab.toLowerCase());
+  const filtered = currentRequests.filter(r => normalizeStatus(r.status) === normalizeStatus(targetTab));
   
   if (filtered.length === 0) {
     pane.innerHTML = `<p style="text-align:center; padding:3rem; opacity:0.6">No ${targetTab} requests found.</p>`;
@@ -172,25 +194,38 @@ function showToast(msg, type = '') {
 }
 
 /* ── Init ── */
-document.addEventListener('DOMContentLoaded', async () => {
+async function initAdvisorRequestsPage() {
   const user = await requireLogin(['instructor']);
-  if (user) {
-    document.querySelector('.user-name').textContent = user.full_name;
-    document.querySelector('.user-sub').textContent = user.department || 'Instructor';
-    
-    // Initial load
-    loadRequests('Pending');
+  if (!user) return;
 
-    // Tab switching
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        const tab = btn.dataset.tab;
-        document.getElementById('pane-' + tab).classList.add('active');
-        loadRequests(tab);
-      });
+  const userName = document.querySelector('.user-name');
+  const userSub = document.querySelector('.user-sub');
+  if (userName) userName.textContent = user.full_name;
+  if (userSub) userSub.textContent = user.department || 'Instructor';
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const tab = btn.dataset.tab;
+      document.getElementById('pane-' + tab).classList.add('active');
+      loadRequests(tab);
     });
+  });
+
+  const defaultTab = document.querySelector('.tab-btn.active')?.dataset.tab || 'pending';
+  const defaultPane = document.getElementById('pane-' + defaultTab);
+  if (defaultPane) {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    defaultPane.classList.add('active');
   }
-});
+
+  await loadRequests(defaultTab);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAdvisorRequestsPage);
+} else {
+  initAdvisorRequestsPage();
+}

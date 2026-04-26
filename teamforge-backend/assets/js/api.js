@@ -122,6 +122,7 @@ const Admin = {
         const q = new URLSearchParams(params).toString();
         return apiRequest('/admin/users.php' + (q ? '?' + q : ''));
     },
+    createUser:        (data)    => apiRequest('/admin/users.php', 'POST', data),
     createInstructor:  (data)    => apiRequest('/admin/users.php', 'POST', data),
     deleteUser:        (user_id) => apiRequest(`/admin/users.php?user_id=${user_id}`, 'DELETE'),
 
@@ -191,6 +192,35 @@ async function loadGlobalUserInfo() {
     }
 }
 
+async function loadInstructorSidebarBadge() {
+    try {
+        const badgeEls = document.querySelectorAll(
+            '#advisorRequestsBadge, #sidebar-pending-badge, .sidebar-nav a[href="advisor_req_insrtoctor.html"] .nav-badge, .sidebar-nav a[href="advisor_req_insrtoctor.html"] .badge'
+        );
+        if (!badgeEls.length) return;
+
+        let pendingCount = 0;
+
+        try {
+            const dashboardData = await Instructor.dashboard();
+            pendingCount = Number(dashboardData?.stats?.pending_requests) || 0;
+        } catch (dashboardErr) {
+            const requests = await Instructor.getRequests();
+            pendingCount = (requests || []).filter(request =>
+                String(request.status || '').trim().toLowerCase() === 'pending'
+            ).length;
+            console.warn('Dashboard pending count unavailable, fell back to request list.', dashboardErr);
+        }
+
+        badgeEls.forEach(el => {
+            el.textContent = pendingCount;
+            el.style.display = pendingCount > 0 ? 'inline-block' : 'none';
+        });
+    } catch (err) {
+        console.error("Instructor badge sync error:", err);
+    }
+}
+
 // ── Guard: call on every protected page ──────────────────────
 async function requireLogin(allowedRoles = []) {
     try {
@@ -208,12 +238,27 @@ async function requireLogin(allowedRoles = []) {
 
         // Run sync in background so page load isn't blocked
         loadGlobalUserInfo();
+        loadInstructorSidebarBadge();
 
         return user;
     } catch (err) {
         console.error("Auth Guard Error:", err);
         window.location.href = PROJECT_ROOT + '/frontend/auth/login.html';
     }
+}
+
+window.loadInstructorSidebarBadge = loadInstructorSidebarBadge;
+
+const isInstructorPage = window.location.pathname.toLowerCase().includes('/frontend/instructor/');
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        if (isInstructorPage) {
+            loadInstructorSidebarBadge();
+        }
+    });
+} else if (isInstructorPage) {
+    loadInstructorSidebarBadge();
 }
 // ── Load notifications into panel (call on every page) ────────
 async function loadNotifications() {

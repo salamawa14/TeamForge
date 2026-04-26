@@ -4,6 +4,7 @@
 
 /* ── Data ── */
 let dashboardData = null;
+let availabilityData = null;
 
 /* ── Fetch Data ── */
 async function loadDashboard() {
@@ -12,6 +13,15 @@ async function loadDashboard() {
     updateUI();
   } catch (err) {
     showToast('Error loading dashboard: ' + err.message, 'red');
+  }
+}
+
+async function loadAvailability() {
+  try {
+    availabilityData = await Instructor.getAvailability();
+    updateAvailabilityUI();
+  } catch (err) {
+    showToast('Error loading availability: ' + err.message, 'red');
   }
 }
 
@@ -68,6 +78,81 @@ function updateUI() {
         requestsList.appendChild(item);
       });
     }
+  }
+}
+
+function updateAvailabilityUI() {
+  if (!availabilityData) return;
+
+  const maxAdvisees = Math.max(1, Number(availabilityData.max_concurrent_advisees) || 5);
+  const activeProjects = Math.max(0, Number(availabilityData.active_projects) || 0);
+  const remaining = Math.max(0, maxAdvisees - activeProjects);
+
+  const availNote = document.getElementById('avail-note');
+  if (availNote) {
+    availNote.innerHTML = `You have <strong>${activeProjects}/${maxAdvisees}</strong> advisor slots filled.`;
+  }
+
+  const availHint = document.getElementById('avail-hint');
+  if (availHint) {
+    availHint.innerHTML = availabilityData.auto_hide_when_full
+      ? '💡 Auto-hide when full is enabled for student searches.'
+      : '💡 Set unavailable when quota is full to hide from student searches.';
+  }
+
+  document.querySelectorAll('.toggle-btn').forEach((btn) => {
+    const group = btn.dataset.group;
+    const value = btn.dataset.val;
+    let isActive = false;
+
+    if (group === 'tubitak') {
+      isActive = value === 'available' ? !!availabilityData.accepts_tubitak : !availabilityData.accepts_tubitak;
+    } else if (group === 'teknofest') {
+      isActive = value === 'available' ? !!availabilityData.accepts_teknofest : !availabilityData.accepts_teknofest;
+    }
+
+    btn.classList.toggle('active', isActive);
+    btn.disabled = activeProjects >= maxAdvisees && value === 'available' && !isActive;
+  });
+
+  const statNums = document.querySelectorAll('.stat-num');
+  if (statNums.length >= 3) {
+    statNums[2].textContent = remaining;
+  }
+}
+
+async function updateAvailability(group, value) {
+  if (!availabilityData) return;
+
+  const nextAvailability = {
+    advising_status: availabilityData.advising_status,
+    accepts_tubitak: availabilityData.accepts_tubitak,
+    accepts_teknofest: availabilityData.accepts_teknofest,
+    max_concurrent_advisees: availabilityData.max_concurrent_advisees || 5,
+    auto_hide_when_full: availabilityData.auto_hide_when_full,
+    office_hours_note: availabilityData.office_hours_note || ''
+  };
+
+  if (group === 'tubitak') {
+    nextAvailability.accepts_tubitak = value === 'available';
+  } else if (group === 'teknofest') {
+    nextAvailability.accepts_teknofest = value === 'available';
+  }
+
+  nextAvailability.advising_status = (nextAvailability.accepts_tubitak || nextAvailability.accepts_teknofest)
+    ? 'Active'
+    : 'Inactive';
+
+  try {
+    await Instructor.setAvailability(nextAvailability);
+    availabilityData = {
+      ...availabilityData,
+      ...nextAvailability
+    };
+    updateAvailabilityUI();
+    showToast('Availability updated.', 'green');
+  } catch (err) {
+    showToast('Error saving availability: ' + err.message, 'red');
   }
 }
 
@@ -179,5 +264,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     loadDashboard();
+    loadAvailability();
   }
+
+  document.querySelectorAll('.toggle-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      if (btn.disabled) return;
+      await updateAvailability(btn.dataset.group, btn.dataset.val);
+    });
+  });
 });

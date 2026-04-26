@@ -123,19 +123,41 @@ function showConfirmModal(title, message, onConfirm) {
     modal.querySelector('.btn-cancel').onclick = () => modal.remove();
 }
 
+async function syncHomeIdentity(sessionUser) {
+  let displayUser = sessionUser;
+
+  try {
+    const profile = await Instructor.getProfile();
+    if (profile) {
+      displayUser = {
+        ...sessionUser,
+        ...profile
+      };
+    }
+  } catch (err) {
+    console.warn('Home profile sync fallback to session user.', err);
+  }
+
+  const fullName = displayUser?.full_name || 'Instructor';
+  const department = displayUser?.department || 'Instructor';
+  const initials = fullName.split(' ').filter(Boolean).slice(0, 2).map(n => n[0]).join('').toUpperCase();
+
+  const sidebarName = document.querySelector('.user-name, .u-name');
+  const sidebarSub = document.querySelector('.user-sub, .u-sub');
+  const welcome = document.getElementById('hero-welcome');
+  const avatar = document.getElementById('sidebar-avatar');
+
+  if (sidebarName) sidebarName.textContent = fullName;
+  if (sidebarSub) sidebarSub.textContent = department;
+  if (welcome) welcome.innerHTML = `Welcome back, <span class="teal">${fullName}</span> 🧑‍🏫`;
+  if (avatar) avatar.textContent = initials || 'IN';
+}
+
 /* ── Init ── */
 document.addEventListener('DOMContentLoaded', async () => {
   const user = await requireLogin(['instructor']);
   if (user) {
-    const sidebarName = document.querySelector('.user-name, .u-name');
-    const sidebarSub = document.querySelector('.user-sub, .u-sub');
-    const welcome = document.getElementById('hero-welcome');
-    const initials = user.full_name.split(' ').filter(Boolean).slice(0, 2).map(n => n[0]).join('').toUpperCase();
-    if (sidebarName) sidebarName.textContent = user.full_name;
-    if (sidebarSub) sidebarSub.textContent = user.department || 'Instructor';
-    if (welcome) welcome.innerHTML = `Welcome back, <span class="teal">${user.full_name}</span> 🧑‍🏫`;
-    const avatar = document.getElementById('sidebar-avatar');
-    if (avatar) avatar.textContent = initials || 'IN';
+    await syncHomeIdentity(user);
     loadHome();
   }
 

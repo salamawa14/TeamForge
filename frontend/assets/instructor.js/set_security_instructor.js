@@ -16,28 +16,53 @@ document.querySelectorAll('.eye-btn').forEach(function(btn) {
   });
 });
 
-// Update Password
-document.getElementById('btn-update-pw').addEventListener('click', function() {
-  var curr = document.getElementById('current-pw').value;
-  var nw   = document.getElementById('new-pw').value;
-  var conf = document.getElementById('confirm-pw').value;
+async function updatePassword() {
+  var currInput = document.getElementById('current-pw');
+  var newInput = document.getElementById('new-pw');
+  var confirmInput = document.getElementById('confirm-pw');
+  var btn = document.getElementById('btn-update-pw');
+
+  var curr = currInput.value.trim();
+  var nw = newInput.value;
+  var conf = confirmInput.value;
 
   if (!curr || !nw || !conf) return showToast('Please fill in all fields', 'red');
-  if (nw.length < 8)          return showToast('New password must be at least 8 characters', 'red');
-  if (nw !== conf)             return showToast('Passwords do not match', 'red');
+  if (nw.length < 8) return showToast('New password must be at least 8 characters', 'red');
+  if (nw !== conf) return showToast('Passwords do not match', 'red');
+  if (curr === nw) return showToast('New password must be different from current password', 'red');
 
-  var btn = this;
-  btn.textContent = '✓ Updated!';
-  btn.style.background = '#16a34a';
-  setTimeout(function() { btn.textContent = 'Update Password'; btn.style.background = ''; }, 2000);
-  showToast('Password updated successfully');
+  btn.disabled = true;
+  var originalText = btn.textContent;
+  btn.textContent = 'Updating...';
+
+  try {
+    await Auth.changePassword(curr, nw);
+    currInput.value = '';
+    newInput.value = '';
+    confirmInput.value = '';
+    btn.textContent = '✓ Updated!';
+    btn.style.background = '#16a34a';
+    showToast('Password updated successfully');
+  } catch (err) {
+    showToast(err.message || 'Failed to update password', 'red');
+  } finally {
+    setTimeout(function() {
+      btn.disabled = false;
+      btn.textContent = originalText;
+      btn.style.background = '';
+    }, 1600);
+  }
+}
+
+document.getElementById('btn-update-pw')?.addEventListener('click', function() {
+  updatePassword();
 });
 
 // 2FA buttons
-document.getElementById('btn-totp').addEventListener('click', function() {
+document.getElementById('btn-totp')?.addEventListener('click', function() {
   showToast('Authenticator App setup coming soon');
 });
-document.getElementById('btn-sms').addEventListener('click', function() {
+document.getElementById('btn-sms')?.addEventListener('click', function() {
   var btn = this;
   if (btn.textContent === 'Enable') {
     btn.textContent = 'Disable';
@@ -58,7 +83,7 @@ document.getElementById('btn-sms').addEventListener('click', function() {
 
 
 
-document.getElementById("profileBtn").addEventListener("click", function () {
+document.getElementById("profileBtn")?.addEventListener("click", function () {
     window.location.href = "profile_instructor.html";
 });
 const saveBtn = document.getElementById("btn-save");
@@ -67,34 +92,33 @@ const cancelSaveBtn = document.getElementById("cancelSaveBtn");
 const confirmSaveBtn = document.getElementById("confirmSaveBtn");
 
 function openSaveModal() {
-  saveConfirmModal.classList.add("show");
+  saveConfirmModal?.classList.add("show");
 }
 
 function closeSaveModal() {
-  saveConfirmModal.classList.remove("show");
+  saveConfirmModal?.classList.remove("show");
 }
 
 function saveChanges() {
-  setTimeout(function() { btn.textContent = '💾 Save Changes'; btn.style.background = ''; }, 2000);
   toast('Settings saved');
 }
 
-saveBtn.addEventListener("click", function (e) {
+saveBtn?.addEventListener("click", function (e) {
   e.preventDefault();
   openSaveModal();
 });
 
-cancelSaveBtn.addEventListener("click", function () {
+cancelSaveBtn?.addEventListener("click", function () {
   closeSaveModal();
 });
 
-confirmSaveBtn.addEventListener("click", function () {
+confirmSaveBtn?.addEventListener("click", function () {
   closeSaveModal();
   saveChanges();
 });
 
 // Optional: close when clicking outside the modal
-saveConfirmModal.addEventListener("click", function (e) {
+saveConfirmModal?.addEventListener("click", function (e) {
   if (e.target === saveConfirmModal) {
     closeSaveModal();
   }
@@ -122,3 +146,19 @@ function showToast(msg, color) {
     setTimeout(function() { t.remove(); }, 300);
   }, 2500);
 }
+
+document.addEventListener('DOMContentLoaded', async function () {
+  const user = await requireLogin(['instructor']);
+  if (!user) return;
+
+  const sidebarName = document.querySelector('.user-name');
+  const sidebarSub = document.querySelector('.user-sub');
+  const sidebarAvatar = document.getElementById('sidebar-avatar');
+  const fullName = user.full_name || 'Instructor';
+  const department = user.department || 'Instructor';
+  const initials = fullName.split(' ').filter(Boolean).slice(0, 2).map(n => n[0]).join('').toUpperCase();
+
+  if (sidebarName) sidebarName.textContent = fullName;
+  if (sidebarSub) sidebarSub.textContent = department;
+  if (sidebarAvatar) sidebarAvatar.textContent = initials || 'IN';
+});
