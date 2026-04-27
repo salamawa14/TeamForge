@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Dashboard – TeamForge</title>
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="..\assets\admin.css\dashboard.css"/>
+  <link rel="stylesheet" href="../assets/admin.css/dashboard.css"/>
 </head>
 <body>
 
@@ -79,7 +79,7 @@
     <div class="stats">
       <div class="st" onclick="window.location='categories.html'">
         <div class="stic ct">📁</div>
-        <div><div class="sv" id="d-projs">38</div><div class="slb">Active Projects</div></div>
+        <div><div class="sv" id="d-projs">3</div><div class="slb">Active Projects</div></div>
       </div>
       <div class="st" onclick="window.location='categories.html'">
         <div class="stic cg">🗂️</div>
@@ -104,7 +104,7 @@
       <div class="card">
         <div class="ch"><h3>Platform Overview</h3></div>
         <div class="cb2">
-          <div class="pbar-row">
+          <div class="pbar-row clickable" onclick="window.location='categories.html'">
             <span class="ov-label">🗂️ Categories</span>
             <strong class="ov-val" id="d-cats-big">3</strong>
           </div>
@@ -112,9 +112,9 @@
             <span class="ov-label">📢 Announcements</span>
             <strong class="ov-val" id="d-anns-big">3</strong>
           </div>
-          <div class="pbar-row">
+          <div class="pbar-row clickable" onclick="window.location='categories.html'">
             <span class="ov-label">📁 Active Projects</span>
-            <strong class="ov-val">38</strong>
+            <strong class="ov-val" id="d-projs-big">3</strong>
           </div>
         </div>
       </div>

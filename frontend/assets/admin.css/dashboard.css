@@ -91,6 +91,8 @@ button, select, input, textarea { font-family: inherit; }
 
 /* ── Platform overview ── */
 .pbar-row  { display: flex; justify-content: space-between; align-items: center; margin-bottom: .85rem; }
+.pbar-row.clickable { cursor: pointer; transition: all .2s; border-radius: 6px; padding: 4px; margin-left: -4px; margin-right: -4px; }
+.pbar-row.clickable:hover { background: var(--gl); }
 .ov-label  { font-size: .88rem; color: var(--tm); }
 .ov-val    { font-size: .88rem; color: var(--navy); }
 

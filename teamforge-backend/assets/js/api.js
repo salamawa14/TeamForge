@@ -5,7 +5,30 @@
 // ============================================================
 
 // Detect project root automatically (supports Docker root and XAMPP subdirectories)
-const PROJECT_ROOT = window.location.pathname.toLowerCase().includes('/teamforge/') ? '/TeamForge' : '';
+function detectProjectRoot() {
+    const path = window.location.pathname;
+    const parts = path.split('/');
+    
+    // Look for the indices of our known folders
+    const frontendIdx = parts.findIndex(p => p.toLowerCase() === 'frontend');
+    const teamforgeIdx = parts.findIndex(p => p.toLowerCase() === 'teamforge');
+    
+    if (frontendIdx > 0) {
+        // If 'frontend' is in the path, the root is everything before it
+        // UNLESS the parent is 'teamforge', then we might want to go one level up or stay there
+        // If the structure is /teamforge/frontend/..., root is /teamforge
+        // If the structure is /frontend/..., root is ""
+        return parts.slice(0, frontendIdx).join('/');
+    }
+    
+    if (teamforgeIdx !== -1) {
+        return parts.slice(0, teamforgeIdx + 1).join('/');
+    }
+
+    return '';
+}
+
+const PROJECT_ROOT = detectProjectRoot();
 const BASE_URL = PROJECT_ROOT + '/teamforge-backend/api';
 
 // ── Core fetch wrapper ────────────────────────────────────────

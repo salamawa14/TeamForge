@@ -39,12 +39,6 @@ function updateUI() {
     statNums[2].textContent = 5 - s.active_projects; // Assuming quota is 5
   }
 
-  // Update Welcome
-  const welcomeTitle = document.querySelector('.welcome-title');
-  if (welcomeTitle) {
-      // We can get the name from the session or Auth.me
-  }
-
   // Update Requests
   const requestsList = document.querySelector('.card .request-item')?.parentElement;
   if (requestsList) {
