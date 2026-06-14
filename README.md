@@ -139,25 +139,21 @@ docker compose down
 
 ## 📷 Screenshots
 
-> **Note:** Screenshots of the application interface will be added soon.
-
 Suggested screenshots:
 - Login Page
+- <img width="1920" height="939" alt="Screenshot From 2026-06-14 02-41-17" src="https://github.com/user-attachments/assets/775a57cc-6e2a-489c-a1f7-02c10fcc90ba" />
+
+
 - Dashboard
+- <img width="1920" height="939" alt="Screenshot From 2026-06-14 02-47-48" src="https://github.com/user-attachments/assets/89d44320-5808-4180-9e71-0c3f97f1ec4e" />
+
+
 - Team Management
-- Task Management
-- Request Approval Interface
+- <img width="1920" height="939" alt="Screenshot From 2026-06-14 02-51-11" src="https://github.com/user-attachments/assets/634e129b-3b13-4338-bb0a-b99e6451c939" />
 
----
+- Announcements
+- <img width="1920" height="939" alt="Screenshot From 2026-06-14 02-51-15" src="https://github.com/user-attachments/assets/fbc2f767-1197-45df-bdd3-b4897fdabc62" />
 
-## 🎯 Future Improvements
-
-- Email notifications.
-- Real-time team chat.
-- File attachment support.
-- Advanced role and permission management.
-- REST API documentation.
-- Automated testing.
 
 ---
 
@@ -171,16 +167,3 @@ During the development of TeamForge, the focus was on building a complete full-s
 - Team collaboration workflows.
 
 ---
-
-## 👨‍💻 Author
-
-**Salam Alawa**  
-Software Engineering Student
-
-- GitHub: https://github.com/salamawa14
-
----
-
-## 📄 License
-
-This project is intended for educational and portfolio purposes. Feel free to explore, learn from, and build upon it.
